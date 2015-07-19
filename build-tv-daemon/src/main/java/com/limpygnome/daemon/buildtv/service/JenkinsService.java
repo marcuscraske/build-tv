@@ -26,9 +26,9 @@ public class JenkinsService implements Service
     public synchronized void start(Controller controller)
     {
         // Fetch required settings
-        String jenkinsBaseUrl = controller.getSetting("jenkins.base", true);
-        String jenkinsJobs = controller.getSetting("jenkins.jobs", true);
-        long jenkinsPollRate = controller.getSettingLong("jenkins.poll-rate-ms", true);
+        String jenkinsBaseUrl = controller.getSetting("jenkins.base");
+        String jenkinsJobs = controller.getSetting("jenkins.jobs");
+        long jenkinsPollRate = controller.getSettingLong("jenkins.poll-rate-ms");
 
         // Make sure URL ends with trailing /
         if (!jenkinsBaseUrl.endsWith("/"))

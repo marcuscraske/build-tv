@@ -31,19 +31,19 @@ public class RestService implements Service, HttpHandler
     {
         try
         {
-            final int PORT = 2500;
+            int endpointPort = controller.getSettingInt("led-daemon.rest.port");
 
             // Fetch instance of LED service
             ledService = (LedService) controller.getServiceByName("leds");
 
             // Start HTTP server
-            httpServer = HttpServer.create(new InetSocketAddress(PORT), 16);
+            httpServer = HttpServer.create(new InetSocketAddress(endpointPort), 16);
 
             httpServer.createContext("/", this);
             httpServer.setExecutor(null);
             httpServer.start();
 
-            LOG.info("REST listening on port {}", PORT);
+            LOG.info("REST listening on port {}", endpointPort);
         }
         catch (Exception e)
         {

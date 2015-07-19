@@ -28,13 +28,24 @@ public class LedService implements Service
     public LedService()
     {
         this.patterns = new HashMap<>();
-        this.ledController = new LedController();
         this.ledRenderThread = null;
+        this.ledController = null;
     }
 
     @Override
     public synchronized void start(Controller controller)
     {
+        // Start LED controller
+        this.ledController = new LedController(
+            controller.getSettingInt("led-daemon.leds"),
+            controller.getSettingInt("led-daemon.pin"),
+            controller.getSettingInt("led-daemon.freq"),
+            controller.getSettingInt("led-daemon.dma"),
+            controller.getSettingInt("led-daemon.brightness"),
+            controller.getSettingInt("led-daemon.pwm_channel"),
+            controller.getSettingBoolean("led-daemon.invert")
+        );
+
         // Register all the patterns!
         patterns.put("build-unknown", new BuildUnknown());
         patterns.put("build-ok", new BuildOkay());
@@ -60,16 +71,27 @@ public class LedService implements Service
         setPattern("shutdown");
 
         // Stop render thread
-        ledRenderThread.kill();
+        if (ledRenderThread != null)
+        {
+            ledRenderThread.kill();
+            ledRenderThread = null;
+        }
 
         // Wipe patterns
         patterns.clear();
+
+        // Stop LED controller
+        if (ledController != null)
+        {
+            ledController.dispose();
+            ledController = null;
+        }
     }
 
     public synchronized void setPattern(String patternName)
     {
         // Check if pattern already set
-        if (currentPatternName == patternName)
+        if (currentPatternName != null && currentPatternName.equals(patternName))
         {
             LOG.debug("Ignoring pattern change request, already set - pattern: {}", patternName);
             return;

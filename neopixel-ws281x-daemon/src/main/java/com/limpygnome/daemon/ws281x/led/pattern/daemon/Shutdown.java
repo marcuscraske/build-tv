@@ -17,8 +17,14 @@ public class Shutdown implements Pattern
         {
             ledController.setStrip(i, i, i);
             ledController.render();
-
-            Thread.sleep(5);
+            try
+            {
+                Thread.sleep(5);
+            }
+            catch (InterruptedException e)
+            {
+                // We don't care, we want to hang in this thread for fade effect
+            }
         }
     }
 }

@@ -15,7 +15,7 @@ public class Controller
 {
     private static final Logger LOG = LogManager.getLogger(Controller.class);
 
-    private static final String SETTINGS_PATH = "daemon-settings.kv";
+    private static final String SETTINGS_PATH = "config/daemon-settings.kv";
 
     private boolean running;
     private HashMap<String, Service> services;
@@ -120,7 +120,7 @@ public class Controller
         return service;
     }
 
-    public synchronized String getSetting(String key, boolean exceptionOnMissing)
+    public synchronized String getSetting(String key)
     {
         String value = settings.get(key);
 
@@ -132,9 +132,9 @@ public class Controller
         return value;
     }
 
-    public synchronized long getSettingLong(String key, boolean exceptionOnMissing)
+    public synchronized long getSettingLong(String key)
     {
-        String value = getSetting(key, exceptionOnMissing);
+        String value = getSetting(key);
 
         try
         {
@@ -145,6 +145,35 @@ public class Controller
             throw new RuntimeException("Malformed setting '" + key + "', expected value to be of type long", e);
         }
     }
+
+    public synchronized int getSettingInt(String key)
+    {
+        String value = getSetting(key);
+
+        try
+        {
+            return Integer.parseInt(value);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException("Malformed setting '" + key + "', expected value to be of type int", e);
+        }
+    }
+
+    public synchronized boolean getSettingBoolean(String key)
+    {
+        String value = getSetting(key);
+
+        try
+        {
+            return Boolean.parseBoolean(value);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException("Malformed setting '" + key + "', expected value to be of type bool", e);
+        }
+    }
+
 
     private void reloadSettings()
     {
@@ -168,7 +197,7 @@ public class Controller
                 {
                     splitIndex = line.indexOf('=');
 
-                    if (splitIndex > 1 && splitIndex+1 < line.length() - 1)
+                    if (splitIndex > 1 && splitIndex < line.length() - 1)
                     {
                         // Read KV
                         key = line.substring(0, splitIndex);

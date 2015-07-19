@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  * Checks build status against list of projects on Jenkins.
@@ -99,10 +100,19 @@ public class JenkinsStatusThread extends ExtendedThread
 
             // Execute and read response
             HttpResponse httpResponse = httpClient.execute(httpGet);
-            String response = Streams.readInputStream(httpResponse.getEntity().getContent(), 8192);
+            String response = Streams.readInputStream(httpResponse.getEntity().getContent(), 64000);
 
-            JSONParser jsonParser = new JSONParser();
-            JSONObject jsonRoot = (JSONObject) jsonParser.parse(response);
+            JSONObject jsonRoot;
+
+            try
+            {
+                JSONParser jsonParser = new JSONParser();
+                jsonRoot = (JSONObject) jsonParser.parse(response);
+            }
+            catch (ParseException e)
+            {
+                throw new RuntimeException("Failed to parse content [" + response.length() + " chars]: " + response, e);
+            }
 
             String result = (String) jsonRoot.get("result");
 

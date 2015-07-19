@@ -21,7 +21,7 @@ public class IntervalLedService implements Service
 {
     private static final Logger LOG = LogManager.getLogger(IntervalLedService.class);
 
-    private static final String INTERVAL_JSON_FILE = "build-tv-intervals.json";
+    private static final String INTERVAL_JSON_FILE = "config/build-tv-intervals.json";
 
     private LedTimeService ledTimeService;
     private LinkedList<IntervalPattern> intervalPatterns;
