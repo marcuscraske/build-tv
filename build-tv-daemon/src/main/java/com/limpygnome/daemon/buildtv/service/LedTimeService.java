@@ -17,7 +17,10 @@ public class LedTimeService implements Service
     {
         String ledDaemonUrl = controller.getSetting("led-daemon.url");
 
-        ledTimeThread = new LedTimeThread(ledDaemonUrl);
+        ledTimeThread = new LedTimeThread(
+                (ScreenDisplayService) controller.getServiceByName("screen"),
+                ledDaemonUrl
+        );
         ledTimeThread.start();
     }
 

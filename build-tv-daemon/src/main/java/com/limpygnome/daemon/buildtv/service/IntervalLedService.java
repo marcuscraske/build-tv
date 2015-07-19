@@ -60,7 +60,8 @@ public class IntervalLedService implements Service
                         (int) (long) interval.get("startHour"),
                         (int) (long) interval.get("startMinute"),
                         (int) (long) interval.get("endHour"),
-                        (int) (long) interval.get("endMinute")
+                        (int) (long) interval.get("endMinute"),
+                        (boolean) interval.get("screenOff")
                 );
 
                 // Add to our own list for cleanup and then to the LED service

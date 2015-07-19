@@ -9,15 +9,19 @@ public class IntervalPattern extends PatternSource
 {
     private int startMinuteOfDay;
     private int endMinuteOfDay;
+    private boolean screenOff;
 
     public IntervalPattern(String name, LedPattern initialCurrentLedPattern, int priority,
-                           int startHour, int startMinute, int endHour, int endMinute)
+                           int startHour, int startMinute, int endHour, int endMinute,
+                           boolean screenOff)
     {
         super(name, initialCurrentLedPattern, priority);
 
         // Convert time to minute of day - more efficient and easier to deal with
         startMinuteOfDay = (startHour * 60) + startMinute;
         endMinuteOfDay = (endHour * 60) + endMinute;
+
+        this.screenOff = screenOff;
     }
 
     @Override
@@ -36,5 +40,10 @@ public class IntervalPattern extends PatternSource
         {
             return minuteOfDay >= startMinuteOfDay && minuteOfDay < endMinuteOfDay;
         }
+    }
+
+    public boolean isScreenOff()
+    {
+        return screenOff;
     }
 }

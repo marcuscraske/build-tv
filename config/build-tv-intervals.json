@@ -8,7 +8,8 @@
             "startMinute"   : 45,
             "endHour"       : 10,
             "endMinute"     : 00,
-            "pattern"       : "standup"
+            "pattern"       : "standup",
+            "screenOff"     : false
         },
         {
             "name"          : "Build Indicator Off",
@@ -17,7 +18,8 @@
             "startMinute"   : 0,
             "endHour"       : 08,
             "endMinute"     : 00,
-            "pattern"       : "shutdown"
+            "pattern"       : "shutdown",
+            "screenOff"     : true
         }
     ]
 }

@@ -1,5 +1,6 @@
 package com.limpygnome.daemon.buildtv.led;
 
+import com.limpygnome.daemon.buildtv.service.ScreenDisplayService;
 import com.limpygnome.daemon.common.ExtendedThread;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -20,11 +21,13 @@ public class LedTimeThread extends ExtendedThread
 {
     private static final Logger LOG = LogManager.getLogger(LedTimeThread.class);
 
+    private ScreenDisplayService screenDisplayService;
     private String ledDaemonUrl;
     private HashMap<String, PatternSource> patternSources;
 
-    public LedTimeThread(String ledDaemonUrl)
+    public LedTimeThread(ScreenDisplayService screenDisplayService, String ledDaemonUrl)
     {
+        this.screenDisplayService = screenDisplayService;
         this.ledDaemonUrl = ledDaemonUrl;
         this.patternSources = new HashMap<>();
     }
@@ -51,14 +54,35 @@ public class LedTimeThread extends ExtendedThread
     {
         final long UPDATE_INTERVAL = 1000;
 
-        LedPattern currentPattern;
+        PatternSource currentPatternSource;
+
         while (!isExit())
         {
             // Fetch the current pattern
-            currentPattern = findCurrentPattern();
+            currentPatternSource = findHighestPriorityPatternSource();
 
             // Update pattern by talking to LED daemon
-            changePattern(currentPattern);
+            if (currentPatternSource != null)
+            {
+                changePattern(currentPatternSource.getCurrentLedPattern());
+            }
+            else
+            {
+                changePattern(LedPattern.BUILD_UNKNOWN);
+            }
+
+            // Update screen on/off
+            if  (   currentPatternSource != null &&
+                    currentPatternSource instanceof IntervalPattern &&
+                    ((IntervalPattern) currentPatternSource).isScreenOff()
+                )
+            {
+                screenDisplayService.screenOff();
+            }
+            else
+            {
+                screenDisplayService.screenOn();
+            }
 
             // Sleep for a while
             try
@@ -71,11 +95,11 @@ public class LedTimeThread extends ExtendedThread
         }
     }
 
-    private synchronized LedPattern findCurrentPattern()
+    private synchronized PatternSource findHighestPriorityPatternSource()
     {
         // Iterate patterns and retrieve enabled source with highest priority
         PatternSource patternSource;
-        LedPattern highestPattern = LedPattern.BUILD_UNKNOWN;
+        PatternSource highestPatternSource = null;
         int highestPriority = -1;
 
         for (Map.Entry<String, PatternSource> patternSourceKV : patternSources.entrySet())
@@ -84,12 +108,12 @@ public class LedTimeThread extends ExtendedThread
 
             if (patternSource.getPriority() > highestPriority && patternSource.isEnabled())
             {
-                highestPattern = patternSource.getCurrentLedPattern();
+                highestPatternSource = patternSource;
                 highestPriority = patternSource.getPriority();
             }
         }
 
-        return highestPattern;
+        return highestPatternSource;
     }
 
     private void changePattern(LedPattern pattern)
