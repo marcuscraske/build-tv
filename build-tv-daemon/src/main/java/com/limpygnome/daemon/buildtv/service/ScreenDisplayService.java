@@ -19,11 +19,13 @@ public class ScreenDisplayService implements Service
 
     private long lastAction;
     private boolean devMachine;
+    private boolean screenOn;
 
     public ScreenDisplayService()
     {
         this.lastAction = 0;
         this.devMachine = false;
+        this.screenOn = false;
     }
 
     @Override
@@ -49,25 +51,33 @@ public class ScreenDisplayService implements Service
 
     public synchronized void screenOn()
     {
-        if (!isTooSoon())
+        if (!isTooSoon() && !this.screenOn)
         {
             LOG.debug("Turning screen on...");
 
-            exec("xset dpms force on");
-            exec("xset -dpms");
-            exec("xset s off");
-            exec("xset s noblank");
+//            exec("xset dpms force on");
+//            exec("xset -dpms");
+//            exec("xset s off");
+//            exec("xset s noblank");
+
+            exec("/opt/vc/bin/tvservice -p");
+            exec("fbset -accel true");
+
+            this.screenOn = true;
         }
     }
 
     public synchronized void screenOff()
     {
-        if (!isTooSoon())
+        if (!isTooSoon() && this.screenOn)
         {
             LOG.debug("Turning screen off...");
 
-            exec("xset s reset");
-            exec("xset dpms force off");
+//            exec("xset s reset");
+//            exec("xset dpms force off");
+            exec("/opt/vc/bin/tvservice -o");
+
+            this.screenOn = false;
         }
     }
 
