@@ -1,0 +1,26 @@
+- name: Check Library Files Exist
+  stat: path={{ deploy_path }}/neopixel-ws281x-lib
+  register: library_files_exist
+
+- name: Delete Existing Library Files
+  shell: rm -R {{ deploy_path }}/neopixel-ws281x-lib
+  when: library_files_exist.stat.exists == true
+
+- name: Copying New Library Files
+  copy: src={{ ws281x_lib }} dest={{ deploy_path }} mode=0775
+
+- name: Compiling Library Files
+  shell: "{{ deploy_path }}/neopixel-ws281x-lib/compile.sh"
+  args:
+    chdir: "{{ deploy_path }}/neopixel-ws281x-lib"
+
+- name: Copying Compiled ws281x Shared Library
+  shell: >
+    cp "{{ deploy_path }}/neopixel-ws281x-lib/output/ws2811.so" "{{ deploy_path }}/ws2811.so"
+
+- name: Copying Compiled JNI Shared Library
+  shell: >
+    cp "{{ deploy_path }}/neopixel-ws281x-lib/output/libws281x.so" "{{ deploy_path }}/libws281x.so"
+
+- name: Cleanup Library Files
+  shell: rm -R {{ deploy_path }}/neopixel-ws281x-lib

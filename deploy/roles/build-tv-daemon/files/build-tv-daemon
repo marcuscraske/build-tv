@@ -1,0 +1,41 @@
+#! /bin/sh
+# /etc/init.d/build-tv-daemon
+#
+
+# **********************************************************************************************************************
+# Daemon configuration
+# **********************************************************************************************************************
+
+DAEMON_NAME="build-tv-daemon"
+DAEMON_JAR="/rpi-misc/build-tv-daemon-1.0.jar"
+DAEMON_WORKING_DIR="/rpi-misc"
+
+# **********************************************************************************************************************
+# Main
+# **********************************************************************************************************************
+
+case "$1" in
+    start)
+
+        echo "Starting ${DAEMON_NAME} ..."
+
+        start-stop-daemon --start --quiet --make-pidfile --pidfile /var/run/${DAEMON_NAME}.pid \
+                    --background \
+                    --chdir ${DAEMON_WORKING_DIR} \
+                    --exec /usr/bin/java -- -jar ${DAEMON_JAR}
+
+      ;;
+    stop)
+
+        echo "Stopping ${DAEMON_NAME} ..."
+
+        start-stop-daemon --stop --quiet --oknodo --pidfile /var/run/${DAEMON_NAME}.pid
+
+        ;;
+    *)
+        echo "Usage: /etc/init.d/${DAEMON_NAME} {start|stop}"
+        exit 1
+        ;;
+esac
+
+exit 0

@@ -1,0 +1,2 @@
+- name: Copying Shared Configuration
+  copy: src={{ shared_config }} dest={{ deploy_path }} mode=077

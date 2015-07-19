@@ -1,0 +1,12 @@
+- hosts: all
+
+  gather_facts: no
+
+  pre_tasks:
+    - shell: hostname
+
+  roles:
+    - { role: shared-config, tags: ["config"] }
+    - { role: neopixel-ws281x-lib, tags: ["neopixel-lib"] }
+    - { role: neopixel-ws281x-daemon, tags: ["neopixel-daemon"] }
+    - { role: build-tv-daemon, tags: ["build-tv-daemon"] }

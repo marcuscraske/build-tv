@@ -1,0 +1,14 @@
+- name: Copying Build TV JAR
+  copy: src={{ build_tv_daemon }}/target/build-tv-daemon-1.0.jar dest={{ deploy_path }} mode=077
+
+- name: Copying Service File to init.d
+  copy: src="build-tv-daemon" dest="/etc/init.d/build-tv-daemon" mode=0755
+  sudo: true
+
+- name: Registering Service
+  shell: "update-rc.d build-tv-daemon defaults"
+  sudo: true
+
+- name: Starting Service
+  shell: "service build-tv-daemon start"
+  sudo: true

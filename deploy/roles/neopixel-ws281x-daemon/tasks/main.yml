@@ -1,0 +1,14 @@
+- name: Copying NeoPixel ws281x JAR
+  copy: src={{ ws281x_daemon }}/target/neopixel-ws281x-daemon-1.0.jar dest={{ deploy_path }} mode=077
+
+- name: Copying Service File to init.d
+  copy: src="neopixel-ws281x-daemon" dest="/etc/init.d/neopixel-ws281x-daemon" mode=0755
+  sudo: true
+
+- name: Registering Service
+  shell: "update-rc.d neopixel-ws281x-daemon defaults"
+  sudo: true
+
+- name: Starting Service
+  shell: "service neopixel-ws281x-daemon start"
+  sudo: true
