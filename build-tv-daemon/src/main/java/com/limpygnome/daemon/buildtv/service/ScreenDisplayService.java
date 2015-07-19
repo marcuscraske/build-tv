@@ -60,6 +60,7 @@ public class ScreenDisplayService implements Service
 //            exec("xset s off");
 //            exec("xset s noblank");
 
+            // refer to: https://93.93.130.214/forums/viewtopic.php?f=28&t=74573
             exec("/opt/vc/bin/tvservice -p");
             exec("fbset -accel true");
 
