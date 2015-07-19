@@ -1,5 +1,6 @@
 package com.limpygnome.daemon.ws281x.led;
 
+import com.limpygnome.daemon.common.ExtendedThread;
 import com.limpygnome.daemon.ws281x.service.LedService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,15 +10,12 @@ import org.apache.logging.log4j.Logger;
  *
  * TODO: move into generic thread, since Java thread object is blurgh...
  */
-public class LedRenderThread extends Thread
+public class LedRenderThread extends ExtendedThread
 {
     private static final Logger LOG = LogManager.getLogger(LedRenderThread.class);
 
     // The current pattern to render
     private Pattern currentPattern;
-
-    // Indicates if to exit
-    private boolean exit;
 
     // The service to which this thread belongs
     private LedService ledService;
@@ -25,7 +23,6 @@ public class LedRenderThread extends Thread
 
     public LedRenderThread(LedService ledService, Pattern currentPattern)
     {
-        this.exit = false;
         this.ledService = ledService;
         this.ledController = ledService.getLedController();
         this.currentPattern = currentPattern;
@@ -48,28 +45,6 @@ public class LedRenderThread extends Thread
         }
 
         LOG.debug("Finished render - pattern: {}", currentPattern.getClass().getName());
-    }
-
-    public boolean isExit()
-    {
-        return exit;
-    }
-
-    public synchronized void kill()
-    {
-        this.exit = true;
-
-        if (Thread.currentThread() != this)
-        {
-            try
-            {
-                join();
-            }
-            catch (InterruptedException e)
-            {
-                LOG.error("Failed to kill thread", e);
-            }
-        }
     }
 
 }

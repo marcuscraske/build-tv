@@ -3,6 +3,8 @@ package com.limpygnome.daemon.api;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,12 +15,16 @@ public class Controller
 {
     private static final Logger LOG = LogManager.getLogger(Controller.class);
 
+    private static final String SETTINGS_PATH = "settings.kv";
+
     private boolean running;
     private HashMap<String, Service> services;
+    private HashMap<String, String> settings;
 
     public Controller()
     {
         this.services = new HashMap<>();
+        this.settings = new HashMap<>();
     }
 
     public synchronized void add(String serviceName, Service service)
@@ -35,7 +41,9 @@ public class Controller
 
     public synchronized void start()
     {
-        LOG.debug("Starting controller...");
+        LOG.info("Starting controller...");
+
+        reloadSettings();
 
         // Start all services
         for (Map.Entry<String, Service> kv : services.entrySet())
@@ -49,12 +57,12 @@ public class Controller
 
         setRunning(true);
 
-        LOG.debug("Controller started successfully");
+        LOG.info("Controller started successfully");
     }
 
     public synchronized void stop()
     {
-        LOG.debug("Controller stopping...");
+        LOG.info("Controller stopping...");
 
         // Stop all services
         for (Map.Entry<String, Service> kv : services.entrySet())
@@ -68,7 +76,7 @@ public class Controller
 
         setRunning(false);
 
-        LOG.debug("Controller has stopped");
+        LOG.info("Controller has stopped");
     }
 
     public synchronized void waitForExit()
@@ -103,6 +111,75 @@ public class Controller
     public synchronized Service getServiceByName(String serviceName)
     {
         return services.get(serviceName);
+    }
+
+    public synchronized String getSetting(String key, boolean exceptionOnMissing)
+    {
+        String value = settings.get(key);
+
+        if (value == null)
+        {
+            throw new RuntimeException("Setting '" + key + "' missing");
+        }
+
+        return value;
+    }
+
+    public synchronized long getSettingLong(String key, boolean exceptionOnMissing)
+    {
+        String value = getSetting(key, exceptionOnMissing);
+
+        try
+        {
+            return Long.parseLong(value);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException("Malformed setting '" + key + "', expected value to be of type long", e);
+        }
+    }
+
+    private void reloadSettings()
+    {
+        settings.clear();
+
+        LOG.debug("Reloading settings...");
+
+        try
+        {
+            // Read file line-by-line
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(SETTINGS_PATH));
+            String line, key, value;
+            int splitIndex;
+
+            while ((line = bufferedReader.readLine()) != null)
+            {
+                line = line.trim();
+
+                // Check line isnt empty or comment
+                if (!line.startsWith("#") && line.length() != 0)
+                {
+                    splitIndex = line.indexOf('=');
+
+                    if (splitIndex > 1 && splitIndex+1 < line.length() - 1)
+                    {
+                        // Read KV
+                        key = line.substring(0, splitIndex);
+                        value = line.substring(splitIndex+1);
+
+                        // Add KV
+                        settings.put(key, value);
+                        LOG.debug("Added setting - key: {}, value: {}", key, value);
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            LOG.error("Unable to load settings", e);
+        }
+
+        LOG.debug("Finished loading settings");
     }
 
     private void setRunning(boolean value)

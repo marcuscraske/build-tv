@@ -11,9 +11,10 @@
     <name>RPI Misc Project</name>
 
     <modules>
-        <module>neopixel-ws281x-daemon</module>
-        <module>neopixel-ws281x-lib</module>
         <module>daemon-lib</module>
+        <module>neopixel-ws281x-lib</module>
+        <module>neopixel-ws281x-daemon</module>
+        <module>build-tv-daemon</module>
     </modules>
 
     <build>

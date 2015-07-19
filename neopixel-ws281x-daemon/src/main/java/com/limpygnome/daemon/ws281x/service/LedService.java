@@ -23,6 +23,7 @@ public class LedService implements Service
     private HashMap<String, Pattern> patterns;
     private LedController ledController;
     private LedRenderThread ledRenderThread;
+    private String currentPatternName;
 
     public LedService()
     {
@@ -35,6 +36,7 @@ public class LedService implements Service
     public synchronized void start(Controller controller)
     {
         // Register all the patterns!
+        patterns.put("build-unknown", new BuildUnknown());
         patterns.put("build-ok", new BuildOkay());
         patterns.put("build-progress", new BuildProgress());
         patterns.put("build-unstable", new BuildUnstable());
@@ -66,6 +68,13 @@ public class LedService implements Service
 
     public synchronized void setPattern(String patternName)
     {
+        // Check if pattern already set
+        if (currentPatternName == patternName)
+        {
+            LOG.debug("Ignoring pattern change request, already set - pattern: {}", patternName);
+            return;
+        }
+
         // Locate pattern
         Pattern pattern = patterns.get(patternName);
 
@@ -84,6 +93,8 @@ public class LedService implements Service
             // Build new thread
             ledRenderThread = new LedRenderThread(this, pattern);
             ledRenderThread.start();
+
+            currentPatternName = patternName;
 
             LOG.debug("LED pattern changed - pattern: {}", patternName);
         }

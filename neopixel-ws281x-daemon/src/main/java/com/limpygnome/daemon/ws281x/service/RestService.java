@@ -2,6 +2,7 @@ package com.limpygnome.daemon.ws281x.service;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Service;
+import com.limpygnome.daemon.util.Streams;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -62,26 +63,15 @@ public class RestService implements Service, HttpHandler
         LOG.debug("Request received - ip: {}", httpExchange.getRemoteAddress());
 
         // Read raw request
-        StringBuilder requestBuffer = new StringBuilder();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpExchange.getRequestBody()));
-
-        int readChars;
-        char[] buffer = new char[1024];
-
-        // There is a limit of 4096 bytes per request, which is beyond excessive!
-        while ((readChars = bufferedReader.read(buffer)) > 0 && requestBuffer.length() < 4096)
-        {
-            requestBuffer.append(buffer, 0, readChars);
-        }
-        bufferedReader.close();
+        String request = Streams.readInputStream(httpExchange.getRequestBody(), 4096);
 
         try
         {
-            if (requestBuffer.length() != 0)
+            if (request.length() != 0)
             {
                 // Attempt to parse as json
                 JSONParser jsonParser = new JSONParser();
-                JSONObject jsonRoot = (JSONObject) jsonParser.parse(requestBuffer.toString());
+                JSONObject jsonRoot = (JSONObject) jsonParser.parse(request.toString());
 
                 // Handle request elsewhere
                 handleRequest(jsonRoot);
