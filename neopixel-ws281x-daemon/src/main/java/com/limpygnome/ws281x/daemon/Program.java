@@ -13,10 +13,11 @@ public class Program
         Controller controller = new Controller();
 
         // Add services
-        controller.add("leds", new LedService());
+        //controller.add("leds", new LedService());
         controller.add("rest", new RestService());
 
         // Start forever...
+        controller.hookShutdown();
         controller.start();
         controller.waitForExit();
     }

@@ -55,6 +55,8 @@ public class Controller
 
     public synchronized void stop()
     {
+        LOG.debug("Controller stopping...");
+
         // Stop all services
         for (Map.Entry<String, Service> kv : services.entrySet())
         {
@@ -66,6 +68,8 @@ public class Controller
         }
 
         setRunning(false);
+
+        LOG.debug("Controller has stopped");
     }
 
     public synchronized void waitForExit()
@@ -81,6 +85,20 @@ public class Controller
             {
             }
         }
+    }
+
+    public synchronized void hookShutdown()
+    {
+        // This will hook an event to stop the controller when the JVM is shutting down
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run()
+            {
+                Controller.this.stop();
+            }
+        });
+
+        LOG.debug("Hooked runtime shutdown event");
     }
 
     public synchronized Service getServiceByName(String serviceName)
