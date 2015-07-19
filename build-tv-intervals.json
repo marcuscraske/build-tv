@@ -1,0 +1,24 @@
+{
+    "intervals" :
+    [
+        {
+            "name"          : "Standup Indicator",
+            "priority"      : 100,
+            "startHour"     : 09,
+            "startMinute"   : 45,
+            "endHour"       : 10,
+            "endMinute"     : 00,
+            "pattern"       : "standup"
+        },
+        {
+            "name"          : "Build Indicator Off",
+            "priority"      : 200,
+            "startHour"     : 18,
+            "startMinute"   : 0,
+            "endHour"       : 08,
+            "endMinute"     : 00,
+            "pattern"       : "shutdown"
+        }
+    ]
+}
+

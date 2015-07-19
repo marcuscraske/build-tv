@@ -15,7 +15,7 @@ public class Controller
 {
     private static final Logger LOG = LogManager.getLogger(Controller.class);
 
-    private static final String SETTINGS_PATH = "settings.kv";
+    private static final String SETTINGS_PATH = "daemon-settings.kv";
 
     private boolean running;
     private HashMap<String, Service> services;
@@ -110,7 +110,14 @@ public class Controller
 
     public synchronized Service getServiceByName(String serviceName)
     {
-        return services.get(serviceName);
+        Service service = services.get(serviceName);
+
+        if (service == null)
+        {
+            throw new RuntimeException("Service '" + serviceName + "' missing");
+        }
+
+        return service;
     }
 
     public synchronized String getSetting(String key, boolean exceptionOnMissing)

@@ -23,13 +23,12 @@ public class JenkinsService implements Service
     }
 
     @Override
-    public void start(Controller controller)
+    public synchronized void start(Controller controller)
     {
         // Fetch required settings
         String jenkinsBaseUrl = controller.getSetting("jenkins.base", true);
         String jenkinsJobs = controller.getSetting("jenkins.jobs", true);
         long jenkinsPollRate = controller.getSettingLong("jenkins.poll-rate-ms", true);
-        String ledDaemonUrl = controller.getSetting("led-daemon.url", true);
 
         // Make sure URL ends with trailing /
         if (!jenkinsBaseUrl.endsWith("/"))
@@ -49,12 +48,12 @@ public class JenkinsService implements Service
         }
 
         // Start thread
-        jenkinsStatusThread = new JenkinsStatusThread(ledDaemonUrl, jenkinsPollRate, jobUrls.toArray(new String[jobUrls.size()]));
+        jenkinsStatusThread = new JenkinsStatusThread(controller, jenkinsPollRate, jobUrls.toArray(new String[jobUrls.size()]));
         jenkinsStatusThread.start();
     }
 
     @Override
-    public void stop(Controller controller)
+    public synchronized void stop(Controller controller)
     {
         if (jenkinsStatusThread != null)
         {

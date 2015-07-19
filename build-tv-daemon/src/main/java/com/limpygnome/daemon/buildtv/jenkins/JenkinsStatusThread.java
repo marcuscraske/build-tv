@@ -1,20 +1,19 @@
 package com.limpygnome.daemon.buildtv.jenkins;
 
+import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.buildtv.led.LedPattern;
+import com.limpygnome.daemon.buildtv.led.PatternSource;
+import com.limpygnome.daemon.buildtv.service.LedTimeService;
 import com.limpygnome.daemon.common.ExtendedThread;
 import com.limpygnome.daemon.util.Streams;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
-import java.net.ConnectException;
 
 /**
  * Checks build status against list of projects on Jenkins.
@@ -23,29 +22,36 @@ public class JenkinsStatusThread extends ExtendedThread
 {
     private static final Logger LOG = LogManager.getLogger(JenkinsStatusThread.class);
 
-    private String ledDaemonUrl;
+    private LedTimeService ledTimeService;
     private long jenkinsPollRate;
     private String[] jenkinsJobStatusUrls;
+    private PatternSource patternSource;
 
-    public JenkinsStatusThread(String ledDaemonUrl, long jenkinsPollRate, String[] jenkinsJobStatusUrls)
+    public JenkinsStatusThread(Controller controller, long jenkinsPollRate, String[] jenkinsJobStatusUrls)
     {
-        this.ledDaemonUrl = ledDaemonUrl;
         this.jenkinsJobStatusUrls = jenkinsJobStatusUrls;
         this.jenkinsPollRate = jenkinsPollRate;
+        this.patternSource = new PatternSource("Jenkins Status", LedPattern.BUILD_UNKNOWN, 1);
+
+        // Fetch LED time service and add our pattern source
+        this.ledTimeService = (LedTimeService) controller.getServiceByName("led-time");
     }
 
     @Override
     public void run()
     {
+        // Add our pattern to LED time service
+        ledTimeService.addPatternSource(patternSource);
+
+        // Run until thread exits, polling Jenkins for status and updating pattern source
+        LedPattern ledPattern;
         while (!isExit())
         {
             try
             {
                 // Poll Jenkins
-                LedPattern ledPattern = pollJenkins();
-
-                // Update build indicator LED strip
-                changePattern(ledPattern);
+                ledPattern = pollJenkins();
+                patternSource.setCurrentLedPattern(ledPattern);
 
                 // Wait a while...
                 Thread.sleep(jenkinsPollRate);
@@ -55,6 +61,9 @@ public class JenkinsStatusThread extends ExtendedThread
                 LOG.error("Exception during Jenkins status thread", e);
             }
         }
+
+        // Remove our pattern from LED time service
+        ledTimeService.removePatternSource(patternSource);
     }
 
     private LedPattern pollJenkins()
@@ -135,35 +144,6 @@ public class JenkinsStatusThread extends ExtendedThread
         }
     }
 
-    private void changePattern(LedPattern pattern)
-    {
-        try
-        {
-            // Build request body
-            JSONObject jsonRoot = new JSONObject();
-            jsonRoot.put("pattern", pattern.PATTERN);
 
-            String json = jsonRoot.toJSONString();
-
-            // Make request
-            HttpClient httpClient = HttpClients.createMinimal();
-
-            HttpPost httpPost = new HttpPost(ledDaemonUrl);
-            httpPost.setHeader("Content-type", "application/json");
-            httpPost.setEntity(new StringEntity(json));
-
-            httpClient.execute(httpPost);
-
-            LOG.debug("LED daemon request sent - pattern: {}", pattern.PATTERN);
-        }
-        catch (ConnectException e)
-        {
-            LOG.error("Failed to connect to LED daemon - url: {}, pattern: {}", ledDaemonUrl, pattern.PATTERN);
-        }
-        catch (Exception e)
-        {
-            LOG.error("Failed to change LED pattern", e);
-        }
-    }
 
 }

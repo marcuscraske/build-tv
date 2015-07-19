@@ -10,7 +10,12 @@ public enum LedPattern
     BUILD_PROGRESS(2, "build-progress"),
     BUILD_UNSTABLE(3, "build-unstable"),
     BUILD_FAILURE(4, "build-failure"),
-    JENKINS_UNAVAILABLE(5, "jenkins-unavailable")
+    JENKINS_UNAVAILABLE(5, "jenkins-unavailable"),
+
+    STARTUP(0, "startup"),
+    SHUTDOWN(999, "shutdown"),
+
+    STANDUP(500, "standup")
     ;
 
     public final int PRIORITY;
@@ -20,6 +25,19 @@ public enum LedPattern
     {
         this.PRIORITY = priority;
         this.PATTERN = pattern;
+    }
+
+    public static LedPattern getByName(String name)
+    {
+        for (LedPattern ledPattern : values())
+        {
+            if (ledPattern.PATTERN.equals(name))
+            {
+                return ledPattern;
+            }
+        }
+
+        throw new RuntimeException("Unknown LED pattern '" + name + "'");
     }
 
 }
