@@ -15,6 +15,7 @@
         <module>neopixel-ws281x-lib</module>
         <module>neopixel-ws281x-daemon</module>
         <module>build-tv-daemon</module>
+        <module>screen-daemon</module>
     </modules>
 
     <build>
@@ -35,7 +36,34 @@
     </build>
 
     <dependencies>
+
+        <!-- JSON Serialization -->
+		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1.1</version>
+		</dependency>
 	
+        <!-- Joda -->
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.7</version>
+		</dependency>
+
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.2</version>
+        </dependency>
+
+	    <!-- JUnit -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

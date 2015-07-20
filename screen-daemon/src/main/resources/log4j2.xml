@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{YYYY-MM-dd HH:mm:ss} : %-24thread : %-5level : %-65c : %msg%n" />
+        </Console>
+        <RollingFile name="LocalFile" fileName="logs/screen-daemon.log" filePattern="logs/screen-daemon-%d{yyyy-MM-dd}-%i.log" append="false">
+            <PatternLayout pattern="%d{YYYY-MM-dd HH:mm:ss} : %-24thread : %-5level : %-65c : %msg%n" />
+            <Policies>
+                <SizeBasedTriggeringPolicy size="1 MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="4"/>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root level="error">
+        </Root>
+        <Logger name="com.limpygnome.daemon" level="debug">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="LocalFile" />
+        </Logger>
+    </Loggers>
+</Configuration>

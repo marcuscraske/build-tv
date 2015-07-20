@@ -5,7 +5,7 @@ import com.limpygnome.daemon.buildtv.led.LedPattern;
 import com.limpygnome.daemon.buildtv.led.PatternSource;
 import com.limpygnome.daemon.buildtv.service.LedTimeService;
 import com.limpygnome.daemon.common.ExtendedThread;
-import com.limpygnome.daemon.util.Streams;
+import com.limpygnome.daemon.util.StreamUtil;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -100,7 +100,7 @@ public class JenkinsStatusThread extends ExtendedThread
 
             // Execute and read response
             HttpResponse httpResponse = httpClient.execute(httpGet);
-            String response = Streams.readInputStream(httpResponse.getEntity().getContent(), 64000);
+            String response = StreamUtil.readInputStream(httpResponse.getEntity().getContent(), 64000);
 
             JSONObject jsonRoot;
 

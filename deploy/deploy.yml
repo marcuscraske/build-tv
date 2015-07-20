@@ -10,3 +10,4 @@
     - { role: neopixel-ws281x-lib, tags: ["neopixel-lib"] }
     - { role: neopixel-ws281x-daemon, tags: ["neopixel-daemon"] }
     - { role: build-tv-daemon, tags: ["build-tv-daemon"] }
+    - { role: screen-daemon, tags: ["screen-daemon"] }

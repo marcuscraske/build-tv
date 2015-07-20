@@ -1,7 +1,8 @@
-package com.limpygnome.daemon.buildtv.service;
+package com.limpygnome.daemon.screen.service;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Service;
+import com.limpygnome.daemon.util.EnvironmentUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,9 +12,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by limpygnome on 19/07/15.
  */
-public class ScreenDisplayService implements Service
+public class ScreenService implements Service
 {
-    private static final Logger LOG = LogManager.getLogger(ScreenDisplayService.class);
+    private static final Logger LOG = LogManager.getLogger(ScreenService.class);
 
     private static final long ACTION_TIMEOUT_MS = 10000;
 
@@ -21,7 +22,7 @@ public class ScreenDisplayService implements Service
     private boolean devMachine;
     private boolean screenOn;
 
-    public ScreenDisplayService()
+    public ScreenService()
     {
         this.lastAction = 0;
         this.devMachine = false;
@@ -32,8 +33,7 @@ public class ScreenDisplayService implements Service
     public synchronized void start(Controller controller)
     {
         // Check if running on dev machine
-        // TODO: horrible hack...
-        devMachine = new File("pom.xml").exists();
+        devMachine = EnvironmentUtil.isDevEnvironment();
 
         if (devMachine)
         {
@@ -55,14 +55,15 @@ public class ScreenDisplayService implements Service
         {
             LOG.debug("Turning screen on...");
 
-//            exec("xset dpms force on");
-//            exec("xset -dpms");
-//            exec("xset s off");
-//            exec("xset s noblank");
+            exec("xset dpms force on");
+            exec("xset -dpms");
+            exec("xset s off");
+            exec("xset s noblank");
 
-            // refer to: https://93.93.130.214/forums/viewtopic.php?f=28&t=74573
-            exec("/opt/vc/bin/tvservice -p");
-            exec("fbset -accel true");
+            // The below is great, except it really does disable HDMI and a TV will say no signal
+//            // refer to: https://93.93.130.214/forums/viewtopic.php?f=28&t=74573
+//            exec("/opt/vc/bin/tvservice -p");
+//            exec("fbset -accel true");
 
             this.screenOn = true;
         }
@@ -74,9 +75,10 @@ public class ScreenDisplayService implements Service
         {
             LOG.debug("Turning screen off...");
 
-//            exec("xset s reset");
-//            exec("xset dpms force off");
-            exec("/opt/vc/bin/tvservice -o");
+            exec("xset s reset");
+            exec("xset dpms force off");
+
+//            exec("/opt/vc/bin/tvservice -o");
 
             this.screenOn = false;
         }

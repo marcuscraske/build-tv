@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 /**
  * Created by limpygnome on 19/07/15.
  */
-public class Streams
+public class StreamUtil
 {
     /**
      * Reads input stream into a String and closes the stream.

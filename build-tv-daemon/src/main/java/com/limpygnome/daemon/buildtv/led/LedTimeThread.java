@@ -1,11 +1,7 @@
 package com.limpygnome.daemon.buildtv.led;
 
-import com.limpygnome.daemon.buildtv.service.ScreenDisplayService;
 import com.limpygnome.daemon.common.ExtendedThread;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClients;
+import com.limpygnome.daemon.util.RestUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
@@ -21,14 +17,14 @@ public class LedTimeThread extends ExtendedThread
 {
     private static final Logger LOG = LogManager.getLogger(LedTimeThread.class);
 
-    private ScreenDisplayService screenDisplayService;
     private String ledDaemonUrl;
+    private String screenDaemonUrl;
     private HashMap<String, PatternSource> patternSources;
 
-    public LedTimeThread(ScreenDisplayService screenDisplayService, String ledDaemonUrl)
+    public LedTimeThread(String ledDaemonUrl, String screenDaemonUrl)
     {
-        this.screenDisplayService = screenDisplayService;
         this.ledDaemonUrl = ledDaemonUrl;
+        this.screenDaemonUrl = screenDaemonUrl;
         this.patternSources = new HashMap<>();
     }
 
@@ -77,11 +73,11 @@ public class LedTimeThread extends ExtendedThread
                     ((IntervalPattern) currentPatternSource).isScreenOff()
                 )
             {
-                screenDisplayService.screenOff();
+                changeScreen(false);
             }
             else
             {
-                screenDisplayService.screenOn();
+                changeScreen(true);
             }
 
             // Sleep for a while
@@ -120,20 +116,12 @@ public class LedTimeThread extends ExtendedThread
     {
         try
         {
-            // Build request body
+            // Build JSON object
             JSONObject jsonRoot = new JSONObject();
             jsonRoot.put("pattern", pattern.PATTERN);
 
-            String json = jsonRoot.toJSONString();
-
             // Make request
-            HttpClient httpClient = HttpClients.createMinimal();
-
-            HttpPost httpPost = new HttpPost(ledDaemonUrl);
-            httpPost.setHeader("Content-type", "application/json");
-            httpPost.setEntity(new StringEntity(json));
-
-            httpClient.execute(httpPost);
+            RestUtil.httpPostRequest(ledDaemonUrl, jsonRoot);
 
             LOG.debug("LED daemon update request sent - pattern: {}", pattern.PATTERN);
         }
@@ -143,7 +131,31 @@ public class LedTimeThread extends ExtendedThread
         }
         catch (Exception e)
         {
-            LOG.error("Failed to change LED pattern", e);
+            LOG.error("Failed to make LED daemon request", e);
+        }
+    }
+
+    private void changeScreen(boolean screenOn)
+    {
+        try
+        {
+            // Build JSON object
+            JSONObject jsonRoot = new JSONObject();
+            // TODO: turn into enum...
+            jsonRoot.put("action", screenOn ? "on" : "off");
+
+            // Make request
+            RestUtil.httpPostRequest(screenDaemonUrl, jsonRoot);
+
+            LOG.debug("Screen action sent - on: {}", screenOn);
+        }
+        catch (ConnectException e)
+        {
+            LOG.error("Failed to connect to screen daemon - url: {}", ledDaemonUrl);
+        }
+        catch (Exception e)
+        {
+            LOG.error("Failed to make screen daemon request", e);
         }
     }
 

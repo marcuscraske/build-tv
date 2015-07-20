@@ -2,6 +2,7 @@ package com.limpygnome.daemon.ws281x.service;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Service;
+import com.limpygnome.daemon.util.EnvironmentUtil;
 import com.limpygnome.daemon.ws281x.led.pattern.build.*;
 import com.limpygnome.daemon.ws281x.led.pattern.daemon.*;
 import com.limpygnome.daemon.ws281x.led.Pattern;
@@ -36,15 +37,23 @@ public class LedService implements Service
     public synchronized void start(Controller controller)
     {
         // Start LED controller
-        this.ledController = new LedController(
-            controller.getSettingInt("led-daemon.leds"),
-            controller.getSettingInt("led-daemon.pin"),
-            controller.getSettingInt("led-daemon.freq"),
-            controller.getSettingInt("led-daemon.dma"),
-            controller.getSettingInt("led-daemon.brightness"),
-            controller.getSettingInt("led-daemon.pwm_channel"),
-            controller.getSettingBoolean("led-daemon.invert")
-        );
+        if (EnvironmentUtil.isDevEnvironment())
+        {
+            LOG.warn("Dev environment detected, stubbing LED controller...");
+            this.ledController = null;
+        }
+        else
+        {
+            this.ledController = new LedController(
+                    controller.getSettingInt("led-daemon.leds"),
+                    controller.getSettingInt("led-daemon.pin"),
+                    controller.getSettingInt("led-daemon.freq"),
+                    controller.getSettingInt("led-daemon.dma"),
+                    controller.getSettingInt("led-daemon.brightness"),
+                    controller.getSettingInt("led-daemon.pwm_channel"),
+                    controller.getSettingBoolean("led-daemon.invert")
+            );
+        }
 
         // Register all the patterns!
         patterns.put("build-unknown", new BuildUnknown());

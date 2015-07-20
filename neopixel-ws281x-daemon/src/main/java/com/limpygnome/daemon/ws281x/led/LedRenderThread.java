@@ -37,7 +37,14 @@ public class LedRenderThread extends ExtendedThread
 
         try
         {
-            currentPattern.render(this, ledController);
+            if (ledController != null)
+            {
+                currentPattern.render(this, ledController);
+            }
+            else
+            {
+                LOG.warn("Unable to render LED pattern, no LED controller - {}", currentPattern);
+            }
         }
         catch (Exception e)
         {

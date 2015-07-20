@@ -4,7 +4,6 @@ import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.buildtv.service.IntervalLedService;
 import com.limpygnome.daemon.buildtv.service.JenkinsService;
 import com.limpygnome.daemon.buildtv.service.LedTimeService;
-import com.limpygnome.daemon.buildtv.service.ScreenDisplayService;
 
 /**
  * Created by limpygnome on 19/07/15.
@@ -13,17 +12,14 @@ public class Program
 {
     public static void main(String[] args)
     {
-        Controller controller = new Controller();
+        Controller controller = new Controller("build-tv");
 
         // Add services
         controller.add("led-time", new LedTimeService());
         controller.add("jenkins-status", new JenkinsService());
         controller.add("interval-leds", new IntervalLedService());
-        controller.add("screen", new ScreenDisplayService());
 
         // Start forever...
-        controller.hookShutdown();
-        controller.start();
-        controller.waitForExit();
+        controller.hookAndStartAndWaitForExit();
     }
 }

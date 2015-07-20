@@ -17,12 +17,14 @@ public class Controller
 
     private static final String SETTINGS_PATH = "config/daemon-settings.kv";
 
+    private String controllerName;
     private boolean running;
     private HashMap<String, Service> services;
     private HashMap<String, String> settings;
 
-    public Controller()
+    public Controller(String controllerName)
     {
+        this.controllerName = controllerName;
         this.services = new HashMap<>();
         this.settings = new HashMap<>();
     }
@@ -106,6 +108,18 @@ public class Controller
         });
 
         LOG.debug("Hooked runtime shutdown event");
+    }
+
+    public synchronized void hookAndStartAndWaitForExit()
+    {
+        hookShutdown();
+        start();
+        waitForExit();
+    }
+
+    public String getControllerName()
+    {
+        return controllerName;
     }
 
     public synchronized Service getServiceByName(String serviceName)
