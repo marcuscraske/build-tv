@@ -55,15 +55,15 @@ public class ScreenService implements Service
         {
             LOG.debug("Turning screen on...");
 
-            exec("xset dpms force on");
-            exec("xset -dpms");
-            exec("xset s off");
-            exec("xset s noblank");
+//            exec("xset dpms force on");
+//            exec("xset -dpms");
+//            exec("xset s off");
+//            exec("xset s noblank");
 
             // The below is great, except it really does disable HDMI and a TV will say no signal
 //            // refer to: https://93.93.130.214/forums/viewtopic.php?f=28&t=74573
-//            exec("/opt/vc/bin/tvservice -p");
-//            exec("fbset -accel true");
+            exec("/opt/vc/bin/tvservice -p");
+            exec("fbset -accel true");
 
             this.screenOn = true;
         }
@@ -75,10 +75,10 @@ public class ScreenService implements Service
         {
             LOG.debug("Turning screen off...");
 
-            exec("xset s reset");
-            exec("xset dpms force off");
+//            exec("xset s reset");
+//            exec("xset dpms force off");
 
-//            exec("/opt/vc/bin/tvservice -o");
+            exec("/opt/vc/bin/tvservice -o");
 
             this.screenOn = false;
         }

@@ -1,0 +1,13 @@
+pi:
+- look into how we can login as pi without x session
+
+deploy:
+- copy .xinitrc and other home files -> rpi-deploy repo
+- could do with override settings files
+- setup proxy
+- pretty sure we changed some x config files for the screen blanking
+- install matchbox window manager package
+- create alternate user, key only
+- disable ssh for pi user
+- disable password logon for ssh
+

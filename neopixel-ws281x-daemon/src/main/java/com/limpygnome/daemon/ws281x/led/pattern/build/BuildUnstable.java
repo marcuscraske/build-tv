@@ -13,6 +13,6 @@ public class BuildUnstable implements Pattern
     @Override
     public void render(LedRenderThread ledRenderThread, LedController ledController) throws InterruptedException
     {
-        GenericKnightRiderPattern.renderKnightRiderEffect(ledRenderThread, ledController, 40, 255, 255, 0);
+        GenericKnightRiderPattern.renderKnightRiderEffect(ledRenderThread, ledController, 30, 255, 255, 0);
     }
 }

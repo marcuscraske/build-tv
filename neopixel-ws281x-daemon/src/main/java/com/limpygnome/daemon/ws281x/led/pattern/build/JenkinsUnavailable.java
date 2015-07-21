@@ -13,6 +13,6 @@ public class JenkinsUnavailable implements Pattern
     @Override
     public void render(LedRenderThread ledRenderThread, LedController ledController) throws InterruptedException
     {
-        GenericPulsePattern.pulse(ledRenderThread, ledController, 255, 0, 0, 100, 0.05f);
+        GenericPulsePattern.pulse(ledRenderThread, ledController, 255, 0, 0, 40, 0.05f);
     }
 }

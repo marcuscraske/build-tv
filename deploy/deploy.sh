@@ -29,5 +29,12 @@ EXTRA_VARS+="ws281x_daemon=\"${PATH_NEOPIXEL_WS281X_DAEMON}\" "
 EXTRA_VARS+="build_tv_daemon=\"${PATH_BUILDTV}\" "
 EXTRA_VARS+="screen_daemon=\"${PATH_SCREEN}\" "
 
-# Run deployment
-ansible-playbook deploy.yml -v -i hosts_pi --extra-vars "${EXTRA_VARS}" --tags "config,neopixel-lib,neopixel-daemon,build-tv-daemon,screen-daemon"
+# Build tags
+DEPLOY_TAGS+="config,"
+DEPLOY_TAGS+="neopixel-lib,"
+DEPLOY_TAGS+="neopixel-daemon,"
+DEPLOY_TAGS+="build-tv-daemon,"
+DEPLOY_TAGS+="screen-daemon"
+
+# Run deployment"
+ansible-playbook deploy.yml -v -i hosts_pi --extra-vars "${EXTRA_VARS}" --tags "${DEPLOY_TAGS}"

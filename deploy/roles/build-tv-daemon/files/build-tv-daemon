@@ -1,6 +1,4 @@
 #! /bin/sh
-# /etc/init.d/build-tv-daemon
-#
 
 # **********************************************************************************************************************
 # Daemon configuration
@@ -14,26 +12,36 @@ DAEMON_WORKING_DIR="/rpi-misc"
 # Main
 # **********************************************************************************************************************
 
+start()
+{
+    echo "Starting ${DAEMON_NAME} ..."
+
+    start-stop-daemon --start --quiet --make-pidfile --pidfile /var/run/${DAEMON_NAME}.pid \
+                --background \
+                --chdir ${DAEMON_WORKING_DIR} \
+                --exec /usr/bin/java -- -jar ${DAEMON_JAR}
+}
+
+stop()
+{
+    echo "Stopping ${DAEMON_NAME} ..."
+
+    start-stop-daemon --stop --quiet --oknodo --pidfile /var/run/${DAEMON_NAME}.pid
+}
+
 case "$1" in
     start)
-
-        echo "Starting ${DAEMON_NAME} ..."
-
-        start-stop-daemon --start --quiet --make-pidfile --pidfile /var/run/${DAEMON_NAME}.pid \
-                    --background \
-                    --chdir ${DAEMON_WORKING_DIR} \
-                    --exec /usr/bin/java -- -jar ${DAEMON_JAR}
-
-      ;;
+        start
+        ;;
     stop)
-
-        echo "Stopping ${DAEMON_NAME} ..."
-
-        start-stop-daemon --stop --quiet --oknodo --pidfile /var/run/${DAEMON_NAME}.pid
-
+        stop
+        ;;
+    restart)
+        stop
+        start
         ;;
     *)
-        echo "Usage: /etc/init.d/${DAEMON_NAME} {start|stop}"
+        echo "Usage: /etc/init.d/${DAEMON_NAME} {start|stop|restart}"
         exit 1
         ;;
 esac

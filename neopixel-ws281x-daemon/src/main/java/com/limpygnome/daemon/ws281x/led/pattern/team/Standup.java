@@ -21,7 +21,7 @@ public class Standup implements Pattern
         while (!ledRenderThread.isExit())
         {
             GenericFlyInPattern.flyIn(ledRenderThread, ledController, red, green, blue, 40);
-            GenericPulsePattern.pulse(ledRenderThread, ledController, red, green, blue, 100, 0.05f, 100);
+            GenericPulsePattern.pulse(ledRenderThread, ledController, red, green, blue, 40, 0.05f, 40);
         }
     }
 }

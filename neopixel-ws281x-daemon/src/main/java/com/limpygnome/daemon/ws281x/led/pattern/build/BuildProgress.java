@@ -13,6 +13,6 @@ public class BuildProgress implements Pattern
     @Override
     public void render(LedRenderThread ledRenderThread, LedController ledController) throws InterruptedException
     {
-        GenericKnightRiderPattern.renderKnightRiderEffect(ledRenderThread, ledController, 60, 0, 0, 255);
+        GenericKnightRiderPattern.renderKnightRiderEffect(ledRenderThread, ledController, 30, 0, 0, 255);
     }
 }

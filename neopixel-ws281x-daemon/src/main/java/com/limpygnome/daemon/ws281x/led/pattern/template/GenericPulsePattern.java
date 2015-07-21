@@ -31,7 +31,7 @@ public class GenericPulsePattern
                              long frameDelay, float pulseStepMultiplier, int maxIterations) throws InterruptedException
     {
         final float PULSE_MAX = 1.0f;
-        final float PULSE_MIN = 0.4f;
+        final float PULSE_MIN = 0.1f;
 
         // Pulse RGB
         boolean positive = true;

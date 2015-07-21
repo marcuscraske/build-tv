@@ -13,6 +13,6 @@ public class BuildFailure implements Pattern
     @Override
     public void render(LedRenderThread ledRenderThread, LedController ledController) throws InterruptedException
     {
-        GenericKnightRiderPattern.renderKnightRiderEffect(ledRenderThread, ledController, 40, 255, 0, 0);
+        GenericKnightRiderPattern.renderKnightRiderEffect(ledRenderThread, ledController, 20, 255, 0, 0);
     }
 }
