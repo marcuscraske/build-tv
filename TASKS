@@ -10,4 +10,6 @@ deploy:
 - create alternate user, key only
 - disable ssh for pi user
 - disable password logon for ssh
+- java oracle 8
+
 
