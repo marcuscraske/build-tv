@@ -1,3 +1,13 @@
+- name: Install SWIG
+  apt:  name=swig
+        state=present
+  sudo: true
+
+- name: Install GCC
+  apt:  name=gcc
+        state=present
+  sudo: true
+
 - name: Check Library Files Exist
   stat: path={{ deploy_path }}/neopixel-ws281x-lib
   register: library_files_exist

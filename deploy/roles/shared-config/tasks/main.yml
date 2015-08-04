@@ -1,2 +1,11 @@
+- name: Creating deployment directory
+  file: path={{ deploy_path }}
+        state=directory
+        owner=monitor
+        group=monitor
+  sudo: true
+
 - name: Copying Shared Configuration
-  copy: src={{ shared_config }} dest={{ deploy_path }} mode=0777
+  copy: src={{ shared_config }}
+        dest={{ deploy_path }}
+        mode=0777

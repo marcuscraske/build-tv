@@ -6,6 +6,7 @@
     - shell: hostname
 
   roles:
+    - { role: setup-pi, tags: ["setup-pi"] }
     - { role: shared-config, tags: ["config"] }
     - { role: neopixel-ws281x-lib, tags: ["neopixel-lib"] }
     - { role: neopixel-ws281x-daemon, tags: ["neopixel-daemon"] }

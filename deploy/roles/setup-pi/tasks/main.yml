@@ -1,0 +1,105 @@
+- name: Copying proxy setting
+  copy: src="environment"
+        dest="/etc/environment"
+        mode=0777
+  sudo: true
+
+- name: Updating apt-get cache
+  apt:  update_cache=yes
+  sudo: true
+
+- name: Upgrading entire OS
+  apt:  upgrade=full
+  sudo: true
+
+- name: Creating managed user for remote SSH
+  user: name=monitor
+        state=present
+        shell=/bin/bash
+        comment="Account for managed SSH access"
+        groups="sudo"
+        createhome=yes
+        append=no
+  sudo: true
+
+- name: Creating managed user for wallboard
+  user: name=wallboard
+        state=present
+        shell=/bin/bash
+        comment="Account for displaying wallboard"
+        createhome=yes
+        append=no
+  sudo: true
+
+- name: Installing mDNS for hostname resolution
+  apt:  name=avahi-daemon
+        state=present
+  sudo: true
+
+- name: Copying splash screen image
+  copy: src="splash.png"
+        dest="/etc/splash.png"
+  sudo: true
+
+- name: Installing FBI for custom splash screen
+  apt:  name=fbi
+        state=present
+  sudo: true
+
+- name: Copying daemon file for splash screen
+  copy: src="aaasplashscreen"
+        dest="/etc/init.d/aaasplashscreen"
+        mode="0777"
+  sudo: true
+
+- name: Registering splash screen service
+  shell: "update-rc.d aaasplashscreen defaults"
+  sudo: true
+
+- name: Installing X11 utils for xset
+  apt:  name=x11-xserver-utils
+        state=present
+  sudo: true
+
+- name: Installing Matchbox window manager
+  apt:  name=matchbox-desktop
+        state=present
+  sudo: true
+
+- name: Installing Chromium browser
+  apt:  name=chromium-browser
+        state=present
+  sudo: true
+
+- name: Installing Oracle JDK 8
+  apt:  name=oracle-java8-jdk
+        state=present
+  sudo: true
+
+- name: Setting up .xinitrc for wallboard user
+  copy: src=".xinitrc"
+        dest="/home/wallboard/.xinitrc"
+        mode=0755
+        owner=wallboard
+        group=wallboard
+  sudo: true
+
+- name: Copying wallboard properties
+  copy: src="wallboard.properties"
+        dest="/home/wallboard/wallboard.properties"
+        mode=0700
+        owner=wallboard
+        group=wallboard
+  sudo: true
+
+- name: Setting up automatic login of wallboard user
+  script: automatic-login.sh wallboard
+  sudo: true
+
+- name: Disabling blanking of monitor
+  script: disable-blanking.sh
+  sudo: true
+
+- name: Setting up bashrc
+  script: setup_bashrc.sh
+  sudo: true

@@ -16,8 +16,8 @@
             "priority"      : 200,
             "startHour"     : 18,
             "startMinute"   : 0,
-            "endHour"       : 08,
-            "endMinute"     : 00,
+            "endHour"       : 18,
+            "endMinute"     : 2,
             "pattern"       : "shutdown",
             "screenOff"     : true
         }

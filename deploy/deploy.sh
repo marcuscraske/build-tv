@@ -30,6 +30,7 @@ EXTRA_VARS+="build_tv_daemon=\"${PATH_BUILDTV}\" "
 EXTRA_VARS+="screen_daemon=\"${PATH_SCREEN}\" "
 
 # Build tags
+DEPLOY_TAGS+="setup-pi,"
 DEPLOY_TAGS+="config,"
 DEPLOY_TAGS+="neopixel-lib,"
 DEPLOY_TAGS+="neopixel-daemon,"
