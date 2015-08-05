@@ -2,8 +2,8 @@
 
 [pi2]
 #pi2-team-blue
-10.0.0.165
+pi2-team-7
 
 [pi2:vars]
 deploy_path=/rpi-misc
-ansible_ssh_user=monitor
+ansible_ssh_user=pi

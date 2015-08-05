@@ -1,5 +1,10 @@
 - name: Copying Build TV JAR
-  copy: src={{ build_tv_daemon }}/target/build-tv-daemon-1.0.jar dest={{ deploy_path }} mode=077
+  copy: src={{ build_tv_daemon }}/target/build-tv-daemon-1.0.jar
+        dest={{ deploy_path }}
+        mode=077
+        owner=wallboard
+        group=wallboard
+  sudo: true
 
 - {
     name:         Setting Up Build TV Daemon,

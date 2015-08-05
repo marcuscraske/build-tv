@@ -8,7 +8,9 @@
   register: service_stopped
 
 - name: Copying Service File to init.d
-  copy: src="../../{{daemon_name}}/files/{{service_name}}" dest="/etc/init.d/{{service_name}}" mode=0777
+  copy: src="../../{{daemon_name}}/files/{{service_name}}"
+        dest="/etc/init.d/{{service_name}}"
+        mode=0777
   sudo: true
 
 - name: Registering Service

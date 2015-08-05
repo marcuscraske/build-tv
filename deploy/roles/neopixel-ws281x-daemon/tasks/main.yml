@@ -1,5 +1,10 @@
 - name: Copying NeoPixel ws281x JAR
-  copy: src={{ ws281x_daemon }}/target/neopixel-ws281x-daemon-1.0.jar dest={{ deploy_path }} mode=077
+  copy: src={{ ws281x_daemon }}/target/neopixel-ws281x-daemon-1.0.jar
+        dest={{ deploy_path }}
+        mode=0775
+        owner=wallboard
+        group=wallboard
+  sudo: true
 
 - {
     name:         Setting Up NeoPixel Daemon,

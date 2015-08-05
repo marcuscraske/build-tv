@@ -12,7 +12,11 @@
   apt:  upgrade=full
   sudo: true
 
-- name: Creating managed user for remote SSH
+- name: Speed up SSH daemon by disabling reverse DNS
+  script: ssh_speedup.sh
+  sudo: true
+
+- name: Creating managed user (monitor) for remote SSH
   user: name=monitor
         state=present
         shell=/bin/bash
@@ -30,6 +34,13 @@
         createhome=yes
         append=no
   sudo: true
+
+- name: Removing default Pi user
+  user: name=pi
+        state=absent
+        remove=yes
+  sudo: true
+  ignore_errors: true
 
 - name: Installing mDNS for hostname resolution
   apt:  name=avahi-daemon

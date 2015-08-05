@@ -9,3 +9,6 @@
   copy: src={{ shared_config }}
         dest={{ deploy_path }}
         mode=0777
+        owner=monitor
+        group=monitor
+  sudo: true

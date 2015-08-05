@@ -1,5 +1,10 @@
 - name: Copying Screen Daemon JAR
-  copy: src={{ screen_daemon }}/target/screen-daemon-1.0.jar dest={{ deploy_path }} mode=0777
+  copy: src={{ screen_daemon }}/target/screen-daemon-1.0.jar
+        dest={{ deploy_path }}
+        mode=0777
+        owner=wallboard
+        group=wallboard
+  sudo: true
 
 - {
     name:         Setting Up Screen Daemon,
