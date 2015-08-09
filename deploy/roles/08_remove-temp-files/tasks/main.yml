@@ -1,0 +1,3 @@
+- name: Removing temp files
+  command: rm -R {{ files_dest }}
+  sudo: true

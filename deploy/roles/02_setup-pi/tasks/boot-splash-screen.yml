@@ -1,0 +1,16 @@
+- name: Copying splash screen image
+  command: cp "{{ files_dest }}/boot-splash-screen/splash.png" "/etc/splash.png"
+  sudo: true
+
+- name: Installing FBI for custom splash screen
+  apt:  name=fbi
+        state=present
+  sudo: true
+
+- name: Copying daemon file for splash screen
+  command: cp "{{ files_dest }}/boot-splash-screen/aaasplashscreen" "/etc/init.d/aaasplashscreen"
+  sudo: true
+
+- name: Registering splash screen service
+  shell: "update-rc.d aaasplashscreen defaults"
+  sudo: true

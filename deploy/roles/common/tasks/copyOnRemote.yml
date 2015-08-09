@@ -1,0 +1,9 @@
+- name: Syncing remote files...
+  command: rsync "{{ src }}" "{{ dest }}"
+
+- name: Setting owner/group...
+  command: chown -R {{ owner}}:{{ group }} {{ dest }}
+
+- name: Setting permissions...
+  command: chmod -R  {{ perms }} {{ dest }}
+  when: perms is defined

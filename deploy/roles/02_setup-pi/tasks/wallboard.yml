@@ -1,0 +1,60 @@
+- name: Creating managed user for wallboard
+  user: name=wallboard
+        state=present
+        shell=/bin/bash
+        comment="Account for displaying wallboard"
+        createhome=yes
+        append=no
+  sudo: true
+
+- name: Installing X11 utils for xset
+  apt:  name=x11-xserver-utils
+        state=present
+  sudo: true
+
+- name: Installing Matchbox window manager
+  apt:  name=matchbox-desktop
+        state=present
+  sudo: true
+
+- name: Installing Chromium browser
+  apt:  name=chromium-browser
+        state=present
+  sudo: true
+
+- {
+      name:         Setting up .xinitrc for wallboard user,
+      include:      ../../common/tasks/copyOnRemote.yml,
+
+      src:          "{{ files_dest }}/wallboard/.xinitrc",
+      dest:         "/home/wallboard/.xinitrc",
+      owner:        "wallboard",
+      group:        "wallboard",
+      perms:        "755",
+      sudo:         true
+  }
+
+- {
+      name:         Copying wallboard properties,
+      include:      ../../common/tasks/copyOnRemote.yml,
+
+      src:          "{{ files_dest }}/wallboard/wallboard.properties",
+      dest:         "/home/wallboard/wallboard.properties",
+      owner:        "wallboard",
+      group:        "wallboard",
+      perms:        "700",
+
+      sudo:         true
+  }
+
+- name: Setting up automatic login of wallboard user
+  shell: "{{ files_dest }}/setup-scripts/automatic-login.sh wallboard"
+  sudo: true
+
+- name: Disabling blanking of monitor
+  shell: "{{ files_dest }}/setup-scripts/disable-blanking.sh"
+  sudo: true
+
+- name: Setting up bashrc to run x11
+  shell: "{{ files_dest }}/setup-scripts/setup-bashrc-x11.sh"
+  sudo: true

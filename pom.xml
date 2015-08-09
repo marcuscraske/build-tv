@@ -16,6 +16,7 @@
         <module>neopixel-ws281x-daemon</module>
         <module>build-tv-daemon</module>
         <module>screen-daemon</module>
+        <module>deploy</module>
     </modules>
 
     <build>

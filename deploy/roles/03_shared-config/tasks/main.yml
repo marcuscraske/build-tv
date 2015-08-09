@@ -1,0 +1,19 @@
+- name: Creating deployment directory
+  file: path={{ deploy_path }}
+        state=directory
+        owner=monitor
+        group=monitor
+  sudo: true
+
+- {
+      name:         Copying shared configuration,
+      include:      ../../common/tasks/copyOnRemote.yml,
+
+      src:          "{{ files_dest }}/config/",
+      dest:         "{{ deploy_path }}",
+      owner:        "monitor",
+      group:        "monitor",
+      perms:        "777",
+
+      sudo:         true
+  }

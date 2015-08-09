@@ -6,10 +6,12 @@
     - shell: hostname
 
   roles:
-    - { role: setup-pi, tags: ["setup-pi"] }
-    - { role: shared-config, tags: ["config"] }
-    - { role: neopixel-ws281x-lib, tags: ["neopixel-lib"] }
-    - { role: neopixel-ws281x-daemon, tags: ["neopixel-daemon"] }
-    - { role: build-tv-daemon, tags: ["build-tv-daemon"] }
-    - { role: screen-daemon, tags: ["screen-daemon"] }
-    - { role: setup-reboot, tags: ["setup-pi"] }
+    - { role: 01_setup-temp-files, tags: ["setup-files"] }
+    - { role: 02_setup-pi, tags: ["setup-pi"] }
+    - { role: 03_shared-config, tags: ["config"] }
+    - { role: 04_neopixel-ws281x-lib, tags: ["neopixel-lib"] }
+    - { role: 05_neopixel-ws281x-daemon, tags: ["neopixel-daemon"] }
+    - { role: 06_build-tv-daemon, tags: ["build-tv-daemon"] }
+    - { role: 07_screen-daemon, tags: ["screen-daemon"] }
+    - { role: 08_remove-temp-files, tags: ["setup-files"] }
+    - { role: 09_setup-reboot, tags: ["setup-pi"] }

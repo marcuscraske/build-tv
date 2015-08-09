@@ -1,0 +1,63 @@
+- name: Copying proxy setting
+  command: cp "{{ files_dest }}/system/environment" "/etc/environment"
+  sudo: true
+
+- name: Updating apt-get cache
+  apt:  update_cache=yes
+  sudo: true
+
+- name: Upgrading entire OS
+  apt:  upgrade=full
+  sudo: true
+
+- {
+      name:         Update boot configuration,
+      include:      ../../common/tasks/copyOnRemote.yml,
+
+      src:          "{{ files_dest }}/system/config.txt",
+      dest:         "/boot/config.txt",
+      owner:        "root",
+      group:        "root",
+      perms:        "777",
+      sudo:         true
+  }
+
+- name: Optimizing SSH daemon by disabling reverse DNS
+  shell: "{{ files_dest }}/setup-scripts/ssh-speedup.sh"
+  sudo: true
+
+- name: Creating managed user (monitor) for remote SSH
+  user: name=monitor
+        state=present
+        shell=/bin/bash
+        comment="Account for managed SSH access"
+        groups="sudo"
+        createhome=yes
+        append=no
+  sudo: true
+
+- name: Removing default Pi user
+  user: name=pi
+        state=absent
+        remove=yes
+  sudo: true
+  ignore_errors: true
+
+- name: Installing mDNS for hostname resolution
+  apt:  name=avahi-daemon
+        state=present
+  sudo: true
+
+- name: Installing Oracle JDK 8
+  apt:  name=oracle-java8-jdk
+        state=present
+  sudo: true
+
+- name: Setting up boot splash screen...
+  include: boot-splash-screen.yml
+
+- name: Setting up wallboard...
+  include: wallboard.yml
+
+- name: Setting up motd...
+  include: motd.yml
