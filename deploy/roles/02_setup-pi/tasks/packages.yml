@@ -1,0 +1,27 @@
+- name: Updating apt-get cache
+  apt:  update_cache=yes
+  sudo: true
+
+- name: Upgrading entire OS
+  apt:  upgrade=full
+  sudo: true
+
+- name: Installing rsync
+  apt:  name=rsync
+        state=present
+  sudo: true
+
+- name: Installing sudo
+  apt:  name=sudo
+        state=present
+  sudo: true
+
+- name: Installing mDNS for hostname resolution
+  apt:  name=avahi-daemon
+        state=present
+  sudo: true
+
+- name: Installing Oracle JDK 8
+  apt:  name=oracle-java8-jdk
+        state=present
+  sudo: true

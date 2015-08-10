@@ -1,0 +1,43 @@
+- name: Optimizing SSH daemon by disabling reverse DNS
+  shell: "{{ files_dest }}/setup-scripts/ssh-speedup.sh"
+  sudo: true
+
+- name: Creating managed user (monitor) for remote SSH
+  user: name=monitor
+        password={{ monitor_password }}
+        state=present
+        shell=/bin/bash
+        comment="Account for managed SSH access"
+        createhome=yes
+        append=no
+  sudo: true
+
+- name: Configuring managed user for nopasswd sudo access
+  lineinfile: dest=/etc/sudoers.d/monitor
+              owner=root
+              group=root
+              mode=0440
+              line="monitor ALL=(ALL) NOPASSWD:ALL"
+              state=present
+              create=yes
+  sudo: true
+
+- name: Reading SSH keys
+  shell: cat "{{ files_dest }}/system/ssh_keys"
+  register: ssh_keys
+
+- name: Displaying SSH keys for auditing purposes
+  debug: msg="{{ ssh_keys.stdout }}"
+
+- name: Adding SSH key to remote managed user
+  authorized_key: exclusive=yes
+                  key="{{ ssh_keys.stdout }}"
+                  user=monitor
+  sudo: true
+
+- name: Removing default Pi user
+  user: name=pi
+        state=absent
+        remove=yes
+  sudo: true
+  ignore_errors: true

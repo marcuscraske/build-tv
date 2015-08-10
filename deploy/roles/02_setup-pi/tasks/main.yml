@@ -2,16 +2,8 @@
   command: cp "{{ files_dest }}/system/environment" "/etc/environment"
   sudo: true
 
-- name: Updating apt-get cache
-  apt:  update_cache=yes
-  sudo: true
-
-- name: Upgrading entire OS
-  apt:  upgrade=full
-  sudo: true
-
 - {
-      name:         Update boot configuration,
+      name:         Update Pi boot configuration,
       include:      ../../common/tasks/copyOnRemote.yml,
 
       src:          "{{ files_dest }}/system/config.txt",
@@ -22,36 +14,11 @@
       sudo:         true
   }
 
-- name: Optimizing SSH daemon by disabling reverse DNS
-  shell: "{{ files_dest }}/setup-scripts/ssh-speedup.sh"
-  sudo: true
+- name: Setting up packages...
+  include: packages.yml
 
-- name: Creating managed user (monitor) for remote SSH
-  user: name=monitor
-        state=present
-        shell=/bin/bash
-        comment="Account for managed SSH access"
-        groups="sudo"
-        createhome=yes
-        append=no
-  sudo: true
-
-- name: Removing default Pi user
-  user: name=pi
-        state=absent
-        remove=yes
-  sudo: true
-  ignore_errors: true
-
-- name: Installing mDNS for hostname resolution
-  apt:  name=avahi-daemon
-        state=present
-  sudo: true
-
-- name: Installing Oracle JDK 8
-  apt:  name=oracle-java8-jdk
-        state=present
-  sudo: true
+- name: Setting up remote SSH...
+  include: remote-user.yml
 
 - name: Setting up boot splash screen...
   include: boot-splash-screen.yml

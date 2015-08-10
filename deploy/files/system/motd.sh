@@ -1,5 +1,12 @@
 #!/bin/bash
 
+PROCCOUNT=`ps -Afl | wc -l`
+PROCCOUNT=`expr $PROCCOUNT - 5`
+GROUPZ=`groups`
+
+CURR_FREQ=$(echo $(($(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq)/1000)))
+
+
 # The pretty header for MOTD
 IFS='' read -r -d '' MOTD_HEADER <<'EOF'
 |  \                |  \|  \      |  \                                        |  \  |  \
@@ -12,39 +19,36 @@ IFS='' read -r -d '' MOTD_HEADER <<'EOF'
  \$$$$$$$   \$$$$$$  \$$ \$$  \$$$$$$$       \$$  \$$  \$$  \$$$$$$  \$$   \$$ \$$    \$$$$   \$$$$$$  \$$
 EOF
 
+# Print MOTD
+echo -e "\033[1;31m
+${MOTD_HEADER}
 
-let upSeconds="$(/usr/bin/cut -d. -f1 /proc/uptime)"
-let secs=$((${upSeconds}%60))
-let mins=$((${upSeconds}/60%60))
-let hours=$((${upSeconds}/3600%24))
-let days=$((${upSeconds}/86400))
-UPTIME=`printf "%d days, %02dh%02dm%02ds" "$days" "$hours" "$mins" "$secs"`
-TEMP=$(echo $(($(cat /sys/class/thermal/thermal_zone0/temp) / 1000)))
-RECENT_LOGON=$(last -n 5)
-CURR_FREQ=$(echo $(($(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq)/1000)))
-HOSTNAME=$(cat /etc/hostname)
+\033[0;37m+++++++++++++++++: \033[1;37mSystem Stats\033[0;37m :+++++++++++++++++++
+   \033[0;37mHostname \033[0;37m= \033[1;32m`hostname`
+   \033[0;37mDatetime \033[0;37m= \033[1;32m`date +"%A, %e %B %Y, %r"`
+\033[0;35m    \033[0;37mAddress \033[0;37m= \033[1;32m`/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
+\033[0;35m     \033[0;37mKernel \033[0;37m= \033[1;32m`uname -r`
+\033[0;35m     \033[0;37mUptime \033[0;37m= \033[1;32m`uptime | sed 's/.*up ([^,]*), .*/1/'`
+\033[0;35m     \033[0;37mMemory \033[0;37m= \033[1;32m`cat /proc/meminfo | grep MemTotal | awk {'print $2'}` kB
+\033[0;35m   \033[0;37mCPU Temp \033[0;37m= \033[1;32m`expr substr "$(cat /sys/class/thermal/thermal_zone0/temp)" 1 2` c
+\033[0;35m   \033[0;37mCPU Freq \033[0;37m= \033[1;32m${CURR_FREQ} MHz
 
-# get the load averages
-read one five fifteen rest < /proc/loadavg
+\033[0;37m++++++++++++++++++: \033[1;37mUser Stats\033[0;37m :++++++++++++++++++++
+   \033[0;37mUsername \033[0;37m= \033[1;32m`whoami`
+\033[0;37m   \033[0;37mSessions \033[0;37m= \033[1;32m`who | grep $USER | wc -l` of $ENDSESSION MAX
+\033[0;37m  \033[0;37mProcesses \033[0;37m= \033[1;32m$PROCCOUNT of `ulimit -u` MAX
 
-echo "$(tput bold ; tput setaf 1)"
-echo "${MOTD_HEADER}"
+\033[0;37m+++++++++++++++++: \033[1;37mUsers Online\033[0;37m :++++++++++++++++++
+\033[1;32m`who`
 
-echo "$(tput setaf 2)
-${HOSTNAME}
-`uname -srmo`
+\033[0;37m+++++++++++++++++: \033[1;37mRecent Sessions\033[0;37m :+++++++++++++++
+\033[1;32m`last -5`
 
-$(tput setaf 3)
-${RECENT_LOGON}
+\033[0;37m+++++++++++++++++++: \033[1;37mProcesses\033[0;37m :+++++++++++++++++++
+\033[1;32m`ps -eo pcpu,pid,user,args | sort -k 1 -r | head -6`
 
-$(tput setaf 2)
-Date               : `date +"%A, %e %B %Y, %r"`
-Uptime             : ${UPTIME}
-Temperature        : ${TEMP} c
-Current CPU Freq   : ${CURR_FREQ} MHz
-Memory             : `cat /proc/meminfo | grep MemFree | awk {'print $2'}`kB (Free) / `cat /proc/meminfo | grep MemTotal | awk {'print $2'}`kB (Total)
-Load Averages      : ${one}, ${five}, ${fifteen} (1, 5, 15 min)
-Running Processes  : `ps ax | wc -l | tr -d " "`
-IP Addresses       : `/sbin/ifconfig eth0 | /bin/grep "inet addr" | /usr/bin/cut -d ":" -f 2 | /usr/bin/cut -d " " -f 1` and `wget -q -O - http://icanhazip.com/ | tail`
+\033[0;37m++++++++++++++++++++: \033[1;37mStorage\033[0;37m :++++++++++++++++++++
+\033[1;32m`df -h`
 
-$(tput sgr0)"
+\033[0;37m+++++++++++++++++++++++++++++++++++++++++++++++++++\033[1;32m
+"

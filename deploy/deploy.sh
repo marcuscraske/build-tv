@@ -12,6 +12,15 @@ PATH_NEOPIXEL_WS281X_DAEMON="${PATH_BASE}/neopixel-ws281x-daemon"
 PATH_BUILDTV="${PATH_BASE}/build-tv-daemon"
 PATH_SCREEN="${PATH_BASE}/screen-daemon"
 
+# Determine inventory file to use
+INVENTORY="${PATH_FILES_OVERRIDE}/hosts_inventory"
+
+if [[ ! -f "${INVENTORY}" ]]; then
+    echo "Override host inventory missing, using default inventory..."
+    INVENTORY="hosts_inventory"
+fi
+
+echo "Inventory file: ${INVENTORY}"
 
 # Output paths for diagnostics
 echo "Path - deploy:          ${PATH_CURR}"
@@ -45,4 +54,4 @@ DEPLOY_TAGS+="build-tv-daemon,"
 DEPLOY_TAGS+="screen-daemon"
 
 # Run deployment"
-ansible-playbook deploy.yml -v -i hosts_pi --extra-vars "${EXTRA_VARS}" --tags "${DEPLOY_TAGS}"
+ansible-playbook deploy.yml -v -i ${INVENTORY} --extra-vars "${EXTRA_VARS}" --tags "${DEPLOY_TAGS}"
