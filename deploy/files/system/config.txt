@@ -1,8 +1,8 @@
 # This is the boot config, for the Pi, located at /boot/config.txt
 
 # Set screen resolution
-framebuffer_width=1280
-framebuffer_height=720
+framebuffer_width=1920
+framebuffer_height=1080
 
 # Set processor frequency between 400 MHz to 800 MHz; keeps it cool when performance not needed
 arm_freq_min=400
