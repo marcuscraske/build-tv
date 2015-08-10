@@ -4,10 +4,10 @@
         {
             "name"          : "Standup Indicator",
             "priority"      : 100,
-            "startHour"     : 09,
+            "startHour"     : 9,
             "startMinute"   : 45,
             "endHour"       : 10,
-            "endMinute"     : 00,
+            "endMinute"     : 0,
             "pattern"       : "standup",
             "screenOff"     : false
         },
@@ -16,8 +16,8 @@
             "priority"      : 200,
             "startHour"     : 18,
             "startMinute"   : 0,
-            "endHour"       : 18,
-            "endMinute"     : 2,
+            "endHour"       : 8,
+            "endMinute"     : 0,
             "pattern"       : "shutdown",
             "screenOff"     : true
         }

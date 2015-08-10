@@ -10,7 +10,7 @@
       include:      ../../common/tasks/copyOnRemote.yml,
 
       src:          "{{ files_dest }}/config/",
-      dest:         "{{ deploy_path }}",
+      dest:         "{{ deploy_path }}/config/",
       owner:        "monitor",
       group:        "monitor",
       perms:        "777",

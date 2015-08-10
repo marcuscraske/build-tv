@@ -9,6 +9,13 @@
         mode="0777"
   sudo: true
 
+- name: Copying override base files
+  copy: src="{{ files_override }}/{{ override_base }}/"
+          dest="{{ files_dest }}"
+          mode="0777"
+  sudo: true
+  when: files_override is defined and override_base is defined
+
 - name: Copying override files
   copy: src="{{ files_override }}/{{ inventory_hostname }}/"
         dest="{{ files_dest }}"

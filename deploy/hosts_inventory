@@ -1,8 +1,5 @@
-# file: hosts_pi
-
 [pi2]
-#pi2-team-blue
-192.168.0.19        ansible_ssh_user="monitor"      hostname_override="pi2-team-7"      monitor_password="password123"
+pi2-team-example    ansible_ssh_user="monitor"      hostname_override="pi2-team-7"      monitor_password="password123"
 
 [pi2:vars]
 deploy_path=/rpi-misc

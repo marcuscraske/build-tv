@@ -17,6 +17,9 @@
 - name: Setting up packages...
   include: packages.yml
 
+- name: Setting up timezone...
+  include: timezone.yml
+
 - name: Setting up remote SSH...
   include: remote-user.yml
 

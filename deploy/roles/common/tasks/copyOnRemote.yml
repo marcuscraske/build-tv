@@ -1,5 +1,5 @@
 - name: Syncing remote files...
-  command: rsync "{{ src }}" "{{ dest }}"
+  command: rsync "{{ src }}" "{{ dest }}" -r
 
 - name: Setting owner/group...
   command: chown -R {{ owner}}:{{ group }} {{ dest }}
