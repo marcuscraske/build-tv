@@ -25,30 +25,8 @@ public class JenkinsService implements Service
     @Override
     public synchronized void start(Controller controller)
     {
-        // Fetch required settings
-        String jenkinsBaseUrl = controller.getSetting("jenkins.base");
-        String jenkinsJobs = controller.getSetting("jenkins.jobs");
-        long jenkinsPollRate = controller.getSettingLong("jenkins.poll-rate-ms");
-
-        // Make sure URL ends with trailing /
-        if (!jenkinsBaseUrl.endsWith("/"))
-        {
-            jenkinsBaseUrl += "/";
-        }
-
-        // Build URLs
-        LinkedList<String> jobUrls = new LinkedList<>();
-
-        String jobUrl;
-        for (String job : jenkinsJobs.split(","))
-        {
-            jobUrl = jenkinsBaseUrl + job + "/lastBuild/api/json";
-            jobUrls.add(jobUrl);
-            LOG.debug("Added Jenkins status job - url: {}", jobUrl);
-        }
-
         // Start thread
-        jenkinsStatusThread = new JenkinsStatusThread(controller, jenkinsPollRate, jobUrls.toArray(new String[jobUrls.size()]));
+        jenkinsStatusThread = new JenkinsStatusThread(controller);
         jenkinsStatusThread.start();
     }
 

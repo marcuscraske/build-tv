@@ -10,6 +10,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.LinkedList;
@@ -21,13 +22,15 @@ public class IntervalLedService implements Service
 {
     private static final Logger LOG = LogManager.getLogger(IntervalLedService.class);
 
-    private static final String INTERVAL_JSON_FILE = "config/build-tv-intervals.json";
+    private static final String INTERVAL_JSON_FILE = "led-patterns.json";
 
+    private Controller controller;
     private LedTimeService ledTimeService;
     private LinkedList<IntervalPattern> intervalPatterns;
 
-    public IntervalLedService()
+    public IntervalLedService(Controller controller)
     {
+        this.controller = controller;
         this.intervalPatterns = new LinkedList<>();
     }
 
@@ -37,11 +40,14 @@ public class IntervalLedService implements Service
         // Fetch LED service instance
         ledTimeService = (LedTimeService) controller.getServiceByName("led-time");
 
+        // Fetch config file
+        File ledPatternsConfig = controller.findConfigFile(INTERVAL_JSON_FILE);
+
         // Load all of the intervals
         try
         {
             JSONParser jsonParser = new JSONParser();
-            JSONObject jsonRoot = (JSONObject) jsonParser.parse(new FileReader(INTERVAL_JSON_FILE));
+            JSONObject jsonRoot = (JSONObject) jsonParser.parse(new FileReader(ledPatternsConfig));
 
             JSONArray intervals = (JSONArray) jsonRoot.get("intervals");
 

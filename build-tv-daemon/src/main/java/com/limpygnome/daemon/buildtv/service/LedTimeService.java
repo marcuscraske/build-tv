@@ -15,8 +15,8 @@ public class LedTimeService implements Service
     @Override
     public synchronized void start(Controller controller)
     {
-        String ledDaemonUrl = controller.getSetting("ws281x.led.rest.url");
-        String screenDaemonUrl = controller.getSetting("screen-daemon.rest.screen.url");
+        String ledDaemonUrl = controller.getSettings().getString("led-daemon.rest.url");
+        String screenDaemonUrl = controller.getSettings().getString("screen-daemon.rest.url");
 
         ledTimeThread = new LedTimeThread(
                 ledDaemonUrl,

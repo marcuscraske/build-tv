@@ -2,6 +2,7 @@ package com.limpygnome.daemon.api;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -15,11 +16,6 @@ public class Settings
 {
     private static final Logger LOG = LogManager.getLogger(Settings.class);
 
-    private static final String[] SETTINGS_PATHS = {
-            "config",
-            "deploy/files/config"
-    };
-
     private static final String SETTINGS_EXTENSION = ".json";
 
     private Controller controller;
@@ -30,39 +26,12 @@ public class Settings
         this.controller = controller;
     }
 
-    private File getSettingsFile(String daemonName)
-    {
-        File file;
-        for (String path : SETTINGS_PATHS)
-        {
-            file = new File(path + "/settings." + daemonName + SETTINGS_EXTENSION);
-
-            if (file.exists())
-            {
-                return file;
-            }
-        }
-
-        // Build detailed exception message
-        StringBuilder buffer = new StringBuilder();
-        buffer.append("Unable to find daemon settings file; possible locations:\n");
-
-        for (String path : SETTINGS_PATHS)
-        {
-            buffer.append("- '").append(path).append("/settings.").append(daemonName).append(SETTINGS_EXTENSION).append("\n");
-        }
-
-        buffer.deleteCharAt(buffer.length() - 1);
-
-        throw new RuntimeException(buffer.toString());
-    }
-
     public synchronized void reload()
     {
         LOG.info("Reloading settings...");
 
-        // Locate settings file
-        File fileSettings = getSettingsFile(controller.getControllerName());
+        // Fetch settings file
+        File fileSettings = controller.findConfigFile("settings." + controller.getControllerName() + SETTINGS_EXTENSION);
 
         LOG.info("Using settings at: {}", fileSettings.getAbsolutePath());
 
@@ -126,9 +95,19 @@ public class Settings
         return getIterativeSettingAtPath(path);
     }
 
+    public synchronized JSONObject getJsonObject(String path)
+    {
+        return (JSONObject) getObject(path);
+    }
+
+    public synchronized JSONArray getJsonArray(String path)
+    {
+        return (JSONArray) getObject(path);
+    }
+
     public synchronized int getInt(String path)
     {
-        return (int) getObject(path);
+        return (int) (long) getObject(path);
     }
 
     public synchronized long getLong(String path)

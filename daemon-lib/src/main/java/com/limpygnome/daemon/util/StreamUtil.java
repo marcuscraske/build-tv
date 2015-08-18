@@ -10,6 +10,8 @@ import java.io.InputStreamReader;
  */
 public class StreamUtil
 {
+    private static final int BUFFER_CHUNK_SIZE = 4096;
+
     /**
      * Reads input stream into a String and closes the stream.
      *
@@ -22,16 +24,17 @@ public class StreamUtil
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
         int readChars;
-        char[] rawBuffer = new char[1024];
+        char[] rawBufferChunk = new char[BUFFER_CHUNK_SIZE];
 
         // Limit is not strictly imposed, can be up to 1023 bytes over limit
         while   (
-                    (readChars = bufferedReader.read(rawBuffer)) > 0 &&
+                    (readChars = bufferedReader.read(rawBufferChunk)) > 0 &&
                     (maxBufferSize == -1 || buffer.length() < maxBufferSize)
                 )
         {
-            buffer.append(rawBuffer, 0, readChars);
+            buffer.append(rawBufferChunk, 0, readChars);
         }
+
         bufferedReader.close();
 
         return buffer.toString();

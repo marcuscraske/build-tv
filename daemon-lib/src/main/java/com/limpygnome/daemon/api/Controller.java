@@ -3,8 +3,8 @@ package com.limpygnome.daemon.api;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +13,8 @@ import java.util.Map;
  */
 public class Controller
 {
+    private final static String[] CONFIG_PATHS = { "config", "deploy/files/config" };
+
     private static final Logger LOG = LogManager.getLogger(Controller.class);
 
     private String controllerName;
@@ -98,7 +100,8 @@ public class Controller
     public synchronized void hookShutdown()
     {
         // This will hook an event to stop the controller when the JVM is shutting down
-        Runtime.getRuntime().addShutdownHook(new Thread() {
+        Runtime.getRuntime().addShutdownHook(new Thread()
+        {
             @Override
             public void run()
             {
@@ -114,6 +117,40 @@ public class Controller
         hookShutdown();
         start();
         waitForExit();
+    }
+
+    /**
+     * Attempts to find a config file.
+     *
+     * @param fileName the filename or relative path
+     * @return found instance
+     */
+    public synchronized File findConfigFile(String fileName)
+    {
+        File file;
+
+        for (String configPath : CONFIG_PATHS)
+        {
+            file = new File(configPath + "/" + fileName);
+
+            if (file.exists())
+            {
+                return file;
+            }
+        }
+
+        // Build exception of possible paths
+        StringBuilder exMessage = new StringBuilder();
+        exMessage.append("Unable to find config file - '" + fileName + "'; possible locations:\n");
+
+        for (String configPath : CONFIG_PATHS)
+        {
+            exMessage.append("- ").append(configPath).append("/").append(fileName).append("\n");
+        }
+
+        exMessage.deleteCharAt(exMessage.length()-1);
+
+        throw new RuntimeException(exMessage.toString());
     }
 
     public String getControllerName()

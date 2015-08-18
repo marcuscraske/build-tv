@@ -1,7 +1,7 @@
 package com.limpygnome.daemon.buildtv.led;
 
 /**
- * Created by limpygnome on 19/07/15.
+ * The LED pattern to use to reflect the status of the build server. Pattern with highest priority  should be used.
  */
 public enum LedPattern
 {

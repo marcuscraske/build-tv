@@ -17,7 +17,7 @@ public class Program
         // Add services
         controller.add("led-time", new LedTimeService());
         controller.add("jenkins-status", new JenkinsService());
-        controller.add("interval-leds", new IntervalLedService());
+        controller.add("interval-leds", new IntervalLedService(controller));
 
         // Start forever...
         controller.hookAndStartAndWaitForExit();
