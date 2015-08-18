@@ -8,9 +8,9 @@ PATH_FILES_BASE="${PATH_CURR}/files"
 PATH_FILES_OVERRIDE="${PATH_CURR}/../../rpi-config/environments"
 
 PATH_NEOPIXEL_WS281X_LIB="${PATH_BASE}/neopixel-ws281x-lib"
-PATH_NEOPIXEL_WS281X_DAEMON="${PATH_BASE}/neopixel-ws281x-daemon"
-PATH_BUILDTV="${PATH_BASE}/build-tv-daemon"
-PATH_SCREEN="${PATH_BASE}/screen-daemon"
+PATH_LED_DAEMON="${PATH_BASE}/led-daemon"
+PATH_BUILDTV_DAEMON="${PATH_BASE}/build-tv-daemon"
+PATH_SCREEN_DAEMON="${PATH_BASE}/screen-daemon"
 
 # Determine inventory file to use
 INVENTORY="${PATH_FILES_OVERRIDE}/hosts_inventory"
@@ -40,16 +40,16 @@ if [[ !( -z "${PATH_FILES_OVERRIDE}") ]]; then
 fi
 
 EXTRA_VARS+="ws281x_lib=\"${PATH_NEOPIXEL_WS281X_LIB}\" "
-EXTRA_VARS+="ws281x_daemon=\"${PATH_NEOPIXEL_WS281X_DAEMON}\" "
-EXTRA_VARS+="build_tv_daemon=\"${PATH_BUILDTV}\" "
-EXTRA_VARS+="screen_daemon=\"${PATH_SCREEN}\" "
+EXTRA_VARS+="led_daemon=\"${PATH_LED_DAEMON}\" "
+EXTRA_VARS+="build_tv_daemon=\"${PATH_BUILDTV_DAEMON}\" "
+EXTRA_VARS+="screen_daemon=\"${PATH_SCREEN_DAEMON}\" "
 
 # Build tags
 DEPLOY_TAGS+="setup-files,"
 DEPLOY_TAGS+="setup-pi,"
 DEPLOY_TAGS+="config,"
 DEPLOY_TAGS+="neopixel-lib,"
-DEPLOY_TAGS+="neopixel-daemon,"
+DEPLOY_TAGS+="led-daemon,"
 DEPLOY_TAGS+="build-tv-daemon,"
 DEPLOY_TAGS+="screen-daemon"
 

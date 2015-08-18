@@ -4,8 +4,8 @@
 # Daemon configuration
 # **********************************************************************************************************************
 
-DAEMON_NAME="neopixel-ws281x-daemon"
-DAEMON_JAR="/rpi-misc/neopixel-ws281x-daemon-1.0.jar"
+DAEMON_NAME="led-daemon"
+DAEMON_JAR="/rpi-misc/led-daemon-1.0.jar"
 DAEMON_WORKING_DIR="/rpi-misc"
 
 # **********************************************************************************************************************

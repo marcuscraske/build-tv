@@ -1,5 +1,5 @@
-- name: Copying NeoPixel ws281x JAR
-  copy: src={{ ws281x_daemon }}/target/neopixel-hardware-daemon-1.0.jar
+- name: Copying LED daemon JAR
+  copy: src={{ led_daemon }}/target/led-daemon-1.0.jar
         dest={{ deploy_path }}
         mode=0775
         owner=wallboard
@@ -9,6 +9,6 @@
 - {
     name:         Setting Up NeoPixel Daemon,
     include:      ../../common/tasks/setupService.yml,
-    service_name: "neopixel-ws281x-daemon",
-    daemon_name:  "neopixel-ws281x-daemon"
+    service_name: "led-daemon",
+    daemon_name:  "led-daemon"
   }
