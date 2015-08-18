@@ -12,7 +12,7 @@ public class Program
 {
     public static void main(String[] args)
     {
-        Controller controller = new Controller("build-tv");
+        Controller controller = new Controller("build-tv-daemon");
 
         // Add services
         controller.add("led-time", new LedTimeService());

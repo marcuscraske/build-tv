@@ -1,0 +1,17 @@
+{
+    "rest" :
+    {
+        "port" : 2500
+    },
+
+    "led-controller" :
+    {
+        "leds"          : 60,
+        "pin"           : 18,
+        "freq"          : 800000,
+        "dma"           : 5,
+        "brightness"    : 255,
+        "pwm_channel"   : 0,
+        "invert"        : false
+    }
+}

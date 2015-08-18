@@ -1,0 +1,25 @@
+{
+    "jenkins":
+    {
+        "poll-rate-ms"      : 10000,
+        "buffer-size-bytes" : 102400,
+
+        "hosts" :
+        [
+            {
+                "name"      : "Apache Build Test",
+                "url"       : "https://builds.apache.org/view/All/job/",
+                "jobs"      :
+                [
+                    "ZooKeeper_branch35_jdk7",
+                    "maven-plugins-ITs-m2"
+                ]
+            },
+            {
+                "name"      : "Test Pipeline",
+                "url"       : "todo",
+                "jobs"      : "*"
+            }
+        ]
+    }
+}

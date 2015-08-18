@@ -42,7 +42,7 @@ public class RestService implements Service, HttpHandler
         // Start HTTP server
         try
         {
-            int endpointPort = controller.getSettingInt(controller.getControllerName() + ".rest.port");
+            int endpointPort = controller.getSettings().getInt("rest/port");
 
             httpServer = HttpServer.create(new InetSocketAddress(endpointPort), 16);
 

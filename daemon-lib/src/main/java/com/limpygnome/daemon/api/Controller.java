@@ -15,18 +15,16 @@ public class Controller
 {
     private static final Logger LOG = LogManager.getLogger(Controller.class);
 
-    private static final String SETTINGS_PATH = "config/daemon-settings.kv";
-
     private String controllerName;
     private boolean running;
     private HashMap<String, Service> services;
-    private HashMap<String, String> settings;
+    private Settings settings;
 
     public Controller(String controllerName)
     {
         this.controllerName = controllerName;
         this.services = new HashMap<>();
-        this.settings = new HashMap<>();
+        this.settings = new Settings(this);
     }
 
     public synchronized void add(String serviceName, Service service)
@@ -45,7 +43,8 @@ public class Controller
     {
         LOG.info("Starting controller...");
 
-        reloadSettings();
+        // Reload settings
+        settings.reload();
 
         // Start all services
         for (Map.Entry<String, Service> kv : services.entrySet())
@@ -134,104 +133,6 @@ public class Controller
         return service;
     }
 
-    public synchronized String getSetting(String key)
-    {
-        String value = settings.get(key);
-
-        if (value == null)
-        {
-            throw new RuntimeException("Setting '" + key + "' missing");
-        }
-
-        return value;
-    }
-
-    public synchronized long getSettingLong(String key)
-    {
-        String value = getSetting(key);
-
-        try
-        {
-            return Long.parseLong(value);
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException("Malformed setting '" + key + "', expected value to be of type long", e);
-        }
-    }
-
-    public synchronized int getSettingInt(String key)
-    {
-        String value = getSetting(key);
-
-        try
-        {
-            return Integer.parseInt(value);
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException("Malformed setting '" + key + "', expected value to be of type int", e);
-        }
-    }
-
-    public synchronized boolean getSettingBoolean(String key)
-    {
-        String value = getSetting(key);
-
-        try
-        {
-            return Boolean.parseBoolean(value);
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException("Malformed setting '" + key + "', expected value to be of type bool", e);
-        }
-    }
-
-
-    private void reloadSettings()
-    {
-        settings.clear();
-
-        LOG.debug("Reloading settings...");
-
-        try
-        {
-            // Read file line-by-line
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(SETTINGS_PATH));
-            String line, key, value;
-            int splitIndex;
-
-            while ((line = bufferedReader.readLine()) != null)
-            {
-                line = line.trim();
-
-                // Check line isnt empty or comment
-                if (!line.startsWith("#") && line.length() != 0)
-                {
-                    splitIndex = line.indexOf('=');
-
-                    if (splitIndex > 1 && splitIndex < line.length() - 1)
-                    {
-                        // Read KV
-                        key = line.substring(0, splitIndex);
-                        value = line.substring(splitIndex+1);
-
-                        // Add KV
-                        settings.put(key, value);
-                        LOG.debug("Added setting - key: {}, value: {}", key, value);
-                    }
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            LOG.error("Unable to load settings", e);
-        }
-
-        LOG.debug("Finished loading settings");
-    }
-
     private void setRunning(boolean value)
     {
         this.running = value;
@@ -239,4 +140,10 @@ public class Controller
 
         LOG.debug("Changed running state of controller - running: {}", this.running);
     }
+
+    public Settings getSettings()
+    {
+        return settings;
+    }
+
 }
