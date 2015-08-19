@@ -6,7 +6,7 @@ import com.limpygnome.daemon.buildtv.service.JenkinsService;
 import com.limpygnome.daemon.buildtv.service.LedTimeService;
 
 /**
- * Created by limpygnome on 19/07/15.
+ * Entry point into the build TV daemon.
  */
 public class Program
 {

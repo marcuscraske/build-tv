@@ -1,8 +1,8 @@
 package com.limpygnome.daemon.led.hardware.pattern.build;
 
-import com.limpygnome.daemon.led.hardware.LedController;
 import com.limpygnome.daemon.led.hardware.LedRenderThread;
-import com.limpygnome.daemon.led.hardware.Pattern;
+import com.limpygnome.daemon.led.hardware.controller.LedController;
+import com.limpygnome.daemon.led.hardware.pattern.Pattern;
 import com.limpygnome.daemon.led.hardware.pattern.template.GenericPulsePattern;
 
 /**

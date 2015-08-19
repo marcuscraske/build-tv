@@ -1,14 +1,14 @@
 package com.limpygnome.daemon.led.hardware;
 
 import com.limpygnome.daemon.common.ExtendedThread;
+import com.limpygnome.daemon.led.hardware.controller.LedController;
+import com.limpygnome.daemon.led.hardware.pattern.Pattern;
 import com.limpygnome.daemon.led.service.LedService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Created by limpygnome on 18/07/15.
- *
- * TODO: move into generic thread, since Java thread object is blurgh...
+ * Used to indefinitely render the set LED pattern.
  */
 public class LedRenderThread extends ExtendedThread
 {

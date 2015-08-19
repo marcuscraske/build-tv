@@ -2,11 +2,12 @@ package com.limpygnome.daemon.led.service;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Service;
+import com.limpygnome.daemon.led.hardware.controller.LedController;
 import com.limpygnome.daemon.util.EnvironmentUtil;
 import com.limpygnome.daemon.led.hardware.pattern.build.*;
 import com.limpygnome.daemon.led.hardware.pattern.daemon.*;
-import com.limpygnome.daemon.led.hardware.Pattern;
-import com.limpygnome.daemon.led.hardware.LedController;
+import com.limpygnome.daemon.led.hardware.pattern.Pattern;
+import com.limpygnome.daemon.led.hardware.controller.Ws281xLedController;
 import com.limpygnome.daemon.led.hardware.LedRenderThread;
 import com.limpygnome.daemon.led.hardware.pattern.team.Standup;
 import org.apache.logging.log4j.LogManager;
@@ -15,7 +16,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.HashMap;
 
 /**
- * A service to control a NeoPixel LED strip.
+ * A service to control an LED strip.
  */
 public class LedService implements Service
 {
@@ -44,7 +45,7 @@ public class LedService implements Service
         }
         else
         {
-            this.ledController = new LedController(
+            this.ledController = new Ws281xLedController(
                     controller.getSettings().getInt("led-controller/leds"),
                     controller.getSettings().getInt("led-controller/pin"),
                     controller.getSettings().getInt("led-controller/freq"),

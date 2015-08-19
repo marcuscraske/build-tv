@@ -1,7 +1,9 @@
 package com.limpygnome.daemon.buildtv.led;
 
+import com.limpygnome.daemon.buildtv.led.pattern.IntervalPattern;
+import com.limpygnome.daemon.buildtv.led.pattern.Pattern;
 import com.limpygnome.daemon.common.ExtendedThread;
-import com.limpygnome.daemon.util.RestUtil;
+import com.limpygnome.daemon.util.RestClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
@@ -11,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by limpygnome on 19/07/15.
+ * Used to decide which pattern to render.
  */
 public class LedTimeThread extends ExtendedThread
 {
@@ -19,30 +21,30 @@ public class LedTimeThread extends ExtendedThread
 
     private String ledDaemonUrl;
     private String screenDaemonUrl;
-    private HashMap<String, PatternSource> patternSources;
+    private HashMap<String, Pattern> patterns;
 
     public LedTimeThread(String ledDaemonUrl, String screenDaemonUrl)
     {
         this.ledDaemonUrl = ledDaemonUrl;
         this.screenDaemonUrl = screenDaemonUrl;
-        this.patternSources = new HashMap<>();
+        this.patterns = new HashMap<>();
     }
 
     /**
      * Adds a source for an LED pattern.
      *
-     * @param patternSource The pattern to add
+     * @param pattern The pattern to add
      */
-    public synchronized void addPatternSource(PatternSource patternSource)
+    public synchronized void addPattern(Pattern pattern)
     {
-        patternSources.put(patternSource.getName(), patternSource);
-        LOG.debug("Added pattern source - name: {}, priority: {}", patternSource.getName(), patternSource.getPriority());
+        patterns.put(pattern.getName(), pattern);
+        LOG.debug("Added pattern source - name: {}, priority: {}", pattern.getName(), pattern.getPriority());
     }
 
-    public synchronized void removePatternSource(PatternSource patternSource)
+    public synchronized void removePattern(Pattern pattern)
     {
-        patternSources.remove(patternSource.getName());
-        LOG.debug("Removed pattern source - name: {}", patternSource.getName());
+        patterns.remove(pattern.getName());
+        LOG.debug("Removed pattern source - name: {}", pattern.getName());
     }
 
     @Override
@@ -50,34 +52,34 @@ public class LedTimeThread extends ExtendedThread
     {
         final long UPDATE_INTERVAL = 1000;
 
-        PatternSource currentPatternSource;
+        Pattern currentPattern;
 
         while (!isExit())
         {
             // Fetch the current pattern
-            currentPatternSource = findHighestPriorityPatternSource();
+            currentPattern = findHighestPriorityPattern();
 
             // Update pattern by talking to LED daemon
-            if (currentPatternSource != null)
+            if (currentPattern != null)
             {
-                changePattern(currentPatternSource.getCurrentLedPattern());
+                changePattern(currentPattern.getCurrentLedPattern());
             }
             else
             {
-                changePattern(LedPattern.BUILD_UNKNOWN);
+                changePattern(LedDisplayPatterns.BUILD_UNKNOWN);
             }
 
             // Update screen on/off
-            if  (   currentPatternSource != null &&
-                    currentPatternSource instanceof IntervalPattern &&
-                    ((IntervalPattern) currentPatternSource).isScreenOff()
+            if  (   currentPattern != null &&
+                    currentPattern instanceof IntervalPattern &&
+                    ((IntervalPattern) currentPattern).isScreenOff()
                 )
             {
-                changeScreen(false);
+                changeScreen(ScreenAction.OFF);
             }
             else
             {
-                changeScreen(true);
+                changeScreen(ScreenAction.ON);
             }
 
             // Sleep for a while
@@ -91,28 +93,28 @@ public class LedTimeThread extends ExtendedThread
         }
     }
 
-    private synchronized PatternSource findHighestPriorityPatternSource()
+    private synchronized Pattern findHighestPriorityPattern()
     {
         // Iterate patterns and retrieve enabled source with highest priority
-        PatternSource patternSource;
-        PatternSource highestPatternSource = null;
+        Pattern pattern;
+        Pattern highestPattern = null;
         int highestPriority = -1;
 
-        for (Map.Entry<String, PatternSource> patternSourceKV : patternSources.entrySet())
+        for (Map.Entry<String, Pattern> patternSourceKV : patterns.entrySet())
         {
-            patternSource = patternSourceKV.getValue();
+            pattern = patternSourceKV.getValue();
 
-            if (patternSource.getPriority() > highestPriority && patternSource.isEnabled())
+            if (pattern.getPriority() > highestPriority && pattern.isEnabled())
             {
-                highestPatternSource = patternSource;
-                highestPriority = patternSource.getPriority();
+                highestPattern = pattern;
+                highestPriority = pattern.getPriority();
             }
         }
 
-        return highestPatternSource;
+        return highestPattern;
     }
 
-    private void changePattern(LedPattern pattern)
+    private void changePattern(LedDisplayPatterns pattern)
     {
         try
         {
@@ -121,7 +123,8 @@ public class LedTimeThread extends ExtendedThread
             jsonRoot.put("pattern", pattern.PATTERN);
 
             // Make request
-            RestUtil.httpPostRequest(ledDaemonUrl, jsonRoot);
+            RestClient restClient = new RestClient();
+            restClient.executePost(ledDaemonUrl, jsonRoot);
 
             LOG.debug("LED daemon update request sent - pattern: {}", pattern.PATTERN);
         }
@@ -135,19 +138,19 @@ public class LedTimeThread extends ExtendedThread
         }
     }
 
-    private void changeScreen(boolean screenOn)
+    private void changeScreen(ScreenAction screenAction)
     {
         try
         {
             // Build JSON object
             JSONObject jsonRoot = new JSONObject();
-            // TODO: turn into enum...
-            jsonRoot.put("action", screenOn ? "on" : "off");
+            jsonRoot.put("action", screenAction.ACTION);
 
             // Make request
-            RestUtil.httpPostRequest(screenDaemonUrl, jsonRoot);
+            RestClient restClient = new RestClient();
+            restClient.executePost(screenDaemonUrl, jsonRoot);
 
-            LOG.debug("Screen action sent - on: {}", screenOn);
+            LOG.debug("Screen action sent - action: {}", screenAction);
         }
         catch (ConnectException e)
         {

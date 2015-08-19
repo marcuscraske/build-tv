@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 
 /**
- * Created by limpygnome on 20/07/15.
+ * Handles REST requests for setting the LED pattern.
  */
 public class LedRestHandler implements RestServiceHandler
 {

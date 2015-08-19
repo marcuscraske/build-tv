@@ -7,7 +7,7 @@ import com.sun.net.httpserver.HttpExchange;
 import org.json.simple.JSONObject;
 
 /**
- * Created by limpygnome on 20/07/15.
+ * A REST handler used as an API to control the attached screen.
  */
 public class ScreenRestHandler implements RestServiceHandler
 {

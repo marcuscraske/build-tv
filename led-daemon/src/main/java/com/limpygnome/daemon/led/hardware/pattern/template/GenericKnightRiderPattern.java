@@ -1,6 +1,6 @@
 package com.limpygnome.daemon.led.hardware.pattern.template;
 
-import com.limpygnome.daemon.led.hardware.LedController;
+import com.limpygnome.daemon.led.hardware.controller.LedController;
 import com.limpygnome.daemon.led.hardware.LedRenderThread;
 
 /**

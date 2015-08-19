@@ -3,7 +3,7 @@ package com.limpygnome.daemon.buildtv.service;
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Service;
 import com.limpygnome.daemon.buildtv.led.LedTimeThread;
-import com.limpygnome.daemon.buildtv.led.PatternSource;
+import com.limpygnome.daemon.buildtv.led.pattern.Pattern;
 
 /**
  * Responsible for controlling the LED requests sent to the LED daemon.
@@ -31,13 +31,13 @@ public class LedTimeService implements Service
         ledTimeThread.kill();
     }
 
-    public synchronized void addPatternSource(PatternSource patternSource)
+    public synchronized void addPatternSource(Pattern pattern)
     {
-        ledTimeThread.addPatternSource(patternSource);
+        ledTimeThread.addPattern(pattern);
     }
 
-    public synchronized void removePatternSource(PatternSource patternSource)
+    public synchronized void removePatternSource(Pattern pattern)
     {
-        ledTimeThread.removePatternSource(patternSource);
+        ledTimeThread.removePattern(pattern);
     }
 }

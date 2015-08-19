@@ -2,8 +2,8 @@ package com.limpygnome.daemon.buildtv.service;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Service;
-import com.limpygnome.daemon.buildtv.led.IntervalPattern;
-import com.limpygnome.daemon.buildtv.led.LedPattern;
+import com.limpygnome.daemon.buildtv.led.pattern.IntervalPattern;
+import com.limpygnome.daemon.buildtv.led.LedDisplayPatterns;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
@@ -61,7 +61,7 @@ public class IntervalLedService implements Service
                 // Parse interval
                 intervalPattern = new IntervalPattern(
                         (String) interval.get("name"),
-                        LedPattern.getByName((String) interval.get("pattern")),
+                        LedDisplayPatterns.getByName((String) interval.get("pattern")),
                         (int) (long) interval.get("priority"),
                         (int) (long) interval.get("startHour"),
                         (int) (long) interval.get("startMinute"),

@@ -2,9 +2,8 @@ package com.limpygnome.daemon.buildtv.jenkins;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Settings;
-import com.limpygnome.daemon.buildtv.jenkins.models.JenkinsHost;
-import com.limpygnome.daemon.buildtv.led.LedPattern;
-import com.limpygnome.daemon.buildtv.led.PatternSource;
+import com.limpygnome.daemon.buildtv.led.LedDisplayPatterns;
+import com.limpygnome.daemon.buildtv.led.pattern.Pattern;
 import com.limpygnome.daemon.buildtv.service.LedTimeService;
 import com.limpygnome.daemon.common.ExtendedThread;
 import com.limpygnome.daemon.util.RestClient;
@@ -24,14 +23,13 @@ public class JenkinsStatusThread extends ExtendedThread
 
     private LedTimeService ledTimeService;
     private long pollRateMs;
-    private PatternSource patternSource;
+    private Pattern pattern;
 
     private JenkinsHost[] jenkinsHosts;
     private RestClient restClient;
 
     public JenkinsStatusThread(Controller controller)
     {
-        // TODO: move a lot of this into a separate class(es)
         Settings settings = controller.getSettings();
 
         // Read global settings
@@ -39,7 +37,24 @@ public class JenkinsStatusThread extends ExtendedThread
 
         // Parse hosts to poll
         JSONArray rawHosts = settings.getJsonArray("jenkins/hosts");
-        this.jenkinsHosts = new JenkinsHost[rawHosts.size()];
+        this.jenkinsHosts = parseHosts(rawHosts);
+
+        // Setup REST client
+        int bufferSizeBytes = settings.getInt("jenkins/max-buffer-bytes");
+        String userAgent = settings.getString("jenkins/user-agent");
+
+        this.restClient = new RestClient(userAgent, bufferSizeBytes);
+
+        // Setup a new LED pattern source for this thread
+        this.pattern = new Pattern("Jenkins Status", LedDisplayPatterns.BUILD_UNKNOWN, 1);
+
+        // Fetch LED time service for later
+        this.ledTimeService = (LedTimeService) controller.getServiceByName("led-time");
+    }
+
+    private JenkinsHost[] parseHosts(JSONArray rawHosts)
+    {
+        JenkinsHost[] jenkinsHosts = new JenkinsHost[rawHosts.size()];
 
         JSONObject rawHost;
         JSONArray rawHostJobs;
@@ -73,28 +88,19 @@ public class JenkinsStatusThread extends ExtendedThread
             jenkinsHosts[i] = jenkinsHost;
         }
 
-        // Setup REST client
-        int bufferSizeBytes = settings.getInt("jenkins/max-buffer-bytes");
-        String userAgent = settings.getString("jenkins/user-agent");
-
-        this.restClient = new RestClient(userAgent, bufferSizeBytes);
-
-
-        // Setup a new LED pattern source for this thread
-        this.patternSource = new PatternSource("Jenkins Status", LedPattern.BUILD_UNKNOWN, 1);
-
-        // Fetch LED time service for later
-        this.ledTimeService = (LedTimeService) controller.getServiceByName("led-time");
+        return jenkinsHosts;
     }
 
     @Override
     public void run()
     {
+        Thread.currentThread().setName("Jenkins Status");
+
         // Add our pattern to LED time service
-        ledTimeService.addPatternSource(patternSource);
+        ledTimeService.addPatternSource(pattern);
 
         // Run until thread exits, polling Jenkins for status and updating pattern source
-        LedPattern ledPattern;
+        LedDisplayPatterns ledPattern;
 
         while (!isExit())
         {
@@ -102,7 +108,7 @@ public class JenkinsStatusThread extends ExtendedThread
             {
                 // Poll Jenkins
                 ledPattern = pollHosts();
-                patternSource.setCurrentLedPattern(ledPattern);
+                pattern.setCurrentLedPattern(ledPattern);
 
                 // Wait a while...
                 Thread.sleep(pollRateMs);
@@ -114,13 +120,13 @@ public class JenkinsStatusThread extends ExtendedThread
         }
 
         // Remove our pattern from LED time service
-        ledTimeService.removePatternSource(patternSource);
+        ledTimeService.removePatternSource(pattern);
     }
 
-    private LedPattern pollHosts()
+    private LedDisplayPatterns pollHosts()
     {
-        LedPattern highest = LedPattern.BUILD_UNKNOWN;
-        LedPattern current;
+        LedDisplayPatterns highest = LedDisplayPatterns.BUILD_UNKNOWN;
+        LedDisplayPatterns current;
 
         // Get status of each job and keep highest priority LED pattern
         for (JenkinsHost jenkinsHost : jenkinsHosts)

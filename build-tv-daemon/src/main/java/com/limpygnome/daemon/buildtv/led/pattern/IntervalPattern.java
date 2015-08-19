@@ -1,17 +1,18 @@
-package com.limpygnome.daemon.buildtv.led;
+package com.limpygnome.daemon.buildtv.led.pattern;
 
+import com.limpygnome.daemon.buildtv.led.LedDisplayPatterns;
 import org.joda.time.DateTime;
 
 /**
- * Created by limpygnome on 19/07/15.
+ * Represents a pattern to be used during a specific interval of time of day.
  */
-public class IntervalPattern extends PatternSource
+public class IntervalPattern extends Pattern
 {
     private int startMinuteOfDay;
     private int endMinuteOfDay;
     private boolean screenOff;
 
-    public IntervalPattern(String name, LedPattern initialCurrentLedPattern, int priority,
+    public IntervalPattern(String name, LedDisplayPatterns initialCurrentLedPattern, int priority,
                            int startHour, int startMinute, int endHour, int endMinute,
                            boolean screenOff)
     {

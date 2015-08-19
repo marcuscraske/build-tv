@@ -6,7 +6,7 @@ import com.limpygnome.daemon.led.service.LedService;
 import com.limpygnome.daemon.service.RestService;
 
 /**
- * The entry point into the daemon.
+ * The entry point into the LED daemon.
  */
 public class Program
 {

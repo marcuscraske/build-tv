@@ -6,7 +6,7 @@ import com.limpygnome.daemon.screen.service.ScreenService;
 import com.limpygnome.daemon.service.RestService;
 
 /**
- * Created by limpygnome on 20/07/15.
+ * Entry point into the screen daemon.
  */
 public class Program
 {

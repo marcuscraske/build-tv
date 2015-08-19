@@ -1,4 +1,4 @@
-package com.limpygnome.daemon.led.hardware;
+package com.limpygnome.daemon.led.hardware.controller;
 
 import com.limpygnome.ws281x.lib.rpi_ws281x;
 import com.limpygnome.ws281x.lib.ws2811_channel_t;
@@ -11,9 +11,9 @@ import java.io.File;
 /**
  * Used to interface with an LED strip at a very high level.
  */
-public class LedController
+public class Ws281xLedController implements LedController
 {
-    private static final Logger LOG = LogManager.getLogger(LedController.class);
+    private static final Logger LOG = LogManager.getLogger(Ws281xLedController.class);
 
     // Settings
     private int ledsCount;
@@ -28,7 +28,7 @@ public class LedController
     ws2811_t leds;
     ws2811_channel_t currentChannel;
 
-    public LedController()
+    public Ws281xLedController()
     {
         // Default settings
         // TODO: move to constants file
@@ -43,7 +43,7 @@ public class LedController
         );
     }
 
-    public LedController(int ledsCount, int gpioPin, int frequencyHz, int dma, int brightness, int pwmChannel, boolean invert)
+    public Ws281xLedController(int ledsCount, int gpioPin, int frequencyHz, int dma, int brightness, int pwmChannel, boolean invert)
     {
         this.ledsCount = ledsCount;
         this.gpioPin = gpioPin;
@@ -137,7 +137,7 @@ public class LedController
     {
         try
         {
-            return new File(LedController.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile().getPath();
+            return new File(Ws281xLedController.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile().getPath();
         }
         catch (Exception e)
         {
@@ -220,4 +220,5 @@ public class LedController
     {
         return invert;
     }
+
 }

@@ -10,12 +10,17 @@ import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by limpygnome on 19/07/15.
+ * A service used to control the attached screen.
  */
 public class ScreenService implements Service
 {
     private static final Logger LOG = LogManager.getLogger(ScreenService.class);
 
+    /**
+     * The timeout between requests. Any requests during the timeout period are ignored. It's expected that
+     * external services will periodically call this daemon, irregardless of the screen state changing. THis is to
+     * allow the daemon to restart or for the external screen to get out of sync.
+     */
     private static final long ACTION_TIMEOUT_MS = 10000;
 
     private long lastAction;

@@ -6,10 +6,8 @@ import com.limpygnome.daemon.buildtv.jenkins.JenkinsStatusThread;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.LinkedList;
-
 /**
- * Created by limpygnome on 19/07/15.
+ * Service responsible for controlling thread to perform periodic Jenkins polling.
  */
 public class JenkinsService implements Service
 {
