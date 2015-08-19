@@ -23,13 +23,13 @@ fi
 echo "Inventory file: ${INVENTORY}"
 
 # Output paths for diagnostics
-echo "Path - deploy:          ${PATH_CURR}"
-echo "Path - base:            ${PATH_BASE}"
+echo "Path - deploy:            ${PATH_CURR}"
+echo "Path - base:              ${PATH_BASE}"
 
-echo "Path - ws281x library:  ${PATH_NEOPIXEL_WS281X_LIB}"
-echo "Path - ws281x daemon:   ${PATH_NEOPIXEL_WS281X_DAEMON}"
-echo "Path - build TV daemon: ${PATH_BUILDTV}"
-echo "Path - screem daemon: ${PATH_SCREEN}"
+echo "Path - ws281x library:    ${PATH_NEOPIXEL_WS281X_LIB}"
+echo "Path - led daemon:        ${PATH_LED_DAEMON}"
+echo "Path - build TV daemon:   ${PATH_BUILDTV_DAEMON}"
+echo "Path - screem daemon:     ${PATH_SCREEN_DAEMON}"
 
 
 # Build extra vars

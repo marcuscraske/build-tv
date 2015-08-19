@@ -60,8 +60,7 @@ public class ScreenService implements Service
         {
             LOG.debug("Turning screen on...");
 
-            exec("/opt/vc/bin/tvservice -p");
-            exec("fbset -accel true");
+            exec("/opt/vc/bin/tvservice -p && fbset -depth 0 && fbset -depth 16 && fbset -accel true");
 
             this.screenOn = true;
         }

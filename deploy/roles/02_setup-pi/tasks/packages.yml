@@ -25,3 +25,8 @@
   apt:  name=oracle-java8-jdk
         state=present
   sudo: true
+
+- name: Installing htop
+  apt:  name=htop
+        state=present
+  sudo: true

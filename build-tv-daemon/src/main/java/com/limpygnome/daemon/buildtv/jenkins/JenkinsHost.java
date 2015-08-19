@@ -82,6 +82,7 @@ public class JenkinsHost
                             break;
                         case "blue":
                         case "notbuilt":
+                        case "disabled":
                             ledPattern = LedDisplayPatterns.BUILD_OK;
                             break;
                         case "red":
