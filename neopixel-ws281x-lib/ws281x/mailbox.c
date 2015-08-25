@@ -265,24 +265,35 @@ unsigned execute_qpu(int file_desc, unsigned num_qpus, unsigned control, unsigne
    return p[5];
 }
 
+// Fix by Gadgetoid for Pi kernel update:
+// https://github.com/pimoroni/unicorn-hat/commit/5c03f81b72eb2e44c58f850db4e3fad90dc3d7a7
+// -- View issue thread at:
+// -- https://github.com/jgarff/rpi_ws281x/issues/41
 int mbox_open(void) {
    int file_desc;
    char filename[64];
 
    // open a char device file used for communicating with kernel mbox driver
-   sprintf(filename, "/tmp/mailbox-%d", getpid());
-   unlink(filename);
-   if (mknod(filename, S_IFCHR|0600, makedev(100, 0)) < 0) {
-      printf("Failed to create mailbox device %s: %m\n", filename);
-      return -1;
-   }
+
+   sprintf(filename, "/dev/vcio");
    file_desc = open(filename, 0);
+
+   if( file_desc < 0 ){
+     printf("Failed to open %s, trying old method.\n", filename);
+     sprintf(filename, "/dev/mailbox-%d", getpid());
+     unlink(filename);
+     if (mknod(filename, S_IFCHR|0600, makedev(100, 0)) < 0) {
+        printf("Failed to create mailbox device %s: %m\n", filename);
+        return -1;
+     }
+     file_desc = open(filename, 0);
+   }
    if (file_desc < 0) {
       printf("Can't open device file %s: %m\n", filename);
-      unlink(filename);
+      //unlink(filename);
       return -1;
    }
-   unlink(filename);
+   //unlink(filename);
 
    return file_desc;
 }

@@ -60,7 +60,10 @@ public class ScreenService implements Service
         {
             LOG.debug("Turning screen on...");
 
-            exec("/opt/vc/bin/tvservice -p && fbset -depth 0 && fbset -depth 16 && fbset -accel true");
+            exec("/opt/vc/bin/tvservice -p");
+            exec("fbset -depth 0");
+            exec("fbset -depth 16");
+            exec("fbset -accel true");
 
             this.screenOn = true;
         }
@@ -116,6 +119,15 @@ public class ScreenService implements Service
 
                     LOG.warn("Forcibly killed process executing command - cmd: {}", command);
                 }
+
+                // Give enough wait for the command to take affect
+                // -- Hacky, but a new attempt at getting this to work through a daemon
+                try
+                {
+                    Thread.sleep(4000);
+                }
+                catch (InterruptedException e) { }
+
             } catch (Exception e)
             {
                 LOG.error("Exception executing command", e);

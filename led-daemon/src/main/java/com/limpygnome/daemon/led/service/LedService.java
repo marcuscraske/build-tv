@@ -16,7 +16,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * A service to control an LED strip.
@@ -39,7 +38,7 @@ public class LedService implements Service
     private LedController ledController;
     private LedRenderThread ledRenderThread;
 
-    private TreeMap<String, LedSource> ledSources;
+    private HashMap<String, LedSource> ledSources;
     private LedSource currentPattern;
 
     public LedService()
@@ -49,10 +48,8 @@ public class LedService implements Service
         this.ledController = null;
         this.currentPattern = null;
 
-        // Setup treemap with ordering by value
-        LedSource.LedSourceComparator ledSourceComparator = new LedSource.LedSourceComparator();
-        this.ledSources = new TreeMap<>(ledSourceComparator);
-        ledSourceComparator.setMap(this.ledSources);
+        // Setup two maps, one with sorting by value
+        this.ledSources = new HashMap<>();
     }
 
     @Override
@@ -66,6 +63,8 @@ public class LedService implements Service
         }
         else
         {
+            LOG.info("Setting up Ws281x LED controller...");
+
             this.ledController = new Ws281xLedController(
                     controller.getSettings().getInt("led-controller/leds"),
                     controller.getSettings().getInt("led-controller/pin"),
@@ -90,6 +89,7 @@ public class LedService implements Service
 
         patterns.put("standup", new Standup());
 
+        LOG.info("{} LED patterns loaded", patterns.size());
 
         // Set startup pattern, whilst another service changes it
         setPattern(INTERNAL_LED_SOURCE, "startup", INTERNAL_LED_PRIORITY);
@@ -145,6 +145,7 @@ public class LedService implements Service
 
             // Add/update source
             ledSources.put(ledSource.getSource(), ledSource);
+
             LOG.debug("LED source updated - source: {}", ledSource);
 
             // Trigger check of LED source
@@ -156,8 +157,6 @@ public class LedService implements Service
     {
         // Fetch highest item
         LedSource ledSourceHighest = fetchHighestLedSource();
-
-        LOG.error("HIGHEST {}", ledSourceHighest);
 
         if (ledSourceHighest != null && (currentPattern == null || ledSourceHighest.getPriority() > currentPattern.getPriority()))
         {
@@ -192,9 +191,20 @@ public class LedService implements Service
 
     private synchronized LedSource fetchHighestLedSource()
     {
-        String lastKey = ledSources.lastKey();
-        Map.Entry<String, LedSource> entry = ledSources.get();
-        return entry != null ? entry.getValue() : null;
+        LedSource ledSourceHighest = null;
+        LedSource ledSource;
+
+        for (Map.Entry<String, LedSource> kv : ledSources.entrySet())
+        {
+            ledSource = kv.getValue();
+
+            if (ledSourceHighest == null || ledSource.getPriority() > ledSourceHighest.getPriority())
+            {
+                ledSourceHighest = ledSource;
+            }
+        }
+
+        return ledSourceHighest;
     }
 
     public synchronized LedController getLedController()

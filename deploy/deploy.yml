@@ -6,12 +6,12 @@
     - shell: hostname
 
   roles:
-    - { role: 01_setup-temp-files, tags: ["setup-files"] }
+    - { role: 01_setup-temp-files, tags: ["always"] }
     - { role: 02_setup-pi, tags: ["setup-pi"] }
     - { role: 03_shared-config, tags: ["config"] }
     - { role: 04_neopixel-ws281x-lib, tags: ["neopixel-lib"] }
     - { role: 05_led-daemon, tags: ["led-daemon"] }
     - { role: 06_build-tv-daemon, tags: ["build-tv-daemon"] }
     - { role: 07_screen-daemon, tags: ["screen-daemon"] }
-    - { role: 08_remove-temp-files, tags: ["setup-files"] }
+    - { role: 08_remove-temp-files, tags: ["always"] }
     - { role: 09_setup-reboot, tags: ["setup-pi"] }

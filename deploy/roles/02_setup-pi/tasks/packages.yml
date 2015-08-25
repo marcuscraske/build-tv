@@ -30,3 +30,8 @@
   apt:  name=htop
         state=present
   sudo: true
+
+- name: Installing ntupdate
+  apt:  name=ntpdate
+        state=present
+  sudo: true

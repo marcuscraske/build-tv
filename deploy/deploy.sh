@@ -45,13 +45,17 @@ EXTRA_VARS+="build_tv_daemon=\"${PATH_BUILDTV_DAEMON}\" "
 EXTRA_VARS+="screen_daemon=\"${PATH_SCREEN_DAEMON}\" "
 
 # Build tags
-DEPLOY_TAGS+="setup-files,"
-DEPLOY_TAGS+="setup-pi,"
-DEPLOY_TAGS+="config,"
-DEPLOY_TAGS+="neopixel-lib,"
-DEPLOY_TAGS+="led-daemon,"
-DEPLOY_TAGS+="build-tv-daemon,"
-DEPLOY_TAGS+="screen-daemon"
+if [[ -z "${1}" ]]; then
+    DEPLOY_TAGS+="setup-files,"
+    DEPLOY_TAGS+="setup-pi,"
+    DEPLOY_TAGS+="config,"
+    DEPLOY_TAGS+="neopixel-lib,"
+    DEPLOY_TAGS+="led-daemon,"
+    DEPLOY_TAGS+="build-tv-daemon,"
+    DEPLOY_TAGS+="screen-daemon"
+else
+    DEPLOY_TAGS="${1}"
+fi
 
 # Run deployment"
 ansible-playbook deploy.yml -v -i ${INVENTORY} --extra-vars "${EXTRA_VARS}" --tags "${DEPLOY_TAGS}"

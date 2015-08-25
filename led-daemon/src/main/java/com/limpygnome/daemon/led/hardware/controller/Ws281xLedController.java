@@ -172,12 +172,19 @@ public class Ws281xLedController implements LedController
 
     public synchronized void dispose()
     {
-        if (leds != null)
+        try
         {
-            rpi_ws281x.ws2811_fini(leds);
-            leds.delete();
-            leds = null;
-            currentChannel = null;
+            if (leds != null)
+            {
+                rpi_ws281x.ws2811_fini(leds);
+                leds.delete();
+                leds = null;
+                currentChannel = null;
+            }
+        }
+        catch (Exception e)
+        {
+            LOG.error("Failed to dispose Ws281x LED controller", e);
         }
     }
 
