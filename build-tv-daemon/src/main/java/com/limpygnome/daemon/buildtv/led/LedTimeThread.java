@@ -1,7 +1,8 @@
 package com.limpygnome.daemon.buildtv.led;
 
-import com.limpygnome.daemon.buildtv.led.pattern.IntervalPattern;
-import com.limpygnome.daemon.buildtv.led.pattern.Pattern;
+import com.limpygnome.daemon.buildtv.led.pattern.source.IntervalPatternSource;
+import com.limpygnome.daemon.buildtv.led.pattern.LedPatterns;
+import com.limpygnome.daemon.buildtv.led.pattern.source.PatternSource;
 import com.limpygnome.daemon.common.ExtendedThread;
 import com.limpygnome.daemon.util.RestClient;
 import org.apache.logging.log4j.LogManager;
@@ -19,13 +20,17 @@ public class LedTimeThread extends ExtendedThread
 {
     private static final Logger LOG = LogManager.getLogger(LedTimeThread.class);
 
-    private String ledDaemonUrl;
-    private String screenDaemonUrl;
-    private HashMap<String, Pattern> patterns;
+    private static final String LED_DAEMON_SOURCE = "build-tv";
 
-    public LedTimeThread(String ledDaemonUrl, String screenDaemonUrl)
+    private String ledDaemonUrl;
+    private long ledDaemonPriority;
+    private String screenDaemonUrl;
+    private HashMap<String, PatternSource> patterns;
+
+    public LedTimeThread(String ledDaemonUrl, long ledDaemonPriority, String screenDaemonUrl)
     {
         this.ledDaemonUrl = ledDaemonUrl;
+        this.ledDaemonPriority = ledDaemonPriority;
         this.screenDaemonUrl = screenDaemonUrl;
         this.patterns = new HashMap<>();
     }
@@ -33,18 +38,18 @@ public class LedTimeThread extends ExtendedThread
     /**
      * Adds a source for an LED pattern.
      *
-     * @param pattern The pattern to add
+     * @param patternSource The pattern to add
      */
-    public synchronized void addPattern(Pattern pattern)
+    public synchronized void addPattern(PatternSource patternSource)
     {
-        patterns.put(pattern.getName(), pattern);
-        LOG.debug("Added pattern source - name: {}, priority: {}", pattern.getName(), pattern.getPriority());
+        patterns.put(patternSource.getName(), patternSource);
+        LOG.debug("Added pattern source - name: {}, priority: {}", patternSource.getName(), patternSource.getPriority());
     }
 
-    public synchronized void removePattern(Pattern pattern)
+    public synchronized void removePattern(PatternSource patternSource)
     {
-        patterns.remove(pattern.getName());
-        LOG.debug("Removed pattern source - name: {}", pattern.getName());
+        patterns.remove(patternSource.getName());
+        LOG.debug("Removed pattern source - name: {}", patternSource.getName());
     }
 
     @Override
@@ -52,27 +57,27 @@ public class LedTimeThread extends ExtendedThread
     {
         final long UPDATE_INTERVAL = 1000;
 
-        Pattern currentPattern;
+        PatternSource currentPatternSource;
 
         while (!isExit())
         {
             // Fetch the current pattern
-            currentPattern = findHighestPriorityPattern();
+            currentPatternSource = findHighestPriorityPattern();
 
             // Update pattern by talking to LED daemon
-            if (currentPattern != null)
+            if (currentPatternSource != null)
             {
-                changePattern(currentPattern.getCurrentLedPattern());
+                changePattern(currentPatternSource.getCurrentLedPattern());
             }
             else
             {
-                changePattern(LedDisplayPatterns.BUILD_UNKNOWN);
+                changePattern(LedPatterns.BUILD_UNKNOWN);
             }
 
             // Update screen on/off
-            if  (   currentPattern != null &&
-                    currentPattern instanceof IntervalPattern &&
-                    ((IntervalPattern) currentPattern).isScreenOff()
+            if  (   currentPatternSource != null &&
+                    currentPatternSource instanceof IntervalPatternSource &&
+                    ((IntervalPatternSource) currentPatternSource).isScreenOff()
                 )
             {
                 changeScreen(ScreenAction.OFF);
@@ -93,34 +98,36 @@ public class LedTimeThread extends ExtendedThread
         }
     }
 
-    private synchronized Pattern findHighestPriorityPattern()
+    private synchronized PatternSource findHighestPriorityPattern()
     {
         // Iterate patterns and retrieve enabled source with highest priority
-        Pattern pattern;
-        Pattern highestPattern = null;
+        PatternSource patternSource;
+        PatternSource highestPatternSource = null;
         int highestPriority = -1;
 
-        for (Map.Entry<String, Pattern> patternSourceKV : patterns.entrySet())
+        for (Map.Entry<String, PatternSource> patternSourceKV : patterns.entrySet())
         {
-            pattern = patternSourceKV.getValue();
+            patternSource = patternSourceKV.getValue();
 
-            if (pattern.getPriority() > highestPriority && pattern.isEnabled())
+            if (patternSource.getPriority() > highestPriority && patternSource.isEnabled())
             {
-                highestPattern = pattern;
-                highestPriority = pattern.getPriority();
+                highestPatternSource = patternSource;
+                highestPriority = patternSource.getPriority();
             }
         }
 
-        return highestPattern;
+        return highestPatternSource;
     }
 
-    private void changePattern(LedDisplayPatterns pattern)
+    private void changePattern(LedPatterns pattern)
     {
         try
         {
             // Build JSON object
             JSONObject jsonRoot = new JSONObject();
+            jsonRoot.put("source", LED_DAEMON_SOURCE);
             jsonRoot.put("pattern", pattern.PATTERN);
+            jsonRoot.put("priority", ledDaemonPriority);
 
             // Make request
             RestClient restClient = new RestClient();

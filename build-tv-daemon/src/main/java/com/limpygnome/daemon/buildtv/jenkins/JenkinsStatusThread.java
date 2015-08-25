@@ -2,8 +2,8 @@ package com.limpygnome.daemon.buildtv.jenkins;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Settings;
-import com.limpygnome.daemon.buildtv.led.LedDisplayPatterns;
-import com.limpygnome.daemon.buildtv.led.pattern.Pattern;
+import com.limpygnome.daemon.buildtv.led.pattern.LedPatterns;
+import com.limpygnome.daemon.buildtv.led.pattern.source.PatternSource;
 import com.limpygnome.daemon.buildtv.service.LedTimeService;
 import com.limpygnome.daemon.common.ExtendedThread;
 import com.limpygnome.daemon.util.RestClient;
@@ -23,7 +23,7 @@ public class JenkinsStatusThread extends ExtendedThread
 
     private LedTimeService ledTimeService;
     private long pollRateMs;
-    private Pattern pattern;
+    private PatternSource patternSource;
 
     private JenkinsHost[] jenkinsHosts;
     private RestClient restClient;
@@ -46,7 +46,7 @@ public class JenkinsStatusThread extends ExtendedThread
         this.restClient = new RestClient(userAgent, bufferSizeBytes);
 
         // Setup a new LED pattern source for this thread
-        this.pattern = new Pattern("Jenkins Status", LedDisplayPatterns.BUILD_UNKNOWN, 1);
+        this.patternSource = new PatternSource("Jenkins Status", LedPatterns.BUILD_UNKNOWN, 1);
 
         // Fetch LED time service for later
         this.ledTimeService = (LedTimeService) controller.getServiceByName("led-time");
@@ -97,10 +97,10 @@ public class JenkinsStatusThread extends ExtendedThread
         Thread.currentThread().setName("Jenkins Status");
 
         // Add our pattern to LED time service
-        ledTimeService.addPatternSource(pattern);
+        ledTimeService.addPatternSource(patternSource);
 
         // Run until thread exits, polling Jenkins for status and updating pattern source
-        LedDisplayPatterns ledPattern;
+        LedPatterns ledPattern;
 
         while (!isExit())
         {
@@ -108,7 +108,7 @@ public class JenkinsStatusThread extends ExtendedThread
             {
                 // Poll Jenkins
                 ledPattern = pollHosts();
-                pattern.setCurrentLedPattern(ledPattern);
+                patternSource.setCurrentLedPattern(ledPattern);
 
                 // Wait a while...
                 Thread.sleep(pollRateMs);
@@ -120,13 +120,13 @@ public class JenkinsStatusThread extends ExtendedThread
         }
 
         // Remove our pattern from LED time service
-        ledTimeService.removePatternSource(pattern);
+        ledTimeService.removePatternSource(patternSource);
     }
 
-    private LedDisplayPatterns pollHosts()
+    private LedPatterns pollHosts()
     {
-        LedDisplayPatterns highest = LedDisplayPatterns.BUILD_UNKNOWN;
-        LedDisplayPatterns current;
+        LedPatterns highest = LedPatterns.BUILD_UNKNOWN;
+        LedPatterns current;
 
         // Get status of each job and keep highest priority LED pattern
         for (JenkinsHost jenkinsHost : jenkinsHosts)

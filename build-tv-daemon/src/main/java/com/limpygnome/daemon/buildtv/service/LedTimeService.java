@@ -3,7 +3,7 @@ package com.limpygnome.daemon.buildtv.service;
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Service;
 import com.limpygnome.daemon.buildtv.led.LedTimeThread;
-import com.limpygnome.daemon.buildtv.led.pattern.Pattern;
+import com.limpygnome.daemon.buildtv.led.pattern.source.PatternSource;
 
 /**
  * Responsible for controlling the LED requests sent to the LED daemon.
@@ -16,10 +16,12 @@ public class LedTimeService implements Service
     public synchronized void start(Controller controller)
     {
         String ledDaemonUrl = controller.getSettings().getString("led-daemon.rest.url");
+        long ledDaemonPriority = controller.getSettings().getLong("led-daemon.priority");
         String screenDaemonUrl = controller.getSettings().getString("screen-daemon.rest.url");
 
         ledTimeThread = new LedTimeThread(
                 ledDaemonUrl,
+                ledDaemonPriority,
                 screenDaemonUrl
         );
         ledTimeThread.start();
@@ -31,13 +33,13 @@ public class LedTimeService implements Service
         ledTimeThread.kill();
     }
 
-    public synchronized void addPatternSource(Pattern pattern)
+    public synchronized void addPatternSource(PatternSource patternSource)
     {
-        ledTimeThread.addPattern(pattern);
+        ledTimeThread.addPattern(patternSource);
     }
 
-    public synchronized void removePatternSource(Pattern pattern)
+    public synchronized void removePatternSource(PatternSource patternSource)
     {
-        ledTimeThread.removePattern(pattern);
+        ledTimeThread.removePattern(patternSource);
     }
 }

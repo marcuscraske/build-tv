@@ -1,9 +1,9 @@
-package com.limpygnome.daemon.buildtv.led;
+package com.limpygnome.daemon.buildtv.led.pattern;
 
 /**
  * The LED pattern to use to reflect the status of the build server. Pattern with highest priority  should be used.
  */
-public enum LedDisplayPatterns
+public enum LedPatterns
 {
     BUILD_UNKNOWN(0, "build-unknown"),
     BUILD_OK(1, "build-ok"),
@@ -21,15 +21,15 @@ public enum LedDisplayPatterns
     public final int PRIORITY;
     public final String PATTERN;
 
-    LedDisplayPatterns(int priority, String pattern)
+    LedPatterns(int priority, String pattern)
     {
         this.PRIORITY = priority;
         this.PATTERN = pattern;
     }
 
-    public static LedDisplayPatterns getByName(String name)
+    public static LedPatterns getByName(String name)
     {
-        for (LedDisplayPatterns ledPattern : values())
+        for (LedPatterns ledPattern : values())
         {
             if (ledPattern.PATTERN.equals(name))
             {

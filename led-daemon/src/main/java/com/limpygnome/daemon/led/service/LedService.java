@@ -3,6 +3,7 @@ package com.limpygnome.daemon.led.service;
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Service;
 import com.limpygnome.daemon.led.hardware.controller.LedController;
+import com.limpygnome.daemon.led.model.LedSource;
 import com.limpygnome.daemon.util.EnvironmentUtil;
 import com.limpygnome.daemon.led.hardware.pattern.build.*;
 import com.limpygnome.daemon.led.hardware.pattern.daemon.*;
@@ -14,6 +15,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * A service to control an LED strip.
@@ -22,16 +25,34 @@ public class LedService implements Service
 {
     private static final Logger LOG = LogManager.getLogger(LedService.class);
 
+    /**
+     * The name used by this daemon when internally setting an LED source.
+     */
+    public static final String INTERNAL_LED_SOURCE = "led-daemon";
+
+    /**
+     * The priority used by this daemon when internally setting an LED source.
+     */
+    public static final long INTERNAL_LED_PRIORITY = 0;
+
     private HashMap<String, Pattern> patterns;
     private LedController ledController;
     private LedRenderThread ledRenderThread;
-    private String currentPatternName;
+
+    private TreeMap<String, LedSource> ledSources;
+    private LedSource currentPattern;
 
     public LedService()
     {
         this.patterns = new HashMap<>();
         this.ledRenderThread = null;
         this.ledController = null;
+        this.currentPattern = null;
+
+        // Setup treemap with ordering by value
+        LedSource.LedSourceComparator ledSourceComparator = new LedSource.LedSourceComparator();
+        this.ledSources = new TreeMap<>(ledSourceComparator);
+        ledSourceComparator.setMap(this.ledSources);
     }
 
     @Override
@@ -71,14 +92,14 @@ public class LedService implements Service
 
 
         // Set startup pattern, whilst another service changes it
-        setPattern("startup");
+        setPattern(INTERNAL_LED_SOURCE, "startup", INTERNAL_LED_PRIORITY);
     }
 
     @Override
     public synchronized void stop(Controller controller)
     {
         // Change pattern to shutdown
-        setPattern("shutdown");
+        setPattern(INTERNAL_LED_SOURCE, "shutdown", INTERNAL_LED_PRIORITY);
 
         // Stop render thread
         if (ledRenderThread != null)
@@ -98,13 +119,16 @@ public class LedService implements Service
         }
     }
 
-    public synchronized void setPattern(String patternName)
+    public synchronized void setPattern(String source, String patternName, long priority)
     {
-        // Check if pattern already set
-        if (currentPatternName != null && currentPatternName.equals(patternName))
+        // Check params are valid
+        if (source == null || source.length() == 0)
         {
-            LOG.debug("Ignoring pattern change request, already set - pattern: {}", patternName);
-            return;
+            throw new IllegalArgumentException("Invalid source argument");
+        }
+        else if (patternName == null || patternName.length() == 0)
+        {
+            throw new IllegalArgumentException("Invalid pattern name");
         }
 
         // Locate pattern
@@ -116,20 +140,61 @@ public class LedService implements Service
         }
         else
         {
-            // Kill current thread
-            if (ledRenderThread != null)
+            // Construct instance of LED pattern source
+            LedSource ledSource = new LedSource(source, pattern, priority);
+
+            // Add/update source
+            ledSources.put(ledSource.getSource(), ledSource);
+            LOG.debug("LED source updated - source: {}", ledSource);
+
+            // Trigger check of LED source
+            checkLedSource();
+        }
+    }
+
+    private synchronized void checkLedSource()
+    {
+        // Fetch highest item
+        LedSource ledSourceHighest = fetchHighestLedSource();
+
+        LOG.error("HIGHEST {}", ledSourceHighest);
+
+        if (ledSourceHighest != null && (currentPattern == null || ledSourceHighest.getPriority() > currentPattern.getPriority()))
+        {
+            // Check if to switch the current pattern being rendered
+            if  (currentPattern == null || ledSourceHighest.getPattern() != currentPattern.getPattern())
             {
-                ledRenderThread.kill();
+                // Kill current thread
+                if (ledRenderThread != null)
+                {
+                    ledRenderThread.kill();
+                }
+
+                // Start new thread
+                ledRenderThread = new LedRenderThread(this, ledSourceHighest.getPattern());
+                ledRenderThread.start();
+
+                LOG.debug("LED pattern changed - source: {}", ledSourceHighest);
+            }
+            else
+            {
+                LOG.debug("LED pattern not updated, no difference - source: {}", ledSourceHighest);
             }
 
-            // Build new thread
-            ledRenderThread = new LedRenderThread(this, pattern);
-            ledRenderThread.start();
-
-            currentPatternName = patternName;
-
-            LOG.debug("LED pattern changed - pattern: {}", patternName);
+            // Check if to update current pattern source
+            if (currentPattern == null || !currentPattern.getSource().equals(ledSourceHighest.getSource()))
+            {
+                currentPattern = ledSourceHighest;
+                LOG.debug("LED current pattern source updated - source: {}", ledSourceHighest);
+            }
         }
+    }
+
+    private synchronized LedSource fetchHighestLedSource()
+    {
+        String lastKey = ledSources.lastKey();
+        Map.Entry<String, LedSource> entry = ledSources.get();
+        return entry != null ? entry.getValue() : null;
     }
 
     public synchronized LedController getLedController()

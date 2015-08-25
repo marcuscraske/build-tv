@@ -15,4 +15,10 @@ public class BuildFailure implements Pattern
     {
         GenericKnightRiderPattern.renderKnightRiderEffect(ledRenderThread, ledController, 20, 255, 0, 0);
     }
+
+    @Override
+    public String getName()
+    {
+        return "Build Failure";
+    }
 }

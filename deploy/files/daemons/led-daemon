@@ -29,6 +29,11 @@ stop()
     start-stop-daemon --stop --quiet --oknodo --pidfile /var/run/${DAEMON_NAME}.pid
 }
 
+test()
+{
+    exec /usr/bin/java -jar "${DAEMON_JAR}" test
+}
+
 case "$1" in
     start)
         start
@@ -41,8 +46,11 @@ case "$1" in
         sleep 5
         start
         ;;
+    test)
+        test
+        ;;
     *)
-        echo "Usage: /etc/init.d/${DAEMON_NAME} {start|stop|restart}"
+        echo "Usage: /etc/init.d/${DAEMON_NAME} {start|stop|restart|test}"
         exit 1
         ;;
 esac

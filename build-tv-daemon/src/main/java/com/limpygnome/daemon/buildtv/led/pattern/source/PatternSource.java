@@ -1,18 +1,18 @@
-package com.limpygnome.daemon.buildtv.led.pattern;
+package com.limpygnome.daemon.buildtv.led.pattern.source;
 
-import com.limpygnome.daemon.buildtv.led.LedDisplayPatterns;
+import com.limpygnome.daemon.buildtv.led.pattern.LedPatterns;
 
 /**
  * Represents a source of a LED pattern, with the priority and enable status used to determine which
  * source's LED pattern should be used.
  */
-public class Pattern
+public class PatternSource
 {
     private String name;
-    private LedDisplayPatterns currentLedPattern;
+    private LedPatterns currentLedPattern;
     private int priority;
 
-    public Pattern(String name, LedDisplayPatterns initialCurrentLedPattern, int priority)
+    public PatternSource(String name, LedPatterns initialCurrentLedPattern, int priority)
     {
         this.name = name;
         this.currentLedPattern = initialCurrentLedPattern;
@@ -35,7 +35,7 @@ public class Pattern
         return name;
     }
 
-    public LedDisplayPatterns getCurrentLedPattern()
+    public LedPatterns getCurrentLedPattern()
     {
         return currentLedPattern;
     }
@@ -45,7 +45,7 @@ public class Pattern
         return priority;
     }
 
-    public void setCurrentLedPattern(LedDisplayPatterns currentLedPattern)
+    public void setCurrentLedPattern(LedPatterns currentLedPattern)
     {
         this.currentLedPattern = currentLedPattern;
     }

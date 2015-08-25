@@ -15,4 +15,10 @@ public class BuildUnknown implements Pattern
     {
         GenericPulsePattern.pulse(ledRenderThread, ledController, 255, 140, 0, 40, 0.01f);
     }
+
+    @Override
+    public String getName()
+    {
+        return "Build Unknown";
+    }
 }

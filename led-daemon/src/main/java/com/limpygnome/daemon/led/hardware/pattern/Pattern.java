@@ -12,4 +12,6 @@ public interface Pattern
 
     void render(LedRenderThread ledRenderThread, LedController ledController) throws InterruptedException;
 
+    String getName();
+
 }

@@ -33,12 +33,25 @@ public class LedRestHandler implements RestServiceHandler
     @Override
     public boolean handleRequestInChain(HttpExchange httpExchange, JSONObject jsonRoot)
     {
+        // Check required data elements present
+        if (!jsonRoot.containsKey("source") || !jsonRoot.containsKey("pattern") || !jsonRoot.containsKey("priority"))
+        {
+            LOG.debug("Malformed LED daemon request");
+            return false;
+        }
+
         // Read, clean and validate requested LED pattern
+        String source = (String) jsonRoot.get("source");
         String pattern = (String) jsonRoot.get("pattern");
+        long priority = (long) jsonRoot.get("priority");
 
         pattern = pattern.trim().toLowerCase();
 
-        if (!pattern.matches("^[a-z0-9\\_\\-]+$"))
+        if (!source.matches("^[a-z0-9\\_\\-]+$"))
+        {
+            throw new IllegalArgumentException("Invalid source specified in web request");
+        }
+        else if (!pattern.matches("^[a-z0-9\\_\\-]+$"))
         {
             throw new IllegalArgumentException("Invalid pattern specified in web request");
         }
@@ -46,13 +59,17 @@ public class LedRestHandler implements RestServiceHandler
         // Hand to LED service to use pattern
         if (ledService != null)
         {
-            LOG.debug("Attempting pattern change - pattern: {}", pattern);
+            LOG.debug("Attempting pattern change - source: {}, pattern: {}, priority: {}",
+                    source, pattern, priority
+            );
 
-            ledService.setPattern(pattern);
+            ledService.setPattern(source, pattern, priority);
         }
         else
         {
-            LOG.warn("Unable to set LED pattern, LED service not available - pattern: {}", pattern);
+            LOG.warn("Unable to set LED pattern, LED service not available - source: {}, pattern: {}, priority: {}",
+                    source, pattern, priority
+            );
         }
 
         return true;

@@ -15,4 +15,10 @@ public class JenkinsUnavailable implements Pattern
     {
         GenericPulsePattern.pulse(ledRenderThread, ledController, 255, 0, 0, 40, 0.05f);
     }
+
+    @Override
+    public String getName()
+    {
+        return "Jenkins Unavailable";
+    }
 }

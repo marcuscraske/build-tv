@@ -21,4 +21,10 @@ public class Startup implements Pattern
             Thread.sleep(100);
         }
     }
+
+    @Override
+    public String getName()
+    {
+        return "Startup";
+    }
 }

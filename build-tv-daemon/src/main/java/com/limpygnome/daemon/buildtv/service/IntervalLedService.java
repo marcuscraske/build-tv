@@ -2,8 +2,8 @@ package com.limpygnome.daemon.buildtv.service;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Service;
-import com.limpygnome.daemon.buildtv.led.pattern.IntervalPattern;
-import com.limpygnome.daemon.buildtv.led.LedDisplayPatterns;
+import com.limpygnome.daemon.buildtv.led.pattern.source.IntervalPatternSource;
+import com.limpygnome.daemon.buildtv.led.pattern.LedPatterns;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
@@ -26,7 +26,7 @@ public class IntervalLedService implements Service
 
     private Controller controller;
     private LedTimeService ledTimeService;
-    private LinkedList<IntervalPattern> intervalPatterns;
+    private LinkedList<IntervalPatternSource> intervalPatterns;
 
     public IntervalLedService(Controller controller)
     {
@@ -52,16 +52,16 @@ public class IntervalLedService implements Service
             JSONArray intervals = (JSONArray) jsonRoot.get("intervals");
 
             JSONObject interval;
-            IntervalPattern intervalPattern;
+            IntervalPatternSource intervalPattern;
 
             for (Object obj : intervals)
             {
                 interval = (JSONObject) obj;
 
                 // Parse interval
-                intervalPattern = new IntervalPattern(
+                intervalPattern = new IntervalPatternSource(
                         (String) interval.get("name"),
-                        LedDisplayPatterns.getByName((String) interval.get("pattern")),
+                        LedPatterns.getByName((String) interval.get("pattern")),
                         (int) (long) interval.get("priority"),
                         (int) (long) interval.get("startHour"),
                         (int) (long) interval.get("startMinute"),
@@ -90,7 +90,7 @@ public class IntervalLedService implements Service
     public synchronized void stop(Controller controller)
     {
         // Remove patterns from service
-        for (IntervalPattern intervalPattern : intervalPatterns)
+        for (IntervalPatternSource intervalPattern : intervalPatterns)
         {
             ledTimeService.removePatternSource(intervalPattern);
         }

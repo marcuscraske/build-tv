@@ -24,4 +24,10 @@ public class Standup implements Pattern
             GenericPulsePattern.pulse(ledRenderThread, ledController, red, green, blue, 40, 0.05f, 40);
         }
     }
+
+    @Override
+    public String getName()
+    {
+        return "Standup";
+    }
 }

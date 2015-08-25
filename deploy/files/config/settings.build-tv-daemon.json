@@ -24,5 +24,6 @@
     },
 
     "led-daemon.rest.url"       : "http://localhost:2500",
+    "led-daemon.priority"       : 100,
     "screen-daemon.rest.url"    : "http://localhost:2600"
 }

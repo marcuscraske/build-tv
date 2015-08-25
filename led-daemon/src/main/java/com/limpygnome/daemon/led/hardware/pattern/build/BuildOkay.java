@@ -15,4 +15,10 @@ public class BuildOkay implements Pattern
         ledController.setStrip(0, 255, 0);
         ledController.render();
     }
+
+    @Override
+    public String getName()
+    {
+        return "Build OK";
+    }
 }

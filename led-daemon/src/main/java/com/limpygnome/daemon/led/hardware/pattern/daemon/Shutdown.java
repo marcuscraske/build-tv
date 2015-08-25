@@ -27,4 +27,10 @@ public class Shutdown implements Pattern
             }
         }
     }
+
+    @Override
+    public String getName()
+    {
+        return "Shutdown";
+    }
 }

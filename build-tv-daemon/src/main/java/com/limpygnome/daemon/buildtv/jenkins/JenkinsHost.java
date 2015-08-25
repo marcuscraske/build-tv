@@ -1,6 +1,6 @@
 package com.limpygnome.daemon.buildtv.jenkins;
 
-import com.limpygnome.daemon.buildtv.led.LedDisplayPatterns;
+import com.limpygnome.daemon.buildtv.led.pattern.LedPatterns;
 import com.limpygnome.daemon.util.RestClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,7 +38,7 @@ public class JenkinsHost
         this.finalUrl = this.baseUrl + "/api/json";
     }
 
-    public LedDisplayPatterns update(RestClient restClient)
+    public LedPatterns update(RestClient restClient)
     {
         try
         {
@@ -56,7 +56,7 @@ public class JenkinsHost
             String project;
             String status;
 
-            LedDisplayPatterns ledPatternHighest = LedDisplayPatterns.BUILD_UNKNOWN;
+            LedPatterns ledPatternHighest = LedPatterns.BUILD_UNKNOWN;
 
             for (int i = 0; i < rawJobsArray.size(); i++)
             {
@@ -70,7 +70,7 @@ public class JenkinsHost
                 if (jobsEmpty || jobs.contains(project))
                 {
                     // Handle status to get led pattern
-                    LedDisplayPatterns ledPattern;
+                    LedPatterns ledPattern;
 
                     switch (status)
                     {
@@ -78,25 +78,25 @@ public class JenkinsHost
                         case "yellow_anime":
                         case "red_anime":
                         case "aborted_anime":
-                            ledPattern = LedDisplayPatterns.BUILD_PROGRESS;
+                            ledPattern = LedPatterns.BUILD_PROGRESS;
                             break;
                         case "blue":
                         case "notbuilt":
                         case "disabled":
-                            ledPattern = LedDisplayPatterns.BUILD_OK;
+                            ledPattern = LedPatterns.BUILD_OK;
                             break;
                         case "red":
-                            ledPattern = LedDisplayPatterns.BUILD_FAILURE;
+                            ledPattern = LedPatterns.BUILD_FAILURE;
                             break;
                         case "yellow":
                         case "aborted":
-                            ledPattern = LedDisplayPatterns.BUILD_UNSTABLE;
+                            ledPattern = LedPatterns.BUILD_UNSTABLE;
                             break;
                         default:
                             LOG.warn("Unknown build status/colour - name: {}, project: {}, status: {}",
                                     name, project, status);
 
-                            ledPattern = LedDisplayPatterns.BUILD_UNKNOWN;
+                            ledPattern = LedPatterns.BUILD_UNKNOWN;
                             break;
                     }
 
@@ -116,7 +116,7 @@ public class JenkinsHost
         {
             LOG.error("Failed to poll Jenkins host - name: {}, url: {}", name, finalUrl, e);
 
-            return LedDisplayPatterns.JENKINS_UNAVAILABLE;
+            return LedPatterns.JENKINS_UNAVAILABLE;
         }
     }
 
