@@ -19,6 +19,6 @@ public class BuildProgress implements Pattern
     @Override
     public String getName()
     {
-        return "Build Progress";
+        return "build-progress";
     }
 }

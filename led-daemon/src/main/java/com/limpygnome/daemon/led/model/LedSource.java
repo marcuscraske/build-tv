@@ -49,6 +49,28 @@ public class LedSource
     }
 
     @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        LedSource ledSource = (LedSource) o;
+
+        if (priority != ledSource.priority) return false;
+        if (source != null ? !source.equals(ledSource.source) : ledSource.source != null) return false;
+        return !(pattern != null ? !pattern.equals(ledSource.pattern) : ledSource.pattern != null);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = source != null ? source.hashCode() : 0;
+        result = 31 * result + (pattern != null ? pattern.hashCode() : 0);
+        result = 31 * result + (int) (priority ^ (priority >>> 32));
+        return result;
+    }
+
+    @Override
     public String toString()
     {
         return "[source: " + source + ", pattern: " + pattern.getName() + ", priority: " + priority + "]";

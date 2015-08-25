@@ -8,9 +8,13 @@ import com.limpygnome.daemon.led.hardware.LedRenderThread;
  */
 public class GenericKnightRiderPattern
 {
-
     public static void renderKnightRiderEffect(LedRenderThread ledRenderThread, LedController ledController,
                                                long frameDelay, int red, int green, int blue) throws InterruptedException
+    {
+        renderKnightRiderEffect(ledRenderThread, ledController, frameDelay, red, green, blue, -1);
+    }
+    public static void renderKnightRiderEffect(LedRenderThread ledRenderThread, LedController ledController,
+                                               long frameDelay, int red, int green, int blue, int iterations) throws InterruptedException
     {
         int currentLedIndex = 0;
         boolean positiveFlow = true;
@@ -20,7 +24,9 @@ public class GenericKnightRiderPattern
         int maxRange = ledsCount + (maxFallOffLeds / 2);
         int minRange = -(maxFallOffLeds / 2);
 
-        while (!ledRenderThread.isExit())
+        int i = 0;
+
+        while (!ledRenderThread.isExit() && (iterations == -1 || i++ < iterations))
         {
             // Render frame
             knightRiderFrame(ledController, currentLedIndex, maxFallOffLeds, ledsCount, red, green, blue);

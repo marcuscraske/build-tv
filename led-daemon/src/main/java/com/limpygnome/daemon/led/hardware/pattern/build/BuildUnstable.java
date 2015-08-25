@@ -19,6 +19,6 @@ public class BuildUnstable implements Pattern
     @Override
     public String getName()
     {
-        return "Build Unstable";
+        return "build-unstable";
     }
 }

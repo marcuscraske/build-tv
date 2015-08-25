@@ -46,7 +46,6 @@ EXTRA_VARS+="screen_daemon=\"${PATH_SCREEN_DAEMON}\" "
 
 # Build tags
 if [[ -z "${1}" ]]; then
-    DEPLOY_TAGS+="setup-files,"
     DEPLOY_TAGS+="setup-pi,"
     DEPLOY_TAGS+="config,"
     DEPLOY_TAGS+="neopixel-lib,"

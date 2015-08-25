@@ -19,6 +19,6 @@ public class BuildOkay implements Pattern
     @Override
     public String getName()
     {
-        return "Build OK";
+        return "build-ok";
     }
 }

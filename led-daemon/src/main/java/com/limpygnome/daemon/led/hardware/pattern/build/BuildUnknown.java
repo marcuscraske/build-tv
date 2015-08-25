@@ -19,6 +19,6 @@ public class BuildUnknown implements Pattern
     @Override
     public String getName()
     {
-        return "Build Unknown";
+        return "build-unknown";
     }
 }

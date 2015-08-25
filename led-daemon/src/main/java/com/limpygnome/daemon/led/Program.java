@@ -1,15 +1,24 @@
 package com.limpygnome.daemon.led;
 
 import com.limpygnome.daemon.api.Controller;
+import com.limpygnome.daemon.led.hardware.pattern.daemon.Test;
 import com.limpygnome.daemon.led.rest.LedRestHandler;
 import com.limpygnome.daemon.led.service.LedService;
 import com.limpygnome.daemon.service.RestService;
+import com.limpygnome.daemon.util.RestClient;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.simple.JSONObject;
 
 /**
  * The entry point into the LED daemon.
  */
 public class Program
 {
+    private static final Logger LOG = LogManager.getLogger(Program.class);
+
+    private static final String CONTROLLER_NAME = "led-daemon";
+
     enum Mode
     {
         DAEMON,
@@ -44,7 +53,7 @@ public class Program
 
     public static void runDaemon()
     {
-        Controller controller = new Controller("led-daemon");
+        Controller controller = new Controller(CONTROLLER_NAME);
 
         // Add services
         controller.add("leds", new LedService());
@@ -58,8 +67,27 @@ public class Program
 
     public static void runLedTest()
     {
-        // Setup REST client to set test/diagnostics pattern
-        // TODO: finish this
+        // Create minimal controller to read settings
+        Controller controller = new Controller(CONTROLLER_NAME);
+
+        // Build JSON to invoke test pattern
+        JSONObject jsonRoot = new JSONObject();
+        jsonRoot.put("source", "led-test");
+        jsonRoot.put("pattern", new Test().getName());
+        jsonRoot.put("priority", 9999);
+
+        // Make request
+        try
+        {
+            RestClient restClient = new RestClient();
+            restClient.executePost("http://localhost:" + controller.getSettings().getLong("rest/port"), jsonRoot);
+
+            LOG.info("Invoked LED daemon endpoint successfully");
+        }
+        catch (Exception e)
+        {
+            LOG.error("Failed to invoke test pattern on local LED daemon REST endpoint, is it running?", e);
+        }
     }
 
 }

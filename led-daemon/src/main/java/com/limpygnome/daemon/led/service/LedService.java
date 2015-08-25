@@ -77,22 +77,29 @@ public class LedService implements Service
         }
 
         // Register all the patterns!
-        patterns.put("build-unknown", new BuildUnknown());
-        patterns.put("build-ok", new BuildOkay());
-        patterns.put("build-progress", new BuildProgress());
-        patterns.put("build-unstable", new BuildUnstable());
-        patterns.put("build-failure", new BuildFailure());
-        patterns.put("jenkins-unavailable", new JenkinsUnavailable());
+        // TODO: use annotations for magical scanning
+        addPattern(new BuildUnknown());
+        addPattern(new BuildOkay());
+        addPattern(new BuildProgress());
+        addPattern(new BuildUnstable());
+        addPattern(new BuildFailure());
+        addPattern(new JenkinsUnavailable());
 
-        patterns.put("shutdown", new Shutdown());
-        patterns.put("startup", new Startup());
+        addPattern(new Shutdown());
+        addPattern(new Startup());
+        addPattern(new Test());
 
-        patterns.put("standup", new Standup());
+        addPattern(new Standup());
 
         LOG.info("{} LED patterns loaded", patterns.size());
 
         // Set startup pattern, whilst another service changes it
         setPattern(INTERNAL_LED_SOURCE, "startup", INTERNAL_LED_PRIORITY);
+    }
+
+    private synchronized void addPattern(Pattern pattern)
+    {
+        patterns.put(pattern.getName(), pattern);
     }
 
     @Override
@@ -158,7 +165,7 @@ public class LedService implements Service
         // Fetch highest item
         LedSource ledSourceHighest = fetchHighestLedSource();
 
-        if (ledSourceHighest != null && (currentPattern == null || ledSourceHighest.getPriority() > currentPattern.getPriority()))
+        if (ledSourceHighest != null && (currentPattern == null || currentPattern != ledSourceHighest))
         {
             // Check if to switch the current pattern being rendered
             if  (currentPattern == null || ledSourceHighest.getPattern() != currentPattern.getPattern())
@@ -180,12 +187,8 @@ public class LedService implements Service
                 LOG.debug("LED pattern not updated, no difference - source: {}", ledSourceHighest);
             }
 
-            // Check if to update current pattern source
-            if (currentPattern == null || !currentPattern.getSource().equals(ledSourceHighest.getSource()))
-            {
-                currentPattern = ledSourceHighest;
-                LOG.debug("LED current pattern source updated - source: {}", ledSourceHighest);
-            }
+            currentPattern = ledSourceHighest;
+            LOG.debug("LED current pattern source updated - source: {}", ledSourceHighest);
         }
     }
 

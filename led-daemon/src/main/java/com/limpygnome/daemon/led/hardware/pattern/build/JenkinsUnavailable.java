@@ -19,6 +19,6 @@ public class JenkinsUnavailable implements Pattern
     @Override
     public String getName()
     {
-        return "Jenkins Unavailable";
+        return "jenkins-unavailable";
     }
 }

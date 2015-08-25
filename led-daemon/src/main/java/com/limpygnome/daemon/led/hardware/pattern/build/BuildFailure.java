@@ -19,6 +19,6 @@ public class BuildFailure implements Pattern
     @Override
     public String getName()
     {
-        return "Build Failure";
+        return "build-failure";
     }
 }

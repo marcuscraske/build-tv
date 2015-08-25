@@ -92,7 +92,14 @@ public class Settings
 
     public synchronized Object getObject(String path)
     {
-        return getIterativeSettingAtPath(path);
+        Object value = getIterativeSettingAtPath(path);
+
+        if (value == null)
+        {
+            throw new RuntimeException("Setting '" + path + "' not found");
+        }
+
+        return value;
     }
 
     public synchronized JSONObject getJsonObject(String path)

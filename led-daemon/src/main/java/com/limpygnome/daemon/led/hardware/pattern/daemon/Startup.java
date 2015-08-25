@@ -25,6 +25,6 @@ public class Startup implements Pattern
     @Override
     public String getName()
     {
-        return "Startup";
+        return "startup";
     }
 }

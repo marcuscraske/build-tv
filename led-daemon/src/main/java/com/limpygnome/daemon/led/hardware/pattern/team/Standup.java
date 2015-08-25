@@ -28,6 +28,6 @@ public class Standup implements Pattern
     @Override
     public String getName()
     {
-        return "Standup";
+        return "standup";
     }
 }
