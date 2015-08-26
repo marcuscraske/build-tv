@@ -1,11 +1,13 @@
 package com.impygnome.client.ui;
 
+import com.limpygnome.daemon.common.ExtendedThread;
+
 import java.awt.*;
 
 /**
  * Created by limpygnome on 26/08/15.
  */
-public class MessageWindowExpanderThread extends Thread
+public class MessageWindowExpanderThread extends ExtendedThread
 {
     private MessageWindow messageWindow;
     private int targetWidth;
@@ -79,7 +81,7 @@ public class MessageWindowExpanderThread extends Thread
             }
             catch (InterruptedException e) { }
         }
-        while (windowWidth < targetWidth || windowHeight < targetHeight);
+        while (!isExit() && (windowWidth < targetWidth || windowHeight < targetHeight));
 
         // Show message since resize complete
         messageWindow.showMessage();

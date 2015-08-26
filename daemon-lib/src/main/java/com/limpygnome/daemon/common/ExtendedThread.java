@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * Created by limpygnome on 19/07/15.
  */
-public class ExtendedThread extends Thread
+public abstract class ExtendedThread extends Thread
 {
     private static final Logger LOG = LogManager.getLogger(ExtendedThread.class);
 
@@ -44,4 +44,6 @@ public class ExtendedThread extends Thread
         }
     }
 
+    @Override
+    public abstract void run();
 }
