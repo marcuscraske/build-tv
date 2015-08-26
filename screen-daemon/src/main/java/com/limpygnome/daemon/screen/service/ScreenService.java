@@ -58,9 +58,10 @@ public class ScreenService implements Service
     {
         if (!isTooSoon() && !this.screenOn)
         {
-            LOG.debug("Turning screen on...");
+            LOG.info("Turning screen on...");
 
             exec("/opt/vc/bin/tvservice -p");
+            exec("fbset -depth 16");
             exec("fbset -depth 0");
             exec("fbset -depth 16");
             exec("fbset -accel true");
@@ -73,7 +74,7 @@ public class ScreenService implements Service
     {
         if (!isTooSoon() && this.screenOn)
         {
-            LOG.debug("Turning screen off...");
+            LOG.info("Turning screen off...");
 
             exec("/opt/vc/bin/tvservice -o");
 

@@ -39,14 +39,14 @@ public class LedService implements Service
     private LedRenderThread ledRenderThread;
 
     private HashMap<String, LedSource> ledSources;
-    private LedSource currentPattern;
+    private LedSource currentLedSource;
 
     public LedService()
     {
         this.patterns = new HashMap<>();
         this.ledRenderThread = null;
         this.ledController = null;
-        this.currentPattern = null;
+        this.currentLedSource = null;
 
         // Setup two maps, one with sorting by value
         this.ledSources = new HashMap<>();
@@ -94,7 +94,7 @@ public class LedService implements Service
         LOG.info("{} LED patterns loaded", patterns.size());
 
         // Set startup pattern, whilst another service changes it
-        setPattern(INTERNAL_LED_SOURCE, "startup", INTERNAL_LED_PRIORITY);
+        setLedSource(INTERNAL_LED_SOURCE, "startup", INTERNAL_LED_PRIORITY);
     }
 
     private synchronized void addPattern(Pattern pattern)
@@ -106,7 +106,7 @@ public class LedService implements Service
     public synchronized void stop(Controller controller)
     {
         // Change pattern to shutdown
-        setPattern(INTERNAL_LED_SOURCE, "shutdown", INTERNAL_LED_PRIORITY);
+        setLedSource(INTERNAL_LED_SOURCE, "shutdown", INTERNAL_LED_PRIORITY);
 
         // Stop render thread
         if (ledRenderThread != null)
@@ -126,7 +126,7 @@ public class LedService implements Service
         }
     }
 
-    public synchronized void setPattern(String source, String patternName, long priority)
+    public synchronized void setLedSource(String source, String patternName, long priority)
     {
         // Check params are valid
         if (source == null || source.length() == 0)
@@ -160,15 +160,20 @@ public class LedService implements Service
         }
     }
 
+    public synchronized LedSource getCurrentLedSource()
+    {
+        return currentLedSource;
+    }
+
     private synchronized void checkLedSource()
     {
         // Fetch highest item
         LedSource ledSourceHighest = fetchHighestLedSource();
 
-        if (ledSourceHighest != null && (currentPattern == null || currentPattern != ledSourceHighest))
+        if (ledSourceHighest != null && (currentLedSource == null || currentLedSource != ledSourceHighest))
         {
             // Check if to switch the current pattern being rendered
-            if  (currentPattern == null || ledSourceHighest.getPattern() != currentPattern.getPattern())
+            if  (currentLedSource == null || ledSourceHighest.getPattern() != currentLedSource.getPattern())
             {
                 // Kill current thread
                 if (ledRenderThread != null)
@@ -187,8 +192,12 @@ public class LedService implements Service
                 LOG.debug("LED pattern not updated, no difference - source: {}", ledSourceHighest);
             }
 
-            currentPattern = ledSourceHighest;
+            currentLedSource = ledSourceHighest;
             LOG.debug("LED current pattern source updated - source: {}", ledSourceHighest);
+        }
+        else
+        {
+            LOG.debug("LED pattern not updated, no source or source not changed - source: {}", ledSourceHighest);
         }
     }
 

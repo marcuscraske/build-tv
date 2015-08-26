@@ -63,7 +63,7 @@ public class LedRestHandler implements RestServiceHandler
                     source, pattern, priority
             );
 
-            ledService.setPattern(source, pattern, priority);
+            ledService.setLedSource(source, pattern, priority);
         }
         else
         {
