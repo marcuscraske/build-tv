@@ -20,6 +20,9 @@
         <module>build-tv-daemon</module>
         <module>screen-daemon</module>
 
+        <!-- Clients -->
+        <module>notification-client</module>
+
         <!-- Deployment-->
         <module>deploy</module>
     </modules>
