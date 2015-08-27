@@ -1,6 +1,6 @@
 package com.limpygnome.daemon.buildtv.led.pattern.source;
 
-import com.limpygnome.daemon.buildtv.led.pattern.LedPatterns;
+import com.limpygnome.daemon.buildtv.led.pattern.LedPattern;
 
 /**
  * Represents a source of a LED pattern, with the priority and enable status used to determine which
@@ -9,10 +9,10 @@ import com.limpygnome.daemon.buildtv.led.pattern.LedPatterns;
 public class PatternSource
 {
     private String name;
-    private LedPatterns currentLedPattern;
+    private LedPattern currentLedPattern;
     private int priority;
 
-    public PatternSource(String name, LedPatterns initialCurrentLedPattern, int priority)
+    public PatternSource(String name, LedPattern initialCurrentLedPattern, int priority)
     {
         this.name = name;
         this.currentLedPattern = initialCurrentLedPattern;
@@ -35,7 +35,7 @@ public class PatternSource
         return name;
     }
 
-    public LedPatterns getCurrentLedPattern()
+    public LedPattern getCurrentLedPattern()
     {
         return currentLedPattern;
     }
@@ -45,7 +45,7 @@ public class PatternSource
         return priority;
     }
 
-    public void setCurrentLedPattern(LedPatterns currentLedPattern)
+    public void setCurrentLedPattern(LedPattern currentLedPattern)
     {
         this.currentLedPattern = currentLedPattern;
     }

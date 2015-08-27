@@ -1,6 +1,6 @@
 package com.limpygnome.daemon.buildtv.led.pattern.source;
 
-import com.limpygnome.daemon.buildtv.led.pattern.LedPatterns;
+import com.limpygnome.daemon.buildtv.led.pattern.LedPattern;
 import org.joda.time.DateTime;
 
 /**
@@ -12,7 +12,7 @@ public class IntervalPatternSource extends PatternSource
     private int endMinuteOfDay;
     private boolean screenOff;
 
-    public IntervalPatternSource(String name, LedPatterns initialCurrentLedPattern, int priority,
+    public IntervalPatternSource(String name, LedPattern initialCurrentLedPattern, int priority,
                                  int startHour, int startMinute, int endHour, int endMinute,
                                  boolean screenOff)
     {

@@ -48,7 +48,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>com.limpygnome.daemon.screen.Program</mainClass>
+							<mainClass>com.limpygnome.client.notifications.Program</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>

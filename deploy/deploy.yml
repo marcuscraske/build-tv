@@ -8,10 +8,12 @@
   roles:
     - { role: 01_setup-temp-files, tags: ["always"] }
     - { role: 02_setup-pi, tags: ["setup-pi"] }
-    - { role: 03_shared-config, tags: ["config"] }
-    - { role: 04_neopixel-ws281x-lib, tags: ["neopixel-lib"] }
-    - { role: 05_led-daemon, tags: ["led-daemon"] }
-    - { role: 06_build-tv-daemon, tags: ["build-tv-daemon"] }
-    - { role: 07_screen-daemon, tags: ["screen-daemon"] }
-    - { role: 08_remove-temp-files, tags: ["always"] }
-    - { role: 09_setup-reboot, tags: ["setup-pi"] }
+    - { role: 03_wallboard, tags: ["wallboard"] }
+    - { role: 04_shared-config, tags: ["config"] }
+    - { role: 05_neopixel-ws281x-lib, tags: ["neopixel-lib"] }
+    - { role: 06_led-daemon, tags: ["led-daemon"] }
+    - { role: 07_build-tv-daemon, tags: ["build-tv-daemon"] }
+    - { role: 08_screen-daemon, tags: ["screen-daemon"] }
+    - { role: 09_notification-client, tags: ["notification-client"] }
+    - { role: 10_remove-temp-files, tags: ["always"] }
+    - { role: 11_setup-reboot, tags: ["reboot"] }

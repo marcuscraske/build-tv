@@ -20,10 +20,6 @@
                     "ZooKeeper_branch35_jdk7",
                     "maven-plugins-ITs-m2"
                 ]
-            },
-            {
-                "name"      : "Apache - All",
-                "url"       : "https://builds.apache.org/view/All",
             }
         ]
     },

@@ -1,4 +1,4 @@
-package com.limpygnome.client.ui;
+package com.limpygnome.client.notifications.ui;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,6 +27,7 @@ public class MessageWindow extends JFrame
         // Set form properties
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Notification Client");
+        setAlwaysOnTop(true);
 
         // Disable window frame
         setUndecorated(true);
@@ -61,6 +62,10 @@ public class MessageWindow extends JFrame
             jLabelText.setVisible(false);
             jPanel.add(jLabelText);
         }
+        else
+        {
+            jLabelText = null;
+        }
 
         // Set initial size of form
         setSize(200, (int) (screenWidth * 0.1));
@@ -73,8 +78,9 @@ public class MessageWindow extends JFrame
         expander = new MessageWindowExpanderThread(this, 60);
         expander.start();
 
-        flasher = new MessageWindowFlashThread(this, 100);
-        flasher.start();
+        // TODO: opacity not supported on Pi, consider removal
+//        flasher = new MessageWindowFlashThread(this, 100);
+//        flasher.start();
 
         // Setup timer to self-close window
         if (lifespanMs != 0)
@@ -140,7 +146,11 @@ public class MessageWindow extends JFrame
     public void showMessage()
     {
         jLabelHeader.setVisible(true);
-        jLabelText.setVisible(true);
+
+        if (jLabelText != null)
+        {
+            jLabelText.setVisible(true);
+        }
     }
 
     public void close()

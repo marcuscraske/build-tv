@@ -1,13 +1,11 @@
-package com.limpygnome.client.subscriber;
+package com.limpygnome.client.notifications.subscriber;
 
-import com.limpygnome.client.ui.MessageWindow;
+import com.limpygnome.client.notifications.ui.MessageWindow;
 import com.limpygnome.daemon.common.ExtendedThread;
 import com.limpygnome.daemon.util.RestClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
-
-import java.io.IOException;
 
 /**
  * Created by limpygnome on 27/08/15.
@@ -45,7 +43,7 @@ public class NotificationListenerThread extends ExtendedThread
                 response = restClient.executeJson(notificationsEndpoint);
                 handleMessage(response);
             }
-            catch (IOException e)
+            catch (Exception e)
             {
                 LOG.error("Failed to poll for notification updates", e);
             }

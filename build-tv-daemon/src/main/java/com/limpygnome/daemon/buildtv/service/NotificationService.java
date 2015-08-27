@@ -37,7 +37,11 @@ public class NotificationService implements Service
 
     public synchronized void updateCurrentNotification(Notification notification)
     {
-        this.currentNotification = notification;
+        // Check notification is different
+        if (notification == null || currentNotification == null || notification.isDifferentBesidesTimestamp(this.currentNotification))
+        {
+            this.currentNotification = notification;
+        }
     }
 
     public synchronized Notification getCurrentNotification()

@@ -1,4 +1,4 @@
-package com.limpygnome.client.ui;
+package com.limpygnome.client.notifications.ui;
 
 import com.limpygnome.daemon.common.ExtendedThread;
 

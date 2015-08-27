@@ -1,7 +1,7 @@
 package com.limpygnome.daemon.buildtv.led;
 
 import com.limpygnome.daemon.buildtv.led.pattern.source.IntervalPatternSource;
-import com.limpygnome.daemon.buildtv.led.pattern.LedPatterns;
+import com.limpygnome.daemon.buildtv.led.pattern.LedPattern;
 import com.limpygnome.daemon.buildtv.led.pattern.source.PatternSource;
 import com.limpygnome.daemon.common.ExtendedThread;
 import com.limpygnome.daemon.util.RestClient;
@@ -71,7 +71,7 @@ public class LedTimeThread extends ExtendedThread
             }
             else
             {
-                changePattern(LedPatterns.BUILD_UNKNOWN);
+                changePattern(LedPattern.BUILD_UNKNOWN);
             }
 
             // Update screen on/off
@@ -119,7 +119,7 @@ public class LedTimeThread extends ExtendedThread
         return highestPatternSource;
     }
 
-    private void changePattern(LedPatterns pattern)
+    private void changePattern(LedPattern pattern)
     {
         try
         {

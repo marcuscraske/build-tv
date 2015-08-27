@@ -23,6 +23,14 @@ public class Notification
         this.timeStamp = System.currentTimeMillis();
     }
 
+    public boolean isDifferentBesidesTimestamp(Notification notification)
+    {
+        return  (header != null && !header.equals(notification.header)) ||
+                (text != null && !text.equals(notification.text)) ||
+                lifespan != notification.lifespan ||
+                (background != null && !background.equals(notification.background));
+    }
+
     public String getHeader()
     {
         return header;

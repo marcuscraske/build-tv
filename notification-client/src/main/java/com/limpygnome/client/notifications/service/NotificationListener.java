@@ -1,6 +1,6 @@
-package com.limpygnome.client.service;
+package com.limpygnome.client.notifications.service;
 
-import com.limpygnome.client.subscriber.NotificationListenerThread;
+import com.limpygnome.client.notifications.subscriber.NotificationListenerThread;
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Service;
 import org.apache.logging.log4j.LogManager;

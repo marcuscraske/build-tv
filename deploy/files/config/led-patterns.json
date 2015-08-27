@@ -14,10 +14,10 @@
         {
             "name"          : "Build Indicator Off",
             "priority"      : 200,
-            "startHour"     : 18,
-            "startMinute"   : 0,
-            "endHour"       : 8,
-            "endMinute"     : 0,
+            "startHour"     : 1,
+            "startMinute"   : 30,
+            "endHour"       : 6,
+            "endMinute"     : 30,
             "pattern"       : "shutdown",
             "screenOff"     : true
         }
