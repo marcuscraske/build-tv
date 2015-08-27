@@ -15,7 +15,7 @@
     <Loggers>
         <Root level="error">
         </Root>
-        <Logger name="com.limpygnome.client" level="debug">
+        <Logger name="com.limpygnome" level="debug">
             <AppenderRef ref="Console" />
             <AppenderRef ref="LocalFile" />
         </Logger>

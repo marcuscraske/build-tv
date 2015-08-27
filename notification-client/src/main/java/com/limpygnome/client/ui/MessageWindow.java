@@ -1,4 +1,4 @@
-package com.impygnome.client.ui;
+package com.limpygnome.client.ui;
 
 import javax.swing.*;
 import java.awt.*;
@@ -84,7 +84,7 @@ public class MessageWindow extends JFrame
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    dispatchEvent(new WindowEvent(MessageWindow.this, WindowEvent.WINDOW_CLOSING));
+                    close();
                 }
             }).start();
         }
@@ -108,7 +108,7 @@ public class MessageWindow extends JFrame
 
     private String prepareLabelText(String text)
     {
-        return "<html><p class=\"text-align: center\">" + text.replace("\n", "<br />") + "</p></html>";
+        return "<html><center>" + text.replace("\n", "<br />") + "</center></html>";
     }
 
     public void centerOnScreen()
@@ -141,6 +141,12 @@ public class MessageWindow extends JFrame
     {
         jLabelHeader.setVisible(true);
         jLabelText.setVisible(true);
+    }
+
+    public void close()
+    {
+        // This will correctly close and dispose the window whilst firing events
+        dispatchEvent(new WindowEvent(MessageWindow.this, WindowEvent.WINDOW_CLOSING));
     }
 
 }

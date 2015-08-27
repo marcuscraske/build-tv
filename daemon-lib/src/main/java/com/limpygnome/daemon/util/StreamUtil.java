@@ -1,9 +1,9 @@
 package com.limpygnome.daemon.util;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import com.sun.net.httpserver.HttpExchange;
+import org.json.simple.JSONObject;
+
+import java.io.*;
 
 /**
  * Created by limpygnome on 19/07/15.
@@ -39,4 +39,20 @@ public class StreamUtil
 
         return buffer.toString();
     }
+
+    public static void writeJsonResponse(HttpExchange httpExchange, JSONObject jsonObject) throws IOException
+    {
+        String data = jsonObject.toJSONString();
+        byte[] rawData = data.getBytes();
+
+        // Set header
+        httpExchange.sendResponseHeaders(200, rawData.length);
+
+        // Write data
+        OutputStream outputStream = httpExchange.getResponseBody();
+        outputStream.write(rawData);
+        outputStream.flush();
+        outputStream.close();
+    }
+
 }

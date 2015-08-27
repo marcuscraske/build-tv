@@ -17,6 +17,7 @@ public class Shutdown implements Pattern
         {
             ledController.setStrip(i, i, i);
             ledController.render();
+
             try
             {
                 Thread.sleep(5);

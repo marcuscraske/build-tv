@@ -1,4 +1,4 @@
-package com.impygnome.client.ui;
+package com.limpygnome.client.ui;
 
 import com.limpygnome.daemon.common.ExtendedThread;
 

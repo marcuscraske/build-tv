@@ -81,34 +81,55 @@ public class RestService implements Service, HttpHandler
     @Override
     public void handle(HttpExchange httpExchange) throws IOException
     {
-        LOG.debug("Request received - ip: {}", httpExchange.getRemoteAddress());
+        LOG.debug(
+                "Request received - ip: {}, path: {}",
+                httpExchange.getRemoteAddress(),
+                httpExchange.getRequestURI().getPath()
+        );
 
         // Read raw request
         String request = StreamUtil.readInputStream(httpExchange.getRequestBody(), 4096);
 
         try
         {
-            if (request.length() != 0)
+            JSONObject jsonRoot;
+
+            // Attempt to parse as json
+            if (request.length() > 0)
             {
-                // Attempt to parse as json
                 JSONParser jsonParser = new JSONParser();
-                JSONObject jsonRoot = (JSONObject) jsonParser.parse(request.toString());
-
-                // Pass to handlers
-                for (RestServiceHandler restServiceHandler : restServiceHandlers)
-                {
-                    if (restServiceHandler.handleRequestInChain(httpExchange, jsonRoot))
-                    {
-                        break;
-                    }
-                }
-
-                // Set default response code
-                httpExchange.sendResponseHeaders(200, 0);
+                jsonRoot = (JSONObject) jsonParser.parse(request.toString());
             }
             else
             {
+                jsonRoot = null;
+            }
+
+            // Pass to handlers
+            boolean handled = false;
+            for (RestServiceHandler restServiceHandler : restServiceHandlers)
+            {
+                if (restServiceHandler.handleRequestInChain(httpExchange, jsonRoot))
+                {
+                    handled = true;
+                    LOG.debug("REST request handled - handler: {}", restServiceHandler.getClass().getName());
+                    break;
+                }
+            }
+
+            if (!handled)
+            {
+                LOG.warn("Unhandled REST request - path: {}", httpExchange.getRequestURI().getPath());
                 httpExchange.sendResponseHeaders(400, 0);
+            }
+            else
+            {
+                // We may have already sent the headers, from a rest handler, so this doesn't matter
+                try
+                {
+                    httpExchange.sendResponseHeaders(200, 0);
+                }
+                catch (Exception e) { }
             }
         }
         catch (Exception e)

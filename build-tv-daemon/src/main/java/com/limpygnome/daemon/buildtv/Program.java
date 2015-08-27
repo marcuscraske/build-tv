@@ -1,9 +1,12 @@
 package com.limpygnome.daemon.buildtv;
 
 import com.limpygnome.daemon.api.Controller;
+import com.limpygnome.daemon.buildtv.rest.NotificationsRestHandler;
 import com.limpygnome.daemon.buildtv.service.IntervalLedService;
 import com.limpygnome.daemon.buildtv.service.JenkinsService;
 import com.limpygnome.daemon.buildtv.service.LedTimeService;
+import com.limpygnome.daemon.buildtv.service.NotificationService;
+import com.limpygnome.daemon.service.RestService;
 
 /**
  * Entry point into the build TV daemon.
@@ -18,6 +21,12 @@ public class Program
         controller.add("led-time", new LedTimeService());
         controller.add("jenkins-status", new JenkinsService());
         controller.add("interval-leds", new IntervalLedService(controller));
+        controller.add(NotificationService.SERVICE_NAME, new NotificationService());
+
+        // Add REST handlers
+        RestService.addRestHandlerToControllerRuntime(
+                controller, new NotificationsRestHandler()
+        );
 
         // Start forever...
         controller.hookAndStartAndWaitForExit();

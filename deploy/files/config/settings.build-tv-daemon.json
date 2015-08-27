@@ -1,4 +1,9 @@
 {
+    "rest" :
+    {
+        "port" : 2700
+    },
+
     "jenkins":
     {
         "poll-rate-ms"      : 10000,

@@ -6,6 +6,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -18,6 +20,8 @@ import java.net.ConnectException;
  */
 public class RestClient
 {
+    private static final Logger LOG = LogManager.getLogger(RestClient.class);
+
     private String userAgent;
     private int bufferSize;
 
@@ -90,7 +94,10 @@ public class RestClient
         }
         catch (ParseException e)
         {
-            throw new RuntimeException("Failed to parse content [" + response.length() + " chars]: " + response, e);
+            LOG.error("Failed to parse REST response - url: {}, response length: {}", url, response.length(), e);
+            LOG.debug("Malformed REST response - response data: {}", response);
+
+            return null;
         }
     }
 }

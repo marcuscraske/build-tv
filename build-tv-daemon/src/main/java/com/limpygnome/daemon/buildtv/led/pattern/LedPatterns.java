@@ -7,9 +7,9 @@ public enum LedPatterns
 {
     BUILD_UNKNOWN(0, "build-unknown"),
     BUILD_OK(1, "build-ok"),
-    BUILD_PROGRESS(2, "build-progress"),
-    BUILD_UNSTABLE(3, "build-unstable"),
-    BUILD_FAILURE(4, "build-failure"),
+    BUILD_UNSTABLE(2, "build-unstable"),
+    BUILD_FAILURE(3, "build-failure"),
+    BUILD_PROGRESS(4, "build-progress"),
     JENKINS_UNAVAILABLE(5, "jenkins-unavailable"),
 
     STARTUP(0, "startup"),

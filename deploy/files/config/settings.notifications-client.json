@@ -1,0 +1,6 @@
+{
+    "notifications" :
+    {
+        "endpoint" : "http://localhost:2700/notifications"
+    }
+}
