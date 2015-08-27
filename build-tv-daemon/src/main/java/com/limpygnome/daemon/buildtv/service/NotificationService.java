@@ -6,6 +6,8 @@ import com.limpygnome.daemon.buildtv.model.Notification;
 
 import java.awt.*;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
 
 /**
  * Created by limpygnome on 27/08/15.
@@ -59,7 +61,32 @@ public class NotificationService implements Service
     {
         try
         {
-            return InetAddress.getLocalHost().getHostAddress();
+            String resultIpAddress = null;
+
+            Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+
+            Enumeration<InetAddress> addresses;
+            String addressStr;
+
+            while (networkInterfaces.hasMoreElements())
+            {
+                addresses = networkInterfaces.nextElement().getInetAddresses();
+
+                while (addresses.hasMoreElements())
+                {
+                    addressStr = addresses.nextElement().getHostAddress();
+
+                    // Ignore local and give preference to ipv4
+                    if (!addressStr.startsWith("127.") && !addressStr.contains("local") &&
+                            !addressStr.startsWith(":") &&
+                            (resultIpAddress == null || resultIpAddress.contains(":")))
+                    {
+                        resultIpAddress = addressStr;
+                    }
+                }
+            }
+
+            return resultIpAddress != null ? resultIpAddress : "unknown";
         }
         catch (Exception e)
         {
