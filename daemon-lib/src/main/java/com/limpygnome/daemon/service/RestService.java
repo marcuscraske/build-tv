@@ -81,10 +81,11 @@ public class RestService implements Service, HttpHandler
     @Override
     public void handle(HttpExchange httpExchange) throws IOException
     {
+        String path = httpExchange.getRequestURI().getPath();
+
         LOG.debug(
                 "Request received - ip: {}, path: {}",
-                httpExchange.getRemoteAddress(),
-                httpExchange.getRequestURI().getPath()
+                httpExchange.getRemoteAddress(), path
         );
 
         // Read raw request
@@ -107,19 +108,22 @@ public class RestService implements Service, HttpHandler
 
             // Pass to handlers
             boolean handled = false;
+
             for (RestServiceHandler restServiceHandler : restServiceHandlers)
             {
-                if (restServiceHandler.handleRequestInChain(httpExchange, jsonRoot))
+                if (restServiceHandler.handleRequestInChain(httpExchange, jsonRoot, path))
                 {
                     handled = true;
-                    LOG.debug("REST request handled - handler: {}", restServiceHandler.getClass().getName());
+                    LOG.debug("REST request handled - handler: {}, path: {}",
+                            restServiceHandler.getClass().getName(), path
+                    );
                     break;
                 }
             }
 
             if (!handled)
             {
-                LOG.warn("Unhandled REST request - path: {}", httpExchange.getRequestURI().getPath());
+                LOG.warn("Unhandled REST request - path: {}", path);
                 httpExchange.sendResponseHeaders(400, 0);
             }
             else

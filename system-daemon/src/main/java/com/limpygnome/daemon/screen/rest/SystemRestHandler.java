@@ -9,7 +9,7 @@ import org.json.simple.JSONObject;
 /**
  * A REST handler used as an API to control the attached screen.
  */
-public class ScreenRestHandler implements RestServiceHandler
+public class SystemRestHandler implements RestServiceHandler
 {
     private ScreenService screenService;
 
@@ -27,7 +27,7 @@ public class ScreenRestHandler implements RestServiceHandler
     }
 
     @Override
-    public boolean handleRequestInChain(HttpExchange httpExchange, JSONObject jsonRoot)
+    public boolean handleRequestInChain(HttpExchange httpExchange, JSONObject jsonRoot, String path)
     {
         String action = (String) jsonRoot.get("action");
 

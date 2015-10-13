@@ -8,10 +8,10 @@
         <artifactId>rpi-misc</artifactId>
         <version>2.0</version>
     </parent>
-    <artifactId>build-tv-daemon</artifactId>
+    <artifactId>remote-daemon</artifactId>
     <packaging>jar</packaging>
 
-    <name>Build TV Daemon</name>
+    <name>Remote Daemon</name>
 
     <dependencies>
 
@@ -22,31 +22,12 @@
 			<version>1.0</version>
 		</dependency>
 
-		<!-- JSON Serialization -->
+		<!-- HTTP Client -->
 		<dependency>
-			<groupId>com.googlecode.json-simple</groupId>
-			<artifactId>json-simple</artifactId>
-			<version>1.1.1</version>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5</version>
 		</dependency>
-	
-        <!-- Joda -->
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-			<version>2.7</version>
-		</dependency>
-
-        <!-- Logging -->
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>2.2</version>
-        </dependency>
 
     </dependencies>
 	
@@ -67,7 +48,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>com.limpygnome.daemon.buildtv.Program</mainClass>
+							<mainClass>com.limpygnome.daemon.remote.Program</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>

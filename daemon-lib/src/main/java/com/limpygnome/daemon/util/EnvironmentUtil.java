@@ -7,6 +7,12 @@ import java.io.File;
  */
 public class EnvironmentUtil
 {
+    private static final boolean DEV_ENVIRONMENT;
+
+    static
+    {
+        DEV_ENVIRONMENT = new File("pom.xml").exists();
+    }
 
     /**
      * Useful for hardware stubbing for local dev testing.
@@ -15,7 +21,7 @@ public class EnvironmentUtil
      */
     public static boolean isDevEnvironment()
     {
-        return new File("pom.xml").exists();
+        return DEV_ENVIRONMENT;
     }
 
 }

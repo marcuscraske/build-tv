@@ -17,6 +17,7 @@ public class LedTimeService implements Service
     {
         String ledDaemonUrl = controller.getSettings().getString("led-daemon.rest.url");
         long ledDaemonPriority = controller.getSettings().getLong("led-daemon.priority");
+        // TODO: refactor to system...
         String screenDaemonUrl = controller.getSettings().getString("screen-daemon.rest.url");
 
         ledTimeThread = new LedTimeThread(

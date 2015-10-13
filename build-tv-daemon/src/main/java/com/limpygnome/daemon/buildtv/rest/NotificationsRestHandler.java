@@ -35,10 +35,9 @@ public class NotificationsRestHandler implements RestServiceHandler
     }
 
     @Override
-    public boolean handleRequestInChain(HttpExchange httpExchange, JSONObject jsonRoot)
+    public boolean handleRequestInChain(HttpExchange httpExchange, JSONObject jsonRoot, String path)
     {
         // Check request destined for us
-        String path = httpExchange.getRequestURI().getPath();
         if (!path.equals("/notifications"))
         {
             return false;

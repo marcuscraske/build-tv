@@ -161,11 +161,11 @@ public class LedTimeThread extends ExtendedThread
         }
         catch (ConnectException e)
         {
-            LOG.error("Failed to connect to screen daemon - url: {}", ledDaemonUrl);
+            LOG.error("Failed to connect to system daemon - url: {}", ledDaemonUrl);
         }
         catch (Exception e)
         {
-            LOG.error("Failed to make screen daemon request", e);
+            LOG.error("Failed to make system daemon request", e);
         }
     }
 

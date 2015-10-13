@@ -23,6 +23,19 @@ public class ScreenService implements Service
      */
     private static final long ACTION_TIMEOUT_MS = 10000;
 
+    /**
+     * Timeout in executing a process before forcibly killing it.
+     */
+    private static final long PROCESS_TIMEOUT = 5000;
+
+    /**
+     * Delay between executing screen commands.
+     */
+    private static final long COMMAND_DELAY = 4000;
+
+
+    private EnvironmentService environmentService;
+
     private long lastAction;
     private boolean devMachine;
     private boolean screenOn;
@@ -37,6 +50,9 @@ public class ScreenService implements Service
     @Override
     public synchronized void start(Controller controller)
     {
+        // Fetch services
+        environmentService = (EnvironmentService) controller.getServiceByName("environment");
+
         // Check if running on dev machine
         devMachine = EnvironmentUtil.isDevEnvironment();
 
@@ -52,6 +68,7 @@ public class ScreenService implements Service
     @Override
     public synchronized void stop(Controller controller)
     {
+        environmentService = null;
     }
 
     public synchronized void screenOn()
@@ -98,43 +115,16 @@ public class ScreenService implements Service
 
     private void exec(String command)
     {
-        final long PROCESS_TIMEOUT = 5000;
+        // Execute the command
+        environmentService.exec(command, PROCESS_TIMEOUT);
 
-        if (devMachine)
+        // Give enough wait for the command to take affect
+        // -- Hacky, but a new attempt at getting this to work through a daemon
+        try
         {
-            LOG.debug("Mock executed command - cmd: {}" , command);
+            Thread.sleep(COMMAND_DELAY);
         }
-        else
-        {
-            try
-            {
-                LOG.debug("Executing command - cmd: {}", command);
-
-                // Run the command
-                Process process = Runtime.getRuntime().exec(command);
-
-                // Wait for process to finish, or kill it
-                if (!process.waitFor(PROCESS_TIMEOUT, TimeUnit.MILLISECONDS))
-                {
-                    process.destroy();
-
-                    LOG.warn("Forcibly killed process executing command - cmd: {}", command);
-                }
-
-                // Give enough wait for the command to take affect
-                // -- Hacky, but a new attempt at getting this to work through a daemon
-                try
-                {
-                    Thread.sleep(4000);
-                }
-                catch (InterruptedException e) { }
-
-            } catch (Exception e)
-            {
-                LOG.error("Exception executing command", e);
-                LOG.error("Failed to execute command - cmd: {}", command);
-            }
-        }
+        catch (InterruptedException e) { }
     }
 
 }

@@ -31,7 +31,7 @@ public class LedRestHandler implements RestServiceHandler
     }
 
     @Override
-    public boolean handleRequestInChain(HttpExchange httpExchange, JSONObject jsonRoot)
+    public boolean handleRequestInChain(HttpExchange httpExchange, JSONObject jsonRoot, String path)
     {
         // Check required data elements present
         if (!jsonRoot.containsKey("source") || !jsonRoot.containsKey("pattern") || !jsonRoot.containsKey("priority"))
