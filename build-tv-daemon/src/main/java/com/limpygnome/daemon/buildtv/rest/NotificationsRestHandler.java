@@ -34,44 +34,5 @@ public class NotificationsRestHandler implements RestServiceHandler
         notificationService = null;
     }
 
-    @Override
-    public boolean handleRequestInChain(HttpExchange httpExchange, JSONObject jsonRoot, String path)
-    {
-        // Check request destined for us
-        if (!path.equals("/notifications"))
-        {
-            return false;
-        }
 
-        // Pull latest notification from service
-        Notification notification = notificationService.getCurrentNotification();
-        Color background = notification.getBackground();
-
-        // Build into response message
-        JSONObject response = new JSONObject();
-
-        response.put("timestamp", notification.getTimeStamp());
-        response.put("header", notification.getHeader());
-        response.put("text" , notification.getText());
-        response.put("lifespan", notification.getLifespan());
-
-        JSONObject resonseBackground = new JSONObject();
-        resonseBackground.put("r", background.getRed());
-        resonseBackground.put("g", background.getGreen());
-        resonseBackground.put("b", background.getBlue());
-
-        response.put("background", resonseBackground);
-
-        // Write response
-        try
-        {
-            StreamUtil.writeJsonResponse(httpExchange, response);
-        }
-        catch (IOException e)
-        {
-            LOG.error("Failed to write response", e);
-        }
-
-        return true;
-    }
 }

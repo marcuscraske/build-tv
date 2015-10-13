@@ -2,18 +2,29 @@ package com.limpygnome.daemon.buildtv.service;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Service;
+import com.limpygnome.daemon.api.rest.RestRequest;
+import com.limpygnome.daemon.api.rest.RestResponse;
+import com.limpygnome.daemon.api.rest.RestServiceHandler;
 import com.limpygnome.daemon.buildtv.model.Notification;
 
+import com.limpygnome.daemon.util.StreamUtil;
+import com.sun.net.httpserver.HttpExchange;
 import java.awt.*;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.simple.JSONObject;
 
 /**
  * Created by limpygnome on 27/08/15.
  */
-public class NotificationService implements Service
+public class NotificationService implements Service, RestServiceHandler
 {
+    private static final Logger LOG = LogManager.getLogger(NotificationService.class);
+
     public static final String SERVICE_NAME = "notifications";
 
     private Notification currentNotification;
@@ -97,4 +108,46 @@ public class NotificationService implements Service
             return "unknown";
         }
     }
+
+    @Override
+    public boolean handleRequestInChain(RestRequest restRequest, RestResponse restResponse)
+    {
+        // Check request destined for us
+        if (!"notifications".equals(restRequest.getPathSegmentSafely(0)))
+        {
+            return false;
+        }
+
+        // Pull latest notification from service
+        Notification notification = getCurrentNotification();
+        Color background = notification.getBackground();
+
+        // Build into response message
+        JSONObject response = new JSONObject();
+
+        response.put("timestamp", notification.getTimeStamp());
+        response.put("header", notification.getHeader());
+        response.put("text" , notification.getText());
+        response.put("lifespan", notification.getLifespan());
+
+        JSONObject resonseBackground = new JSONObject();
+        resonseBackground.put("r", background.getRed());
+        resonseBackground.put("g", background.getGreen());
+        resonseBackground.put("b", background.getBlue());
+
+        response.put("background", resonseBackground);
+
+        // Write response
+        try
+        {
+            restResponse.writeJsonResponse(response);
+        }
+        catch (IOException e)
+        {
+            LOG.error("Failed to write response", e);
+        }
+
+        return true;
+    }
+
 }
