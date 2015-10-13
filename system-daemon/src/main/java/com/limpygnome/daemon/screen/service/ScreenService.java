@@ -2,17 +2,21 @@ package com.limpygnome.daemon.screen.service;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Service;
+import com.limpygnome.daemon.api.rest.RestRequest;
+import com.limpygnome.daemon.api.rest.RestResponse;
+import com.limpygnome.daemon.api.rest.RestServiceHandler;
 import com.limpygnome.daemon.util.EnvironmentUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
+import org.json.simple.JSONObject;
 
 /**
  * A service used to control the attached screen.
  */
-public class ScreenService implements Service
+public class ScreenService implements Service, RestServiceHandler
 {
     private static final Logger LOG = LogManager.getLogger(ScreenService.class);
 
@@ -37,13 +41,11 @@ public class ScreenService implements Service
     private EnvironmentService environmentService;
 
     private long lastAction;
-    private boolean devMachine;
     private boolean screenOn;
 
     public ScreenService()
     {
         this.lastAction = 0;
-        this.devMachine = false;
         this.screenOn = false;
     }
 
@@ -52,14 +54,6 @@ public class ScreenService implements Service
     {
         // Fetch services
         environmentService = (EnvironmentService) controller.getServiceByName("environment");
-
-        // Check if running on dev machine
-        devMachine = EnvironmentUtil.isDevEnvironment();
-
-        if (devMachine)
-        {
-            LOG.warn("Screen service stubbed, dev machine detected...");
-        }
 
         // Make sure the screen is initially on
         screenOn();
@@ -125,6 +119,34 @@ public class ScreenService implements Service
             Thread.sleep(COMMAND_DELAY);
         }
         catch (InterruptedException e) { }
+    }
+
+    @Override
+    public boolean handleRequestInChain(RestRequest restRequest, RestResponse restResponse)
+    {
+        // Check we can handle the request
+        if (!restRequest.isJsonRequest() || !"screen".equals(restRequest.getPathSegmentSafely(0)))
+        {
+            return false;
+        }
+
+        // Check request has JSON body
+        String action = (String) restRequest.getJsonElement(new String[]{ "action" });
+
+        if (action != null && action.length() > 0)
+        {
+            switch (action)
+            {
+                case "on":
+                    screenOn();
+                    return true;
+                case "off":
+                    screenOff();
+                    return true;
+            }
+        }
+
+        return false;
     }
 
 }

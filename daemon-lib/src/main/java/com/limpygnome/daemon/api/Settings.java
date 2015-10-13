@@ -1,5 +1,6 @@
 package com.limpygnome.daemon.api;
 
+import com.limpygnome.daemon.util.JsonUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
@@ -58,36 +59,14 @@ public class Settings
     {
         String[] pathSegments = path.trim().split("/");
 
-        if (pathSegments.length == 0)
+        Object value = JsonUtil.getNestedNode(root, pathSegments);
+
+        if (value == null)
         {
-            throw new RuntimeException("Invalid empty settings path provided");
+            throw new RuntimeException("Failed to find setting at '" + path + "'");
         }
 
-        String segment;
-        JSONObject parent = root;
-
-        for (int i = 0; i < pathSegments.length; i++)
-        {
-            segment = pathSegments[i];
-
-            if (i == pathSegments.length - 1)
-            {
-                return parent.get(segment);
-            }
-            else
-            {
-                try
-                {
-                    parent = (JSONObject) parent.get(segment);
-                }
-                catch (Exception e)
-                {
-                    throw new RuntimeException("Failed to read setting at '" + path + "'", e);
-                }
-            }
-        }
-
-        throw new RuntimeException("Failed to find setting at '" + path + "'");
+        return value;
     }
 
     public synchronized Object getObject(String path)

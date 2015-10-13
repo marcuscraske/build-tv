@@ -1,7 +1,6 @@
 package com.limpygnome.daemon.screen;
 
 import com.limpygnome.daemon.api.Controller;
-import com.limpygnome.daemon.screen.rest.SystemRestHandler;
 import com.limpygnome.daemon.screen.service.EnvironmentService;
 import com.limpygnome.daemon.screen.service.PowerService;
 import com.limpygnome.daemon.screen.service.ScreenService;
@@ -21,8 +20,8 @@ public class Program
         controller.add("screen", new ScreenService());
         controller.add("power", new PowerService());
 
-        // Add REST handlers
-        RestService.addRestHandlerToControllerRuntime(controller, new SystemRestHandler());
+        // Attach REST handlers
+        RestService.attachControllerRestHandlerServices(controller);
 
         // Start forever...
         controller.hookAndStartAndWaitForExit();

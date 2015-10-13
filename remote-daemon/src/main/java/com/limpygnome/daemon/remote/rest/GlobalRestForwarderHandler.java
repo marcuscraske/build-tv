@@ -1,7 +1,7 @@
 package com.limpygnome.daemon.remote.rest;
 
 import com.limpygnome.daemon.api.Controller;
-import com.limpygnome.daemon.api.RestServiceHandler;
+import com.limpygnome.daemon.api.rest.RestServiceHandler;
 import com.limpygnome.daemon.remote.service.RestForwarderService;
 import com.limpygnome.daemon.remote.service.auth.AuthProviderService;
 import com.limpygnome.daemon.util.StreamUtil;

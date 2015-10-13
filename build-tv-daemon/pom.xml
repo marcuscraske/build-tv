@@ -19,7 +19,7 @@
 		<dependency>
 			<groupId>com.limpygnome</groupId>
 			<artifactId>daemon-lib</artifactId>
-			<version>1.0</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<!-- JSON Serialization -->

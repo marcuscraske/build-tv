@@ -56,7 +56,7 @@ if [[ -z "${1}" ]]; then
     DEPLOY_TAGS+="led-daemon,"
     DEPLOY_TAGS+="build-tv-daemon,"
     DEPLOY_TAGS+="screen-daemon,"
-    DEPLOY_TAGS+="notification-client"
+    DEPLOY_TAGS+="notification-client,"
     DEPLOY_TAGS+="reboot"
 else
     DEPLOY_TAGS="${1}"

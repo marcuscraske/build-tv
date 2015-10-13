@@ -1,16 +1,16 @@
 package com.limpygnome.daemon.service;
 
 import com.limpygnome.daemon.api.Controller;
-import com.limpygnome.daemon.api.RestServiceHandler;
+import com.limpygnome.daemon.api.rest.RestRequest;
+import com.limpygnome.daemon.api.rest.RestResponse;
+import com.limpygnome.daemon.api.rest.RestServiceHandler;
 import com.limpygnome.daemon.api.Service;
-import com.limpygnome.daemon.util.StreamUtil;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -56,23 +56,11 @@ public class RestService implements Service, HttpHandler
         {
             LOG.error("Failed to start REST service", e);
         }
-
-        // Inform handlers
-        for (RestServiceHandler restServiceHandler : restServiceHandlers)
-        {
-            restServiceHandler.start(controller);
-        }
     }
 
     @Override
     public synchronized void stop(Controller controller)
     {
-        // Inform handlers
-        for (RestServiceHandler restServiceHandler : restServiceHandlers)
-        {
-            restServiceHandler.stop(controller);
-        }
-
         // Stop HTTP server
         httpServer.stop(0);
         httpServer = null;
@@ -81,54 +69,42 @@ public class RestService implements Service, HttpHandler
     @Override
     public void handle(HttpExchange httpExchange) throws IOException
     {
-        String path = httpExchange.getRequestURI().getPath();
-
-        LOG.debug(
-                "Request received - ip: {}, path: {}",
-                httpExchange.getRemoteAddress(), path
-        );
-
-        // Read raw request
-        String request = StreamUtil.readInputStream(httpExchange.getRequestBody(), 4096);
-
         try
         {
-            JSONObject jsonRoot;
+            // Create request/response objects
+            RestRequest restRequest = new RestRequest(httpExchange);
+            RestResponse restResponse = new RestResponse(httpExchange);
 
-            // Attempt to parse as json
-            if (request.length() > 0)
-            {
-                JSONParser jsonParser = new JSONParser();
-                jsonRoot = (JSONObject) jsonParser.parse(request.toString());
-            }
-            else
-            {
-                jsonRoot = null;
-            }
+            LOG.debug(
+                    "Request received - ip: {}, path: {}",
+                    httpExchange.getRemoteAddress(),
+                    restRequest.getPath()
+            );
 
-            // Pass to handlers
+            // Pass to REST handlers
             boolean handled = false;
 
             for (RestServiceHandler restServiceHandler : restServiceHandlers)
             {
-                if (restServiceHandler.handleRequestInChain(httpExchange, jsonRoot, path))
+                if (restServiceHandler.handleRequestInChain(restRequest, restResponse))
                 {
                     handled = true;
                     LOG.debug("REST request handled - handler: {}, path: {}",
-                            restServiceHandler.getClass().getName(), path
+                            restServiceHandler.getClass().getName(), restRequest.getPath()
                     );
                     break;
                 }
             }
 
+            // Check request handled
             if (!handled)
             {
-                LOG.warn("Unhandled REST request - path: {}", path);
+                LOG.warn("Unhandled REST request - ip: {}, path: {}", httpExchange.getRemoteAddress(), restRequest.getPath());
                 httpExchange.sendResponseHeaders(400, 0);
             }
             else
             {
-                // We may have already sent the headers, from a rest handler, so this doesn't matter
+                // We may have already sent the headers, from a rest handler, so this doesn't matter if it fails
                 try
                 {
                     httpExchange.sendResponseHeaders(200, 0);
@@ -143,9 +119,12 @@ public class RestService implements Service, HttpHandler
 
             httpExchange.sendResponseHeaders(500, 0);
         }
+        finally
+        {
 
-        // Dispose connection
-        httpExchange.close();
+            // Dispose connection
+            httpExchange.close();
+        }
     }
 
     public static void addRestHandlerToControllerRuntime(Controller controller, RestServiceHandler restServiceHandler)
@@ -157,16 +136,41 @@ public class RestService implements Service, HttpHandler
         {
             restService = (RestService) controller.getServiceByName(SERVICE_NAME_SHARED_RUNTIME);
         }
-        catch (Exception e)
+        catch (RuntimeException e)
         {
 
             LOG.debug("No existing REST service found, creating new instance");
+
             restService = new RestService();
             controller.add(SERVICE_NAME_SHARED_RUNTIME, restService);
         }
 
         // Add handler
         restService.restServiceHandlers.add(restServiceHandler);
+
+        LOG.debug("REST handler added - " + restServiceHandler.getClass().getName());
+    }
+
+    /**
+     * Attaches any REST handler capable services, added to the specified controller, to the current
+     * controller's REST service.
+     *
+     * @param controller The current controller
+     */
+    public static void attachControllerRestHandlerServices(Controller controller)
+    {
+        Map<String, Service> services = controller.getServices();
+
+        Service service;
+        for (Map.Entry<String, Service> kv : services.entrySet())
+        {
+            service = kv.getValue();
+
+            if (service instanceof RestServiceHandler)
+            {
+                addRestHandlerToControllerRuntime(controller, (RestServiceHandler) service);
+            }
+        }
     }
 
 }

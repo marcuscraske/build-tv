@@ -1,7 +1,7 @@
 package com.limpygnome.daemon.led.rest;
 
 import com.limpygnome.daemon.api.Controller;
-import com.limpygnome.daemon.api.RestServiceHandler;
+import com.limpygnome.daemon.api.rest.RestServiceHandler;
 import com.limpygnome.daemon.led.service.LedService;
 import com.sun.net.httpserver.HttpExchange;
 import org.apache.logging.log4j.LogManager;

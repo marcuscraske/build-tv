@@ -1,7 +1,7 @@
 package com.limpygnome.daemon.buildtv.rest;
 
 import com.limpygnome.daemon.api.Controller;
-import com.limpygnome.daemon.api.RestServiceHandler;
+import com.limpygnome.daemon.api.rest.RestServiceHandler;
 import com.limpygnome.daemon.buildtv.model.Notification;
 import com.limpygnome.daemon.buildtv.service.NotificationService;
 import com.limpygnome.daemon.util.StreamUtil;

@@ -1,5 +1,7 @@
 package com.limpygnome.daemon.api;
 
+import com.limpygnome.daemon.api.rest.RestServiceHandler;
+import com.limpygnome.daemon.service.RestService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,6 +33,7 @@ public class Controller
 
     public synchronized void add(String serviceName, Service service)
     {
+        // Check controller is not already running...
         if (running)
         {
             throw new RuntimeException("Cannot add service whilst running - name: " + serviceName +
@@ -38,6 +41,7 @@ public class Controller
             );
         }
 
+        // Add service
         services.put(serviceName, service);
     }
 
@@ -181,6 +185,11 @@ public class Controller
     public Settings getSettings()
     {
         return settings;
+    }
+
+    public synchronized Map<String, Service> getServices()
+    {
+        return new HashMap<>(services);
     }
 
 }
