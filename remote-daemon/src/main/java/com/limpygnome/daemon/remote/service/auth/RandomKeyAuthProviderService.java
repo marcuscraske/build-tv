@@ -1,6 +1,7 @@
 package com.limpygnome.daemon.remote.service.auth;
 
 import com.limpygnome.daemon.api.Controller;
+import com.limpygnome.daemon.api.rest.RestRequest;
 import com.sun.net.httpserver.HttpExchange;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,7 +10,7 @@ import org.json.simple.JSONObject;
 import java.security.SecureRandom;
 
 /**
- * Created by limpygnome on 13/10/15.
+ * Generates a random key on startup, which is used to authenticate inbound requests.
  *
  * TODO: block IPs with too many incorrect attempts, prevent brute force; reset on successful auth, limt of e.g. 5 per 15 mins
  */
@@ -25,7 +26,7 @@ public class RandomKeyAuthProviderService implements AuthProviderService
     /**
      * The root element in requests expecte to hold the auth key.
      */
-    public static final String JSON_AUTH_ELEMENT = "auth";
+    public static final String[] JSON_AUTH_ELEMENT = new String[] { "auth" };
 
 
     private String authToken;
@@ -43,7 +44,7 @@ public class RandomKeyAuthProviderService implements AuthProviderService
     }
 
     @Override
-    public synchronized boolean isAuthorised(HttpExchange httpExchange, JSONObject jsonRoot, String path)
+    public synchronized boolean isAuthorised(RestRequest restRequest)
     {
         // Check auth token setup
         if (authToken == null)
@@ -56,7 +57,7 @@ public class RandomKeyAuthProviderService implements AuthProviderService
         boolean authorised = false;
 
         // Check request has a valid auth element
-        Object rawAuth = jsonRoot.get(JSON_AUTH_ELEMENT);
+        Object rawAuth = restRequest.getJsonElement(JSON_AUTH_ELEMENT);
 
         if (rawAuth != null && (rawAuth instanceof String))
         {
@@ -66,7 +67,7 @@ public class RandomKeyAuthProviderService implements AuthProviderService
         }
 
         LOG.info("Request auth result - ip: {}, authorised: {}, path: {}",
-                httpExchange.getRemoteAddress(), authorised, path
+                restRequest.getHttpExchange().getRemoteAddress(), authorised, restRequest.getPath()
         );
 
         return authorised;

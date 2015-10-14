@@ -27,21 +27,11 @@ public class PowerService implements Service, RestServiceHandler
         environmentService = null;
     }
 
-    public void reboot()
-    {
-        environmentService.exec("reboot", PROCESS_TIMEOUT);
-    }
-
-    public void shutdown()
-    {
-        environmentService.exec("halt", PROCESS_TIMEOUT);
-    }
-
     @Override
     public boolean handleRequestInChain(RestRequest restRequest, RestResponse restResponse)
     {
         // Check we can handle the request
-        if (!restRequest.isJsonRequest() || !"power".equals(restRequest.getPathSegmentSafely(0)))
+        if (!restRequest.isJsonRequest() || !restRequest.isPathMatch(new String[]{ "system-daemon", "power" }))
         {
             return false;
         }
@@ -63,6 +53,16 @@ public class PowerService implements Service, RestServiceHandler
         }
 
         return true;
+    }
+
+    public void reboot()
+    {
+        environmentService.exec("reboot", PROCESS_TIMEOUT);
+    }
+
+    public void shutdown()
+    {
+        environmentService.exec("halt", PROCESS_TIMEOUT);
     }
 
 }

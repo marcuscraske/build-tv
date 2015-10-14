@@ -1,9 +1,8 @@
 package com.limpygnome.daemon.remote;
 
 import com.limpygnome.daemon.api.Controller;
-import com.limpygnome.daemon.remote.rest.GlobalRestForwarderHandler;
 import com.limpygnome.daemon.remote.service.IntervalUpdateService;
-import com.limpygnome.daemon.remote.service.RestForwarderService;
+import com.limpygnome.daemon.remote.service.RestProxyService;
 import com.limpygnome.daemon.remote.service.auth.RandomKeyAuthProviderService;
 import com.limpygnome.daemon.service.RestService;
 
@@ -20,10 +19,10 @@ public class Program
         // Add services
         controller.add("updates", new IntervalUpdateService());
         controller.add("auth", new RandomKeyAuthProviderService());
-        controller.add("forwarder", new RestForwarderService());
+        controller.add("forwarder", new RestProxyService());
 
-        // Add REST handlers
-        RestService.addRestHandlerToControllerRuntime(controller, new GlobalRestForwarderHandler());
+        // Attach REST handlers
+        RestService.attachControllerRestHandlerServices(controller);
 
         // Start forever...
         controller.hookAndStartAndWaitForExit();

@@ -113,7 +113,7 @@ public class NotificationService implements Service, RestServiceHandler
     public boolean handleRequestInChain(RestRequest restRequest, RestResponse restResponse)
     {
         // Check request destined for us
-        if (!"notifications".equals(restRequest.getPathSegmentSafely(0)))
+        if (!restRequest.isPathMatch(new String[]{ "build-tv-daemon", "notifications" }))
         {
             return false;
         }

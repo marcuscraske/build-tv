@@ -1,7 +1,6 @@
 package com.limpygnome.daemon.buildtv;
 
 import com.limpygnome.daemon.api.Controller;
-import com.limpygnome.daemon.buildtv.rest.NotificationsRestHandler;
 import com.limpygnome.daemon.buildtv.service.IntervalLedService;
 import com.limpygnome.daemon.buildtv.service.JenkinsService;
 import com.limpygnome.daemon.buildtv.service.LedTimeService;
@@ -23,10 +22,8 @@ public class Program
         controller.add("interval-leds", new IntervalLedService(controller));
         controller.add(NotificationService.SERVICE_NAME, new NotificationService());
 
-        // Add REST handlers
-        RestService.addRestHandlerToControllerRuntime(
-                controller, new NotificationsRestHandler()
-        );
+        // Attach REST handlers
+        RestService.attachControllerRestHandlerServices(controller);
 
         // Start forever...
         controller.hookAndStartAndWaitForExit();

@@ -22,16 +22,16 @@ public class LedTimeThread extends ExtendedThread
 
     private static final String LED_DAEMON_SOURCE = "build-tv";
 
-    private String ledDaemonUrl;
+    private String ledDaemonUrlLeds;
     private long ledDaemonPriority;
-    private String screenDaemonUrl;
+    private String systemDaemonUrlScreen;
     private HashMap<String, PatternSource> patterns;
 
-    public LedTimeThread(String ledDaemonUrl, long ledDaemonPriority, String screenDaemonUrl)
+    public LedTimeThread(String ledDaemonUrl, long ledDaemonPriority, String systemDaemonUrl)
     {
-        this.ledDaemonUrl = ledDaemonUrl;
+        this.ledDaemonUrlLeds = ledDaemonUrl + "/led-daemon/leds";
         this.ledDaemonPriority = ledDaemonPriority;
-        this.screenDaemonUrl = screenDaemonUrl;
+        this.systemDaemonUrlScreen = systemDaemonUrl + "/system-daemon/screen";
         this.patterns = new HashMap<>();
     }
 
@@ -131,13 +131,13 @@ public class LedTimeThread extends ExtendedThread
 
             // Make request
             RestClient restClient = new RestClient();
-            restClient.executePost(ledDaemonUrl, jsonRoot);
+            restClient.executePost(ledDaemonUrlLeds, jsonRoot);
 
             LOG.debug("LED daemon update request sent - pattern: {}", pattern.PATTERN);
         }
         catch (ConnectException e)
         {
-            LOG.error("Failed to connect to LED daemon - url: {}, pattern: {}", ledDaemonUrl, pattern.PATTERN);
+            LOG.error("Failed to connect to LED daemon - url: {}, pattern: {}", ledDaemonUrlLeds, pattern.PATTERN);
         }
         catch (Exception e)
         {
@@ -155,13 +155,13 @@ public class LedTimeThread extends ExtendedThread
 
             // Make request
             RestClient restClient = new RestClient();
-            restClient.executePost(screenDaemonUrl, jsonRoot);
+            restClient.executePost(systemDaemonUrlScreen, jsonRoot);
 
             LOG.debug("Screen action sent - action: {}", screenAction);
         }
         catch (ConnectException e)
         {
-            LOG.error("Failed to connect to system daemon - url: {}", ledDaemonUrl);
+            LOG.error("Failed to connect to system daemon - url: {}", systemDaemonUrlScreen);
         }
         catch (Exception e)
         {

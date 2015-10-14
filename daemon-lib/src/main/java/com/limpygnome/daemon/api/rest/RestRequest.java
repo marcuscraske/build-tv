@@ -103,6 +103,19 @@ public class RestRequest
         return pathSegments;
     }
 
+    public boolean isPathMatch(String[] pathStartSegments)
+    {
+        for (int i = 0; i < pathStartSegments.length; i++)
+        {
+            if (!pathStartSegments[i].equals(getPathSegmentSafely(i)))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     /**
      * Safely retrieves a path segment
      *

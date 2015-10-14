@@ -5,15 +5,18 @@ package com.limpygnome.daemon.remote.model;
  */
 public enum DaemonType
 {
-    LED_DAEMON("local-ports/led-daemon"),
-    SCREEN_DAEMON("local-ports/screen-daemon"),
-    BUILD_TV_DAEMON("local-ports/build-tv-daemon")
+    LED_DAEMON("led-daemon", "local-ports/led-daemon"),
+    SYSTEM_DAEMON("system-daemon", "local-ports/system-daemon"),
+    BUILD_TV_DAEMON("build-tv-daemon", "local-ports/build-tv-daemon")
     ;
 
+    public final String TOP_LEVEL_PATH;
     public final String SETTING_KEY_PORT;
 
-    DaemonType(String SETTING_KEY_PORT)
+    DaemonType(String TOP_LEVEL_PATH, String SETTING_KEY_PORT)
     {
+        this.TOP_LEVEL_PATH = TOP_LEVEL_PATH;
         this.SETTING_KEY_PORT = SETTING_KEY_PORT;
     }
+
 }

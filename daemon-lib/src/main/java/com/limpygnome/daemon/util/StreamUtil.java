@@ -43,7 +43,12 @@ public class StreamUtil
     public static void writeJsonResponse(HttpExchange httpExchange, JSONObject jsonObject) throws IOException
     {
         String data = jsonObject.toJSONString();
-        byte[] rawData = data.getBytes();
+        writeResponse(httpExchange, data);
+    }
+
+    public static void writeResponse(HttpExchange httpExchange, String response) throws IOException
+    {
+        byte[] rawData = response.getBytes();
 
         // Set header
         httpExchange.sendResponseHeaders(200, rawData.length);

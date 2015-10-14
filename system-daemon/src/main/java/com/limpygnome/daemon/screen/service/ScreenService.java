@@ -125,7 +125,7 @@ public class ScreenService implements Service, RestServiceHandler
     public boolean handleRequestInChain(RestRequest restRequest, RestResponse restResponse)
     {
         // Check we can handle the request
-        if (!restRequest.isJsonRequest() || !"screen".equals(restRequest.getPathSegmentSafely(0)))
+        if (!restRequest.isJsonRequest() || !restRequest.isPathMatch(new String[]{"system-daemon", "screen" }))
         {
             return false;
         }

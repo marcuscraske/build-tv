@@ -160,6 +160,23 @@ public class LedService implements Service
         }
     }
 
+    public synchronized void removeLedSource(String source)
+    {
+        LedSource ledSource = ledSources.remove(source);
+
+        if (ledSource != null)
+        {
+            LOG.info("Removed LED source - source: {}", source);
+
+            // Check which source is now highest...
+            checkLedSource();
+        }
+        else
+        {
+            LOG.info("Unable to remove non-existent LED source - source: {}", source);
+        }
+    }
+
     public synchronized LedSource getCurrentLedSource()
     {
         return currentLedSource;
