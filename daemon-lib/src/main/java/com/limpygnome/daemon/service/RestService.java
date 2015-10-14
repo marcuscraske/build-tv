@@ -69,11 +69,14 @@ public class RestService implements Service, HttpHandler
     @Override
     public void handle(HttpExchange httpExchange) throws IOException
     {
+        // Create request/response objects
+        RestRequest restRequest;
+        RestResponse restResponse = null;
+
         try
         {
-            // Create request/response objects
-            RestRequest restRequest = new RestRequest(httpExchange);
-            RestResponse restResponse = new RestResponse(httpExchange);
+            restRequest = new RestRequest(httpExchange);
+            restResponse = new RestResponse(httpExchange);
 
             LOG.debug(
                     "Request received - ip: {}, path: {}",
@@ -100,24 +103,22 @@ public class RestService implements Service, HttpHandler
             if (!handled)
             {
                 LOG.warn("Unhandled REST request - ip: {}, path: {}", httpExchange.getRemoteAddress(), restRequest.getPath());
-                httpExchange.sendResponseHeaders(400, 0);
+                restResponse.sendStatusJson(restResponse, 404);
             }
             else
             {
                 // We may have already sent the headers, from a rest handler, so this doesn't matter if it fails
-                try
-                {
-                    httpExchange.sendResponseHeaders(200, 0);
-                }
-                catch (Exception e) { }
+                restResponse.sendStatus(200, 0);
             }
         }
         catch (Exception e)
         {
             LOG.error("Failed to process web request", e);
-            e.printStackTrace();
 
-            httpExchange.sendResponseHeaders(500, 0);
+            if (restResponse != null)
+            {
+                restResponse.sendStatusJson(restResponse, 500);
+            }
         }
         finally
         {

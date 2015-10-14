@@ -48,7 +48,7 @@ public class RestProxyService implements Service, RestServiceHandler
         String url;
         for (DaemonType daemonType : DaemonType.values())
         {
-            url = "http://localhost:" + controller.getSettings().getString(daemonType.SETTING_KEY_PORT);
+            url = "http://localhost:" + controller.getSettings().getLong(daemonType.SETTING_KEY_PORT);
             daemonUrls.put(daemonType, url);
         }
     }
@@ -77,9 +77,8 @@ public class RestProxyService implements Service, RestServiceHandler
         // Check request is authorised
         if (!authProviderService.isAuthorised(restRequest))
         {
-            JSONObject response = new JSONObject();
-            response.put("status", "403");
-            restResponse.writeJsonResponseIgnoreExceptions(response);
+            restResponse.sendStatusJson(restResponse, 403);
+            return true;
         }
 
         // Fetch the top-level path to work out which daemon should receive the message
@@ -117,9 +116,13 @@ public class RestProxyService implements Service, RestServiceHandler
             {
                 String response = StreamUtil.readInputStream(httpResponse.getEntity().getContent(), BUFFER_SIZE);
 
+                // Send status header with size
+                restResponse.sendStatus(httpResponse.getStatusLine().getStatusCode(), response.length());
+
+                // Write response data (if available)
                 if (response.length() > 0)
                 {
-                    restResponse.writeResponseIgnoreExceptions(response);
+                    restResponse.writeResponseIgnoreExceptions(restResponse, response);
                 }
             }
             catch (Exception e)
@@ -140,6 +143,8 @@ public class RestProxyService implements Service, RestServiceHandler
                     daemonType.name(),
                     e
             );
+
+            restResponse.sendStatusJson(restResponse, 500);
         }
     }
 

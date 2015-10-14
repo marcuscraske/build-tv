@@ -7,7 +7,7 @@
     "local-ports" :
     {
         "led-daemon" :      2500,
-        "screen-daemon" :   2600,
+        "system-daemon" :   2600,
         "build-tv-daemon" : 2700
     }
 }

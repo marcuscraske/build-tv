@@ -42,8 +42,6 @@ public class RestRequest
         }
         catch (Exception e)
         {
-            httpExchange.sendResponseHeaders(500, 0);
-
             throw new IOException("Unable to parse request as JSON - ip: " + httpExchange.getRemoteAddress(), e);
         }
 

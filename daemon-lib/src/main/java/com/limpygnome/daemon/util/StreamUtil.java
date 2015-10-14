@@ -1,5 +1,6 @@
 package com.limpygnome.daemon.util;
 
+import com.limpygnome.daemon.api.rest.RestResponse;
 import com.sun.net.httpserver.HttpExchange;
 import org.json.simple.JSONObject;
 
@@ -40,21 +41,21 @@ public class StreamUtil
         return buffer.toString();
     }
 
-    public static void writeJsonResponse(HttpExchange httpExchange, JSONObject jsonObject) throws IOException
+    public static void writeJsonResponse(RestResponse restResponse, JSONObject jsonObject) throws IOException
     {
         String data = jsonObject.toJSONString();
-        writeResponse(httpExchange, data);
+        writeResponse(restResponse, data);
     }
 
-    public static void writeResponse(HttpExchange httpExchange, String response) throws IOException
+    public static void writeResponse(RestResponse restResponse, String response) throws IOException
     {
         byte[] rawData = response.getBytes();
 
         // Set header
-        httpExchange.sendResponseHeaders(200, rawData.length);
+        restResponse.sendStatus(200, rawData.length);
 
         // Write data
-        OutputStream outputStream = httpExchange.getResponseBody();
+        OutputStream outputStream = restResponse.getHttpExchange().getResponseBody();
         outputStream.write(rawData);
         outputStream.flush();
         outputStream.close();
