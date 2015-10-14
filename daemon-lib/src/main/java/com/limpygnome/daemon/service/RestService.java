@@ -28,6 +28,11 @@ public class RestService implements Service, HttpHandler
 
     private static final String SERVICE_NAME_SHARED_RUNTIME = "rest";
 
+    /**
+     * Number of backlogged connections.
+     */
+    private static final int SOCKET_BACKLOG = 16;
+
     private HttpServer httpServer;
     private final List<RestServiceHandler> restServiceHandlers;
 
@@ -43,8 +48,22 @@ public class RestService implements Service, HttpHandler
         try
         {
             int endpointPort = controller.getSettings().getInt("rest/port");
+            boolean endpointLocalOnly = controller.getSettings().getBoolean("rest/local-only");
 
-            httpServer = HttpServer.create(new InetSocketAddress(endpointPort), 16);
+            // Build listening socket
+            InetSocketAddress address;
+
+            if (endpointLocalOnly)
+            {
+                address = new InetSocketAddress("localhost", endpointPort);
+            }
+            else
+            {
+                address = new InetSocketAddress(endpointPort);
+            }
+
+            // Create actual server
+            httpServer = HttpServer.create(address, SOCKET_BACKLOG);
 
             httpServer.createContext("/", this);
             httpServer.setExecutor(null);

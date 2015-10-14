@@ -1,6 +1,7 @@
 {
     "rest" :
     {
+        "local-only" : true,
         "port" : 2700
     },
 
