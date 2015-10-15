@@ -1,5 +1,6 @@
 package com.limpygnome.daemon.buildtv.led;
 
+import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.buildtv.led.pattern.source.IntervalPatternSource;
 import com.limpygnome.daemon.buildtv.led.pattern.LedPattern;
 import com.limpygnome.daemon.buildtv.led.pattern.source.PatternSource;
@@ -22,16 +23,17 @@ public class LedTimeThread extends ExtendedThread
 
     private static final String LED_DAEMON_SOURCE = "build-tv";
 
+    private Controller controller;
     private String ledDaemonUrlLeds;
     private long ledDaemonPriority;
     private String systemDaemonUrlScreen;
     private HashMap<String, PatternSource> patterns;
 
-    public LedTimeThread(String ledDaemonUrl, long ledDaemonPriority, String systemDaemonUrl)
+    public LedTimeThread(Controller controller, String ledDaemonUrl, long ledDaemonPriority)
     {
+        this.controller = controller;
         this.ledDaemonUrlLeds = ledDaemonUrl + "/led-daemon/leds";
         this.ledDaemonPriority = ledDaemonPriority;
-        this.systemDaemonUrlScreen = systemDaemonUrl + "/system-daemon/screen";
         this.patterns = new HashMap<>();
     }
 
@@ -58,33 +60,39 @@ public class LedTimeThread extends ExtendedThread
         final long UPDATE_INTERVAL = 1000;
 
         PatternSource currentPatternSource;
+        IntervalPatternSource intervalPatternSource;
+
+        PatternSource lastPatternSource = null;
 
         while (!isExit())
         {
             // Fetch the current pattern
             currentPatternSource = findHighestPriorityPattern();
 
+            // Check if pattern has changed
+            if (lastPatternSource == null || currentPatternSource != lastPatternSource)
+            {
+                // Inform current pattern they're now the current pattern
+                if (currentPatternSource != null)
+                {
+                    currentPatternSource.eventNowCurrentPatternSource(controller);
+                }
+
+                lastPatternSource = currentPatternSource;
+            }
+
             // Update pattern by talking to LED daemon
             if (currentPatternSource != null)
             {
+                // Update LED pattern
                 changePattern(currentPatternSource.getCurrentLedPattern());
+
+                // Run pattern logic
+                currentPatternSource.update(controller);
             }
             else
             {
                 changePattern(LedPattern.BUILD_UNKNOWN);
-            }
-
-            // Update screen on/off
-            if  (   currentPatternSource != null &&
-                    currentPatternSource instanceof IntervalPatternSource &&
-                    ((IntervalPatternSource) currentPatternSource).isScreenOff()
-                )
-            {
-                changeScreen(ScreenAction.OFF);
-            }
-            else
-            {
-                changeScreen(ScreenAction.ON);
             }
 
             // Sleep for a while
@@ -142,30 +150,6 @@ public class LedTimeThread extends ExtendedThread
         catch (Exception e)
         {
             LOG.error("Failed to make LED daemon request", e);
-        }
-    }
-
-    private void changeScreen(ScreenAction screenAction)
-    {
-        try
-        {
-            // Build JSON object
-            JSONObject jsonRoot = new JSONObject();
-            jsonRoot.put("action", screenAction.ACTION);
-
-            // Make request
-            RestClient restClient = new RestClient();
-            restClient.executePost(systemDaemonUrlScreen, jsonRoot);
-
-            LOG.debug("Screen action sent - action: {}", screenAction);
-        }
-        catch (ConnectException e)
-        {
-            LOG.error("Failed to connect to system daemon - url: {}", systemDaemonUrlScreen);
-        }
-        catch (Exception e)
-        {
-            LOG.error("Failed to make system daemon request", e);
         }
     }
 

@@ -9,7 +9,14 @@
             "endHour"       : 10,
             "endMinute"     : 0,
             "pattern"       : "standup",
-            "screenOff"     : false
+            "screenOff"     : false,
+
+            "notification"  :
+            {
+                "header"        : null,
+                "text"          : "Standup",
+                "background"    : "#F00"
+            }
         },
         {
             "name"          : "Build Indicator Off",

@@ -17,12 +17,11 @@ public class LedTimeService implements Service
     {
         String ledDaemonUrl = controller.getSettings().getString("led-daemon.rest.url");
         long ledDaemonPriority = controller.getSettings().getLong("led-daemon.priority");
-        String systemDaemonUrl = controller.getSettings().getString("screen-daemon.rest.url");
 
         ledTimeThread = new LedTimeThread(
+                controller,
                 ledDaemonUrl,
-                ledDaemonPriority,
-                systemDaemonUrl
+                ledDaemonPriority
         );
         ledTimeThread.start();
     }

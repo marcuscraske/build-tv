@@ -4,12 +4,14 @@ import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Service;
 import com.limpygnome.daemon.buildtv.led.pattern.source.IntervalPatternSource;
 import com.limpygnome.daemon.buildtv.led.pattern.LedPattern;
+import com.limpygnome.daemon.buildtv.model.Notification;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -59,16 +61,7 @@ public class IntervalLedService implements Service
                 interval = (JSONObject) obj;
 
                 // Parse interval
-                intervalPattern = new IntervalPatternSource(
-                        (String) interval.get("name"),
-                        LedPattern.getByName((String) interval.get("pattern")),
-                        (int) (long) interval.get("priority"),
-                        (int) (long) interval.get("startHour"),
-                        (int) (long) interval.get("startMinute"),
-                        (int) (long) interval.get("endHour"),
-                        (int) (long) interval.get("endMinute"),
-                        (boolean) interval.get("screenOff")
-                );
+                intervalPattern = parseIntervalPatternSource(interval);
 
                 // Add to our own list for cleanup and then to the LED service
                 intervalPatterns.add(intervalPattern);
@@ -84,6 +77,42 @@ public class IntervalLedService implements Service
         {
             LOG.error("Cannot read interval LED JSON file", e);
         }
+    }
+
+    private IntervalPatternSource parseIntervalPatternSource(JSONObject root)
+    {
+        Notification notification;
+
+        if (root.containsKey("notfication"))
+        {
+            notification = parseIntervalPatternSourceNotification((JSONObject) root.get("notification"));
+        }
+        else
+        {
+            notification = null;
+        }
+
+        return new IntervalPatternSource(
+                (String) root.get("name"),
+                LedPattern.getByName((String) root.get("pattern")),
+                (int) (long) root.get("priority"),
+                (int) (long) root.get("startHour"),
+                (int) (long) root.get("startMinute"),
+                (int) (long) root.get("endHour"),
+                (int) (long) root.get("endMinute"),
+                (boolean) root.get("screenOff"),
+                notification
+        );
+    }
+
+    private Notification parseIntervalPatternSourceNotification(JSONObject root)
+    {
+        return new Notification(
+                (String) root.get("header"),
+                (String) root.get("text"),
+                (long) root.get("lifespan"),
+                Color.decode((String) root.get("background"))
+        );
     }
 
     @Override

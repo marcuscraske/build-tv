@@ -1,5 +1,6 @@
 package com.limpygnome.daemon.buildtv.led.pattern.source;
 
+import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.buildtv.led.pattern.LedPattern;
 
 /**
@@ -49,4 +50,21 @@ public class PatternSource
     {
         this.currentLedPattern = currentLedPattern;
     }
+
+    /**
+     * Invoked once when this pattern becomes the current pattern source.
+     */
+    public void eventNowCurrentPatternSource(Controller controller)
+    {
+        // Nothing by default...
+    }
+
+    /**
+     * Invoked every time the current source pattern is updated and is this instance.
+     */
+    public void update(Controller controller)
+    {
+        // Nothing by default...
+    }
+
 }
