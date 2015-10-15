@@ -6,4 +6,32 @@
 - name: Removing deploy directory...
   command: rm -r "{{ deploy_path }}"
   sudo: true
-  when: deploy_exists
+  when: deploy_exists.stat.exists
+
+- {
+    name:         Removing remote-daemon service...,
+    include:      ../../common/tasks/removeService.yml,
+    service_name: "remote-daemon",
+    daemon_name:  "remote-daemon"
+  }
+
+- {
+    name:         Removing system-daemon service...,
+    include:      ../../common/tasks/removeService.yml,
+    service_name: "system-daemon",
+    daemon_name:  "system-daemon"
+  }
+
+- {
+    name:         Removing build-tv-daemon service...,
+    include:      ../../common/tasks/removeService.yml,
+    service_name: "build-tv-daemon",
+    daemon_name:  "build-tv-daemon"
+  }
+
+- {
+    name:         Removing led-daemon service...,
+    include:      ../../common/tasks/removeService.yml,
+    service_name: "led-daemon",
+    daemon_name:  "led-daemon"
+  }

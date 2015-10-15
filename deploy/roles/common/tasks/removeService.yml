@@ -1,0 +1,21 @@
+- name: Checking if service already exists...
+  stat: path=/etc/init.d/{{service_name}}
+  register: service_status
+
+- name: Stopping service...
+  service: name={{service_name}} state=stopped
+  when: service_status.stat.exists
+  ignore_errors: true
+  register: service_stopped
+
+- name: Forcibly removing service
+  shell: "update-rc.d -f {{service_name}} remove"
+  when: service_status.stat.exists
+  ignore_errors: true
+  sudo: true
+
+- name: Removing service file...
+  command: rm "/etc/init.d/{{service_name}}"
+  when: service_status.stat.exists
+  ignore_errors: true
+  sudo: true
