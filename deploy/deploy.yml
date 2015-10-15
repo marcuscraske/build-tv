@@ -14,6 +14,7 @@
     - { role: 06_led-daemon, tags: ["led-daemon"] }
     - { role: 07_build-tv-daemon, tags: ["build-tv-daemon"] }
     - { role: 08_screen-daemon, tags: ["system-daemon"] }
-    - { role: 09_notification-client, tags: ["notification-client"] }
-    - { role: 10_remove-temp-files, tags: ["always"] }
-    - { role: 11_setup-reboot, tags: ["reboot"] }
+    - { role: 09_remote-daemon, tags: ["remote-daemon"] }
+    - { role: 10_notification-client, tags: ["notification-client"] }
+    - { role: 11_remove-temp-files, tags: ["always"] }
+    - { role: 12_setup-reboot, tags: ["reboot"] }

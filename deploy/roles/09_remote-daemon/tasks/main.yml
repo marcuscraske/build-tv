@@ -1,0 +1,14 @@
+- name: Copying Remote Daemon JAR
+  copy: src={{ remote_daemon }}/target/remote-daemon-2.0.jar
+        dest={{ deploy_path }}
+        mode=0770
+        owner=rpi-daemon
+        group=rpi-daemon
+  sudo: true
+
+- {
+    name:         Setting Up Remote Daemon,
+    include:      ../../common/tasks/setupService.yml,
+    service_name: "remote-daemon",
+    daemon_name:  "remote-daemon"
+  }
