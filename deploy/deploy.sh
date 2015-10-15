@@ -74,6 +74,7 @@ EXTRA_VARS+="notification_client=\"${PATH_NOTIFICATION_CLIENT}\" "
 
 # Build tags
 if [[ -z "${1}" ]]; then
+    DEPLOY_TAGS+="remove-deploy,"
     DEPLOY_TAGS+="setup-pi,"
     DEPLOY_TAGS+="wallboard,"
     DEPLOY_TAGS+="config,"

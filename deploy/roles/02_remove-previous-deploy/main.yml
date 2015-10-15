@@ -1,0 +1,9 @@
+- name: Checking deploy directory exists...
+  stat: path={{ deploy_path }}
+  register: deploy_exists
+  sudo: true
+
+- name: Removing deploy directory...
+  command: rm -r "{{ deploy_path }}"
+  sudo: true
+  when: deploy_exists
