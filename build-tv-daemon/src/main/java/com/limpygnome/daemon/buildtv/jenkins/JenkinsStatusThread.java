@@ -150,10 +150,10 @@ public class JenkinsStatusThread extends ExtendedThread
                 notification = new Notification("build failure", null, 60000, Color.decode("#CC3300"));
                 break;
             case BUILD_OK:
-                notification = new Notification("build success", null, 30000, Color.decode("#339933"));
+                notification = new Notification("build success", null, 10000, Color.decode("#339933"));
                 break;
             case BUILD_PROGRESS:
-                notification = new Notification("build in progress...", null, 30000, Color.decode("#003D99"));
+                notification = new Notification("build in progress...", null, 10000, Color.decode("#003D99"));
                 break;
             case BUILD_UNSTABLE:
                 notification = new Notification("build unstable", null, 60000, Color.decode("#FF9933"));

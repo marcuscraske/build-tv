@@ -16,7 +16,7 @@ xset s noblank
 matchbox-window-manager -use_titlebar no -use_cursor no &
 
 # Start notification client
-#(cd /rpi-misc; java -jar /rpi-misc/notification-client-1.0.jar) &
+(cd /rpi-misc; java -jar /rpi-misc/notification-client-2.0.jar) &
 
 # Build JIRA url
 DISPLAY_URL="${JIRA_URL}/login.jsp?os_username=${JIRA_USERNAME}&os_password=${JIRA_PASSWORD}&os_destination=plugins/servlet/Wallboard/?dashboardId=${JIRA_WALLBOARD_ID}"

@@ -67,20 +67,28 @@ public class MessageWindow extends JFrame
             jLabelText = null;
         }
 
+        // Fetch size of monitor, make size 80% of screen
+        int targetWidth = (int) (screenWidth * 0.8f);
+        int targetHeight = (int) (screenHeight * 0.8f);
+        setSize(targetWidth, targetHeight);
+
         // Set initial size of form
-        setSize(200, (int) (screenWidth * 0.1));
+        //setSize(200, (int) (screenWidth * 0.1));
 
         // Show window
         centerOnScreen();
         setVisible(true);
 
         // Gradually expand window
-        expander = new MessageWindowExpanderThread(this, 60);
-        expander.start();
+        // TODO: graphics are not powerful/optimised enough, consider removal
+//        expander = new MessageWindowExpanderThread(this, 60);
+//        expander.start();
 
         // TODO: opacity not supported on Pi, consider removal
 //        flasher = new MessageWindowFlashThread(this, 100);
 //        flasher.start();
+
+        showMessage();
 
         // Setup timer to self-close window
         if (lifespanMs != 0)
