@@ -22,7 +22,7 @@
 				<executions>
 					<execution>
 						<id>deploy</id>
-						<phase>compile</phase>
+						<phase>install</phase>
 						<goals>
 							<goal>exec</goal>
 						</goals>

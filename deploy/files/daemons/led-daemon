@@ -7,6 +7,7 @@
 DAEMON_NAME="led-daemon"
 DAEMON_JAR="/rpi-misc/led-daemon-1.0.jar"
 DAEMON_WORKING_DIR="/rpi-misc"
+DAEMON_USER="root"
 
 # **********************************************************************************************************************
 # Main
@@ -19,6 +20,7 @@ start()
     start-stop-daemon --start --quiet --make-pidfile --pidfile /var/run/${DAEMON_NAME}.pid \
                 --background \
                 --chdir ${DAEMON_WORKING_DIR} \
+                --chuid "${DAEMON_USER}" \
                 --exec /usr/bin/java -- -jar ${DAEMON_JAR}
 }
 

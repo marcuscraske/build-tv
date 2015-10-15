@@ -4,9 +4,10 @@
 # Daemon configuration
 # **********************************************************************************************************************
 
-DAEMON_NAME="screen-daemon"
-DAEMON_JAR="/rpi-misc/screen-daemon-1.0.jar"
+DAEMON_NAME="remote-daemon"
+DAEMON_JAR="/rpi-misc/remote-daemon-2.0.jar"
 DAEMON_WORKING_DIR="/rpi-misc"
+DAEMON_USER="rpi-daemon"
 
 # **********************************************************************************************************************
 # Main
@@ -19,6 +20,7 @@ start()
     start-stop-daemon --start --quiet --make-pidfile --pidfile /var/run/${DAEMON_NAME}.pid \
                 --background \
                 --chdir ${DAEMON_WORKING_DIR} \
+                --chuid "${DAEMON_USER}" \
                 --exec /usr/bin/java -- -jar ${DAEMON_JAR}
 }
 

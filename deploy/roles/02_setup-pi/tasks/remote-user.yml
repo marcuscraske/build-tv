@@ -2,7 +2,7 @@
   shell: "{{ files_dest }}/setup-scripts/ssh-speedup.sh"
   sudo: true
 
-- name: Creating managed user for SSH (with password)
+- name: Creating managed user for SSH (with password specified)
   user: name=monitor
         password={{ monitor_password }}
         state=present
@@ -13,7 +13,7 @@
   sudo: true
   when: monitor_password is defined
 
-- name: Creating managed user for SSH (no password)
+- name: Creating managed user for SSH (when no password)
   user: name=monitor
         state=present
         shell=/bin/bash
@@ -22,6 +22,15 @@
         append=no
   sudo: true
   when: monitor_password is not defined
+
+- name: Creating managed user for non-root daemons
+  user: name=rpi-daemon
+        state=present
+        shell=/bin/bash
+        comment="Account for non-root daemons"
+        createhome=no
+        append=no
+  sudo: true
 
 - name: Configuring managed user for nopasswd sudo access
   lineinfile: dest=/etc/sudoers.d/monitor

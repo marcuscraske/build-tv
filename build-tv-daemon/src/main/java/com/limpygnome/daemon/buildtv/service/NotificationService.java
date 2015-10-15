@@ -140,7 +140,7 @@ public class NotificationService implements Service, RestServiceHandler
         // Write response
         try
         {
-            restResponse.writeJsonResponse(response);
+            restResponse.writeJsonResponse(restResponse, response);
         }
         catch (IOException e)
         {

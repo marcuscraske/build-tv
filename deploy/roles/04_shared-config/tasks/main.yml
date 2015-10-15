@@ -13,7 +13,7 @@
       dest:         "{{ deploy_path }}/config/",
       owner:        "monitor",
       group:        "monitor",
-      perms:        "777",
+      perms:        "774",
 
       sudo:         true
   }

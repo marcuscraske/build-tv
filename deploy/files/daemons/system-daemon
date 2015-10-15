@@ -4,10 +4,10 @@
 # Daemon configuration
 # **********************************************************************************************************************
 
-DAEMON_NAME="build-tv-daemon"
-DAEMON_JAR="/rpi-misc/build-tv-daemon-1.0.jar"
+DAEMON_NAME="system-daemon"
+DAEMON_JAR="/rpi-misc/system-daemon-2.0.jar"
 DAEMON_WORKING_DIR="/rpi-misc"
-DAEMON_USER="rpi-daemon"
+DAEMON_USER="root"
 
 # **********************************************************************************************************************
 # Main

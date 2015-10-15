@@ -13,7 +13,7 @@
     - { role: 05_neopixel-ws281x-lib, tags: ["neopixel-lib"] }
     - { role: 06_led-daemon, tags: ["led-daemon"] }
     - { role: 07_build-tv-daemon, tags: ["build-tv-daemon"] }
-    - { role: 08_screen-daemon, tags: ["screen-daemon"] }
+    - { role: 08_screen-daemon, tags: ["system-daemon"] }
     - { role: 09_notification-client, tags: ["notification-client"] }
     - { role: 10_remove-temp-files, tags: ["always"] }
     - { role: 11_setup-reboot, tags: ["reboot"] }
