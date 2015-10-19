@@ -20,7 +20,7 @@ public class TemperatureStatService extends AbstractStatService
 
         // Setup min/max thresholds
         min = controller.getSettings().getOptionalFloat("stats/temperature/min", 20.0f);
-        min = controller.getSettings().getOptionalFloat("stats/temperature/max", 100.0f);
+        max = controller.getSettings().getOptionalFloat("stats/temperature/max", 100.0f);
     }
 
     @Override
