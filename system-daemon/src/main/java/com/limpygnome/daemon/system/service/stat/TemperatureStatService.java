@@ -26,7 +26,7 @@ public class TemperatureStatService extends AbstractStatService
     @Override
     public Statistic update()
     {
-        final String BASH_COMMANDS = "expr substr \"$(cat /sys/class/thermal/thermal_zone0/temp)\" 1 2";
+        final String[] BASH_COMMANDS = { "/bin/sh", "-c", "expr substr \"$(cat /sys/class/thermal/thermal_zone0/temp)\" 1 2" };
 
         // Fetch value
         float value;

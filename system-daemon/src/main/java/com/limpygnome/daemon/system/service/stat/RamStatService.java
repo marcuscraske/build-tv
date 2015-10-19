@@ -10,8 +10,8 @@ public class RamStatService extends AbstractStatService
 {
     public static final String SERVICE_NAME = "stats_ram";
 
-    private static final String BASH_COMMANDS_MAX_MEMORY = "free -m| grep  Mem | awk '{ print int($2) }'";
-    private static final String BASH_COMMANDS_MEMORY_USED = "free -m| grep  Mem | awk '{ print int($3) }'";
+    private static final String[] BASH_COMMANDS_MAX_MEMORY = { "/bin/sh", "-c", "free -m| grep  Mem | awk '{ print int($2) }'" };
+    private static final String[] BASH_COMMANDS_MEMORY_USED = { "/bin/sh", "-c", "free -m| grep  Mem | awk '{ print int($3) }'" };
     //private static final String BASH_COMMANDS_MEMORY_PERCENT = "free -m| grep  Mem | awk '{ print int($3/$2*100) }'";
 
     private float maxMemory;
@@ -22,8 +22,8 @@ public class RamStatService extends AbstractStatService
         super.start(controller);
 
         // Fetch max memory available
-//        maxMemory = environmentService.execute(BASH_COMMANDS_MAX_MEMORY, DEFAULT_PROCESS_TIMEOUT);
-        maxMemory = environmentService.execute("free -m | grep Mem", DEFAULT_PROCESS_TIMEOUT);
+        maxMemory = environmentService.execute(BASH_COMMANDS_MAX_MEMORY, DEFAULT_PROCESS_TIMEOUT);
+//        maxMemory = environmentService.execute("free -m | grep Mem", DEFAULT_PROCESS_TIMEOUT);
 //        maxMemory = environmentService.execute("ifconfig", DEFAULT_PROCESS_TIMEOUT);
     }
 

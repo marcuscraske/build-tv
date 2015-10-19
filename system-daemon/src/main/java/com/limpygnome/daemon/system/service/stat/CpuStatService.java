@@ -14,7 +14,7 @@ public class CpuStatService extends AbstractStatService
     @Override
     public Statistic update()
     {
-        final String BASH_COMMANDS = "grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$4+$5)} END {print usage}'";
+        final String[] BASH_COMMANDS = { "/bin/sh", "-c", "grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$4+$5)} END {print usage}'" };
 
         float value;
         float min = 0.0f;

@@ -72,7 +72,7 @@ public class EnvironmentService implements Service
      * @param processTimeout
      * @return The value of the command, or null if invalid
      */
-    public Float execute(String command, long processTimeout)
+    public Float execute(String[] command, long processTimeout)
     {
         final long BUFFER_LIMIT = 512;
 
