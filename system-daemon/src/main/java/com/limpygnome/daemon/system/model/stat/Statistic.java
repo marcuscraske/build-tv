@@ -1,10 +1,14 @@
-package com.limpygnome.daemon.screen.model.stat;
+package com.limpygnome.daemon.system.model.stat;
+
+import java.io.Serializable;
 
 /**
  * Created by limpygnome on 16/10/15.
  */
-public class Statistic
+public class Statistic implements Serializable
 {
+    private static final long serialVersionUid = 1L;
+
     private String text;
     private float min;
     private float max;
@@ -37,4 +41,5 @@ public class Statistic
     {
         return value;
     }
+
 }

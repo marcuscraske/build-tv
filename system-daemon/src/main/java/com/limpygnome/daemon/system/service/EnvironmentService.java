@@ -1,4 +1,4 @@
-package com.limpygnome.daemon.screen.service;
+package com.limpygnome.daemon.system.service;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Service;
@@ -101,7 +101,7 @@ public class EnvironmentService implements Service
                     buffer.append(line);
                 }
             }
-            while (process.isAlive() && System.currentTimeMillis() - start < processTimeout && buffer.length() < BUFFER_LIMIT);
+            while ((process.isAlive() || line != null) && System.currentTimeMillis() - start < processTimeout && buffer.length() < BUFFER_LIMIT);
 
             // Attempt to parse output
             if (buffer.length() > 0)

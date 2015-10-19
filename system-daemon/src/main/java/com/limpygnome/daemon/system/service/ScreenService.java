@@ -1,17 +1,12 @@
-package com.limpygnome.daemon.screen.service;
+package com.limpygnome.daemon.system.service;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Service;
 import com.limpygnome.daemon.api.rest.RestRequest;
 import com.limpygnome.daemon.api.rest.RestResponse;
 import com.limpygnome.daemon.api.rest.RestServiceHandler;
-import com.limpygnome.daemon.util.EnvironmentUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.io.File;
-import java.util.concurrent.TimeUnit;
-import org.json.simple.JSONObject;
 
 /**
  * A service used to control the attached screen.

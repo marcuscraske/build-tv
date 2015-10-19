@@ -1,4 +1,4 @@
-package com.limpygnome.daemon.screen.service;
+package com.limpygnome.daemon.system.service;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Service;

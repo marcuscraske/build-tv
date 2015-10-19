@@ -24,7 +24,7 @@
   include: remote-user.yml
 
 - name: Setting up boot splash screen...
-  include: boot-splash-screen.yml
+  include: boot-splash-system.yml
 
 - name: Setting up motd...
   include: motd.yml

@@ -63,7 +63,7 @@ public class Settings
 
         if (value == null)
         {
-            throw new RuntimeException("Failed to find setting at '" + path + "'");
+            return null;
         }
 
         return value;
@@ -109,6 +109,23 @@ public class Settings
     public synchronized boolean getBoolean(String path)
     {
         return (boolean) getObject(path);
+    }
+
+    public synchronized Object getOptionalObject(String path, Object alternative)
+    {
+        Object value = getIterativeSettingAtPath(path);
+
+        return value != null ? value : alternative;
+    }
+
+    public synchronized long getOptionalLong(String path, long alternative)
+    {
+        return (long) getOptionalObject(path, alternative);
+    }
+
+    public synchronized float getOptionalFloat(String path, float alternative)
+    {
+        return (float) getOptionalObject(path, alternative);
     }
 
 }
