@@ -94,4 +94,10 @@ public class RandomKeyAuthProviderService implements AuthProviderService
         LOG.debug("Auth key generated: '{}' [{} chars]", authToken, AUTH_KEY_LENGTH);
     }
 
+    @Override
+    public synchronized String getAuthToken()
+    {
+        return authToken;
+    }
+
 }

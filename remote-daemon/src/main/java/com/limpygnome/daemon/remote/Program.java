@@ -17,8 +17,9 @@ public class Program
         Controller controller = new Controller("remote-daemon");
 
         // Add services
+        // TODO: move names to constants
         controller.add("updates", new IntervalUpdateService());
-        controller.add("auth", new RandomKeyAuthProviderService());
+        controller.add(RandomKeyAuthProviderService.SERVICE_NAME, new RandomKeyAuthProviderService());
         controller.add("forwarder", new RestProxyService());
 
         // Attach REST handlers

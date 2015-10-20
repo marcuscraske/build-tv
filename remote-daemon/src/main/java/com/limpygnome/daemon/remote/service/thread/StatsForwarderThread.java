@@ -4,6 +4,7 @@ import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.common.ExtendedThread;
 import com.limpygnome.daemon.remote.service.StatsForwarderService;
 import com.limpygnome.daemon.remote.service.InstanceIdentityService;
+import com.limpygnome.daemon.remote.service.auth.AuthProviderService;
 import com.limpygnome.daemon.util.RestClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,24 +23,34 @@ public class StatsForwarderThread extends ExtendedThread
     private Controller controller;
     private StatsForwarderService statsForwarderService;
     private InstanceIdentityService instanceIdentityService;
+    private AuthProviderService authProviderService;
 
     public StatsForwarderThread(Controller controller, StatsForwarderService statsForwarderService)
     {
+        this.controller = controller;
         this.statsForwarderService = statsForwarderService;
         this.instanceIdentityService = (InstanceIdentityService) controller.getServiceByName(InstanceIdentityService.SERVICE_NAME);
+        this.authProviderService = (AuthProviderService) controller.getServiceByName(AuthProviderService.SERVICE_NAME);
     }
 
     @Override
     public void run()
     {
-        // Initially we will send our info to the endpoint, as a way to register with them...
-
         long frequency = statsForwarderService.getFrequency();
+        boolean infoSent = false;
 
         while (!isExit())
         {
-            // Send update to endpoint
-            sendUpdate("online");
+            // Initially we will send our info to the endpoint, as a way to register with them...
+            if (!infoSent)
+            {
+                infoSent = sendInfo();
+            }
+            else
+            {
+                // Send update to endpoint
+                sendUpdate("online");
+            }
 
             // Sleep...
             try
@@ -53,37 +64,52 @@ public class StatsForwarderThread extends ExtendedThread
         sendUpdate("shutdown");
     }
 
-    private void sendInfo()
+    private boolean sendInfo()
     {
-        JSONObject request = new JSONObject();
-        request.put("uuid", instanceIdentityService.getInstanceUuid());
-        request.put("title", instanceIdentityService.getTitle());
-        request.put("hostname", null);
-        request.put("port", 123);
-        request.put("auth", null);
-        request.put("version", null);
+        try
+        {
+            // Build info object
+            JSONObject request = new JSONObject();
+            request.put("uuid", instanceIdentityService.getInstanceUuid());
+            request.put("title", instanceIdentityService.getTitle());
+            request.put("hostname", null);
+            request.put("port", 123);
+            request.put("auth", authProviderService.getAuthToken());
+            request.put("version", null);
+
+            // Send to endpoint
+            RestClient restClient = new RestClient(STATS_FORWARDER_USER_AGENT, -1);
+            restClient.executePost(statsForwarderService.getEndpointUrlInfo(), request);
+
+            return true;
+        }
+        catch (Exception e)
+        {
+            LOG.error("Failed to send info to REST endpoint", e);
+            return false;
+        }
     }
 
     private void sendUpdate(String status)
     {
-        // Fetch latest stats
-        JSONArray jsonArrayStats = fetchStatistics();
-
-        // Fetch latest build indicator
-        String buildIndicator = fetchBuildIndicator();
-
-        // Build update packet object
-        JSONObject request = new JSONObject();
-        request.put("uuid", instanceIdentityService.getInstanceUuid());
-        request.put("status", status);
-        request.put("buildIndicator", buildIndicator);
-        request.put("metrics", jsonArrayStats);
-
-        // Send to endpoint
-        RestClient restClient = new RestClient(STATS_FORWARDER_USER_AGENT, -1);
 
         try
         {
+            // Fetch latest stats
+            JSONArray jsonArrayStats = fetchStatistics();
+
+            // Fetch latest build indicator
+            String buildIndicator = fetchBuildIndicator();
+
+            // Build update packet object
+            JSONObject request = new JSONObject();
+            request.put("uuid", instanceIdentityService.getInstanceUuid());
+            request.put("status", status);
+            request.put("buildIndicator", buildIndicator);
+            request.put("metrics", jsonArrayStats);
+
+            // Send to endpoint
+            RestClient restClient = new RestClient(STATS_FORWARDER_USER_AGENT, -1);
             restClient.executePost(statsForwarderService.getEndpointUrlUpdate(), request);
         }
         catch (Exception e)

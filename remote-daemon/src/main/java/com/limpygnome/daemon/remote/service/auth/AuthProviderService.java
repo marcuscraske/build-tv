@@ -11,6 +11,8 @@ import org.json.simple.JSONObject;
 public interface AuthProviderService extends Service
 {
 
+    String SERVICE_NAME = "auth";
+
     /**
      * Determines if a request is authorised.
      *
@@ -18,5 +20,7 @@ public interface AuthProviderService extends Service
      * @return True = authorised, false = not authorised
      */
     boolean isAuthorised(RestRequest restRequest);
+
+    String getAuthToken();
 
 }
