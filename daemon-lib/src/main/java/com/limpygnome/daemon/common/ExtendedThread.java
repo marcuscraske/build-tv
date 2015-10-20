@@ -23,6 +23,9 @@ public abstract class ExtendedThread extends Thread
         return exit;
     }
 
+    /**
+     * Stops the thread and waits for it to exit.
+     */
     public synchronized void kill()
     {
         this.exit = true;

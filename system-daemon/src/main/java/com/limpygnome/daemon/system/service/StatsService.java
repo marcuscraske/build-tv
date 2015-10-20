@@ -120,4 +120,9 @@ public class StatsService implements Service, RestServiceHandler
         return environmentService;
     }
 
+    public Statistic[] getCachedStatistics()
+    {
+        return cachedStatistics;
+    }
+
 }

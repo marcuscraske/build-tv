@@ -50,7 +50,7 @@ public class TemperatureStatService extends AbstractStatService
             min = value;
         }
 
-        return new Statistic("Temperature", min, max, value);
+        return new Statistic("Temperature", min, max, value, "CELSIUS");
     }
 
 }

@@ -7,24 +7,25 @@ import java.io.Serializable;
  */
 public class Statistic implements Serializable
 {
-    private static final long serialVersionUid = 1L;
+    private static final long serialVersionUID = 1L;
 
-    private String text;
+    private String key;
     private float min;
     private float max;
     private float value;
+    private String unit;
 
-    public Statistic(String text, float min, float max, float value)
+    public Statistic(String key, float min, float max, float value, String unit)
     {
-        this.text = text;
+        this.key = key;
         this.min = min;
         this.max = max;
         this.value = value;
     }
 
-    public String getText()
+    public String getKey()
     {
-        return text;
+        return key;
     }
 
     public float getMin()
@@ -40,6 +41,11 @@ public class Statistic implements Serializable
     public float getValue()
     {
         return value;
+    }
+
+    public String getUnit()
+    {
+        return unit;
     }
 
 }

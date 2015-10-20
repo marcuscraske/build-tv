@@ -1,12 +1,10 @@
 package com.limpygnome.daemon.api;
 
-import com.limpygnome.daemon.api.rest.RestServiceHandler;
-import com.limpygnome.daemon.service.RestService;
+import com.limpygnome.daemon.util.EnvironmentUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +13,8 @@ import java.util.Map;
  */
 public class Controller
 {
-    private final static String[] CONFIG_PATHS = { "config", "deploy/files/config" };
+    private final static String CONFIG_PATH_DEV = "config";
+    private final static String CONFIG_PATH_PRODUCTION = "deploy/files/config";
 
     private static final Logger LOG = LogManager.getLogger(Controller.class);
 
@@ -131,30 +130,37 @@ public class Controller
      */
     public synchronized File findConfigFile(String fileName)
     {
-        File file;
+        File file = getFilePathConfig(fileName);
 
-        for (String configPath : CONFIG_PATHS)
+        if (file.exists())
         {
-            file = new File(configPath + "/" + fileName);
-
-            if (file.exists())
-            {
-                return file;
-            }
+            return file;
         }
 
         // Build exception of possible paths
         StringBuilder exMessage = new StringBuilder();
-        exMessage.append("Unable to find config file - '" + fileName + "'; possible locations:\n");
-
-        for (String configPath : CONFIG_PATHS)
-        {
-            exMessage.append("- ").append(configPath).append("/").append(fileName).append("\n");
-        }
-
-        exMessage.deleteCharAt(exMessage.length()-1);
+        exMessage.append("Unable to find config file - '" + fileName + "'; expected at:\n");
+        exMessage.append(file.getAbsolutePath());
 
         throw new RuntimeException(exMessage.toString());
+    }
+
+    /**
+     * Provides the path to a configuration file.
+     *
+     * @param fileName The name of the file at the base of the configuration path
+     * @return The file instance to this file; may not exist
+     */
+    public synchronized File getFilePathConfig(String fileName)
+    {
+        if (EnvironmentUtil.isDevEnvironment())
+        {
+            return new File(CONFIG_PATH_DEV, fileName);
+        }
+        else
+        {
+            return new File(CONFIG_PATH_PRODUCTION, fileName);
+        }
     }
 
     public String getControllerName()

@@ -32,6 +32,7 @@ public class CpuStatService extends AbstractStatService
         }
 
 
-        return new Statistic(LABEL, min, max, value);
+        return new Statistic(LABEL, min, max, value, "PERCENTAGE");
     }
+
 }

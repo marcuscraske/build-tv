@@ -42,7 +42,7 @@ public class RamStatService extends AbstractStatService
             value = 0.0f;
         }
 
-        return new Statistic("RAM", min, maxMemory, value);
+        return new Statistic("RAM", min, maxMemory, value, "MEGABYTES");
     }
 
 }
