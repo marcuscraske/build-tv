@@ -56,7 +56,7 @@ public class InstanceIdentityService implements Service
             this.uuid = UUID.fromString(rawUuid);
 
             // Parse title
-            String title = (String) root.get("title");
+            this.title = (String) root.get("title");
 
             LOG.info("Loaded identity for this instance - uuid: {}, title: {}", this.uuid, this.title);
         }
@@ -80,7 +80,7 @@ public class InstanceIdentityService implements Service
 
             // Persist to file
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("uuid", this.uuid);
+            jsonObject.put("uuid", this.uuid.toString());
             jsonObject.put("title", this.title);
 
             String json = jsonObject.toJSONString();

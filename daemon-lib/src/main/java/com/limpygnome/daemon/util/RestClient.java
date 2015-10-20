@@ -83,14 +83,14 @@ public class RestClient
         return StreamUtil.readInputStream(httpResponse.getEntity().getContent(), bufferSize);
     }
 
-    public JSONObject executeJson(String url) throws IOException
+    public Object executeGet(String url) throws IOException
     {
         String response = executeStr(url);
 
         try
         {
             JSONParser jsonParser = new JSONParser();
-            return (JSONObject) jsonParser.parse(response);
+            return jsonParser.parse(response);
         }
         catch (ParseException e)
         {
@@ -99,5 +99,10 @@ public class RestClient
 
             return null;
         }
+    }
+
+    public JSONObject executeJson(String url) throws IOException
+    {
+        return (JSONObject) executeGet(url);
     }
 }

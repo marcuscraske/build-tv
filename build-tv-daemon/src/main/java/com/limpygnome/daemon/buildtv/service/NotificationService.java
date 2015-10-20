@@ -7,6 +7,7 @@ import com.limpygnome.daemon.api.rest.RestResponse;
 import com.limpygnome.daemon.api.rest.RestServiceHandler;
 import com.limpygnome.daemon.buildtv.model.Notification;
 
+import com.limpygnome.daemon.util.EnvironmentUtil;
 import com.limpygnome.daemon.util.StreamUtil;
 import com.sun.net.httpserver.HttpExchange;
 import java.awt.*;
@@ -33,8 +34,15 @@ public class NotificationService implements Service, RestServiceHandler
     public void start(Controller controller)
     {
         // Set default startup notification to be hostname
+        String ip = EnvironmentUtil.getIpAddress();
+
+        if (ip == null)
+        {
+            ip = "unknown";
+        }
+
         Notification notification = new Notification(
-            getHostname(), "ip: " + getIpAddress(), 10000, Color.DARK_GRAY
+            getHostname(), "ip: " + ip, 10000, Color.DARK_GRAY
         );
 
         updateCurrentNotification(notification);
@@ -65,43 +73,6 @@ public class NotificationService implements Service, RestServiceHandler
         try
         {
             return InetAddress.getLocalHost().getHostName();
-        }
-        catch (Exception e)
-        {
-            return "unknown";
-        }
-    }
-
-    public String getIpAddress()
-    {
-        try
-        {
-            String resultIpAddress = null;
-
-            Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
-
-            Enumeration<InetAddress> addresses;
-            String addressStr;
-
-            while (networkInterfaces.hasMoreElements())
-            {
-                addresses = networkInterfaces.nextElement().getInetAddresses();
-
-                while (addresses.hasMoreElements())
-                {
-                    addressStr = addresses.nextElement().getHostAddress();
-
-                    // Ignore local and give preference to ipv4
-                    if (!addressStr.startsWith("127.") && !addressStr.contains("local") &&
-                            !addressStr.startsWith(":") &&
-                            (resultIpAddress == null || resultIpAddress.contains(":")))
-                    {
-                        resultIpAddress = addressStr;
-                    }
-                }
-            }
-
-            return resultIpAddress != null ? resultIpAddress : "unknown";
         }
         catch (Exception e)
         {

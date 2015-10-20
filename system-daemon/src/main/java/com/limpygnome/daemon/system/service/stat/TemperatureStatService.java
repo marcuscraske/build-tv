@@ -2,12 +2,17 @@ package com.limpygnome.daemon.system.service.stat;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.system.model.stat.Statistic;
+import com.limpygnome.daemon.util.MathUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Created by limpygnome on 19/10/15.
  */
 public class TemperatureStatService extends AbstractStatService
 {
+    private static final Logger LOG = LogManager.getLogger(TemperatureStatService.class);
+
     public static final String SERVICE_NAME = "stats_temp";
 
     private float min;
@@ -29,11 +34,20 @@ public class TemperatureStatService extends AbstractStatService
         final String[] BASH_COMMANDS = { "/bin/sh", "-c", "expr substr \"$(cat /sys/class/thermal/thermal_zone0/temp)\" 1 2" };
 
         // Fetch value
-        float value;
+        Float value;
 
         if (environmentService != null)
         {
             value = environmentService.execute(BASH_COMMANDS, DEFAULT_PROCESS_TIMEOUT);
+
+            if (value == null)
+            {
+                LOG.warn("Failed to retrieve temperature, possibly unsupported");
+                value = 0.0f;
+            }
+
+            // Round value
+            value = MathUtil.round(value, 2);
         }
         else
         {

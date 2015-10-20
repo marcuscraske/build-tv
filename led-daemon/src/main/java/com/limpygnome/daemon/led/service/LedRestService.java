@@ -5,8 +5,10 @@ import com.limpygnome.daemon.api.Service;
 import com.limpygnome.daemon.api.rest.RestRequest;
 import com.limpygnome.daemon.api.rest.RestResponse;
 import com.limpygnome.daemon.api.rest.RestServiceHandler;
+import com.limpygnome.daemon.led.model.LedSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.simple.JSONObject;
 
 /**
  * A REST service/handler to handle requests to control the {@link LedService}.
@@ -33,11 +35,20 @@ public class LedRestService implements Service, RestServiceHandler
     @Override
     public boolean handleRequestInChain(RestRequest restRequest, RestResponse restResponse)
     {
-        if (!restRequest.isJsonRequest() || !restRequest.isPathMatch(new String[]{ "led-daemon", "leds" }))
+        if (restRequest.isJsonRequest() && restRequest.isPathMatch(new String[]{ "led-daemon", "leds", "set" }))
         {
-            return false;
+            return handleSetLed(restRequest, restResponse);
+        }
+        else if (restRequest.isPathMatch(new String[]{ "led-daemon", "leds", "get" }))
+        {
+            return handleGetLed(restRequest, restResponse);
         }
 
+        return true;
+    }
+
+    private boolean handleSetLed(RestRequest restRequest, RestResponse restResponse)
+    {
         // Check required data elements present
         String source = (String) restRequest.getJsonElement(new String[]{ "source" });
         String pattern = (String) restRequest.getJsonElement(new String[]{ "pattern" });
@@ -45,7 +56,7 @@ public class LedRestService implements Service, RestServiceHandler
 
         if (source == null || pattern == null || priority == null)
         {
-            LOG.debug("Malformed LED daemon request");
+            LOG.warn("Malformed LED daemon request - source: {}, pattern: {}, priority: {}", source, pattern, priority);
             return false;
         }
 
@@ -86,6 +97,27 @@ public class LedRestService implements Service, RestServiceHandler
                     source, pattern, priority
             );
         }
+
+        return true;
+    }
+
+    private boolean handleGetLed(RestRequest restRequest, RestResponse restResponse)
+    {
+        // TODO: change this to provide all led sources currently at LED daemon
+        // Retrieve current pattern
+        LedSource currentLedSource = ledService.getCurrentLedSource();
+
+        // Build json response
+        JSONObject response = new JSONObject();
+
+        JSONObject current = new JSONObject();
+        current.put("source", currentLedSource.getSource());
+        current.put("pattern", currentLedSource.getPattern().getName());
+        current.put("priority", currentLedSource.getPriority());
+
+        response.put("current", current);
+
+        restResponse.writeJsonResponseIgnoreExceptions(restResponse, response);
 
         return true;
     }

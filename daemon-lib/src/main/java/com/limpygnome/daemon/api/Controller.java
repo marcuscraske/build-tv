@@ -13,19 +13,20 @@ import java.util.Map;
  */
 public class Controller
 {
-    private final static String CONFIG_PATH_DEV = "config";
-    private final static String CONFIG_PATH_PRODUCTION = "deploy/files/config";
+    private final static String CONFIG_PATH_DEV = "deploy/files/config";
+    private final static String CONFIG_PATH_PRODUCTION = "config";
 
     private static final Logger LOG = LogManager.getLogger(Controller.class);
 
     private String controllerName;
-    private boolean running;
+    private ControllerState state;
     private HashMap<String, Service> services;
     private Settings settings;
 
     public Controller(String controllerName)
     {
         this.controllerName = controllerName;
+        this.state = ControllerState.STOPPED;
         this.services = new HashMap<>();
         this.settings = new Settings(this);
     }
@@ -33,7 +34,7 @@ public class Controller
     public synchronized void add(String serviceName, Service service)
     {
         // Check controller is not already running...
-        if (running)
+        if (state == ControllerState.RUNNING)
         {
             throw new RuntimeException("Cannot add service whilst running - name: " + serviceName +
                     ", class: " + service.getClass().getName()
@@ -48,6 +49,8 @@ public class Controller
     {
         LOG.info("Starting controller...");
 
+        setState(ControllerState.STARTING);
+
         // Reload settings
         settings.reload();
 
@@ -61,7 +64,7 @@ public class Controller
             LOG.debug("Started service successfully - name: {}", kv.getKey());
         }
 
-        setRunning(true);
+        setState(ControllerState.RUNNING);
 
         LOG.info("Controller started successfully");
     }
@@ -69,6 +72,8 @@ public class Controller
     public synchronized void stop()
     {
         LOG.info("Controller stopping...");
+
+        setState(ControllerState.STOPPING);
 
         // Stop all services
         for (Map.Entry<String, Service> kv : services.entrySet())
@@ -80,15 +85,19 @@ public class Controller
             LOG.debug("Stopped service - name: {}", kv.getKey());
         }
 
-        setRunning(false);
+        setState(ControllerState.STOPPED);
 
         LOG.info("Controller has stopped");
     }
 
     public synchronized void waitForExit()
     {
-        // Block until we exit...
-        while (!running)
+        waitForState(ControllerState.STOPPED);
+    }
+
+    public synchronized void waitForState(ControllerState state)
+    {
+        while (this.state.LIFECYCLE_STEP < state.LIFECYCLE_STEP)
         {
             try
             {
@@ -180,12 +189,12 @@ public class Controller
         return service;
     }
 
-    private void setRunning(boolean value)
+    private void setState(ControllerState state)
     {
-        this.running = value;
+        this.state = state;
         notifyAll();
 
-        LOG.debug("Changed running state of controller - running: {}", this.running);
+        LOG.debug("Changed state of controller - state: {}", this.state);
     }
 
     public Settings getSettings()

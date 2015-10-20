@@ -21,6 +21,7 @@ public class Statistic implements Serializable
         this.min = min;
         this.max = max;
         this.value = value;
+        this.unit = unit;
     }
 
     public String getKey()

@@ -21,7 +21,7 @@ public class RandomKeyAuthProviderService implements AuthProviderService
     /**
      * The length of auth keys generated.
      */
-    public static final int AUTH_KEY_LENGTH = 128;
+    public static final int AUTH_KEY_LENGTH = 256;
 
     /**
      * The root element in requests expecte to hold the auth key.
@@ -64,6 +64,11 @@ public class RandomKeyAuthProviderService implements AuthProviderService
             // Check it matches what we're expecting...
             String auth = (String) rawAuth;
             authorised = auth.equals(this.authToken);
+
+            if (!authorised)
+            {
+                LOG.debug("Token mis-match - expected: {}, provided: {}", authToken, auth);
+            }
         }
 
         LOG.info("Request auth result - ip: {}, authorised: {}, path: {}",
@@ -85,7 +90,7 @@ public class RandomKeyAuthProviderService implements AuthProviderService
 
         for (int i = 0; i < AUTH_KEY_LENGTH; i++)
         {
-            buffer.append((char) charMin + secureRandom.nextInt(charRange));
+            buffer.append((char) (charMin + secureRandom.nextInt(charRange)));
         }
 
         this.authToken = buffer.toString();

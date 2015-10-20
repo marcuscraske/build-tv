@@ -1,9 +1,12 @@
 package com.limpygnome.daemon.remote.service.thread;
 
 import com.limpygnome.daemon.api.Controller;
+import com.limpygnome.daemon.api.ControllerState;
 import com.limpygnome.daemon.common.ExtendedThread;
+import com.limpygnome.daemon.remote.service.HostInformationService;
 import com.limpygnome.daemon.remote.service.StatsForwarderService;
 import com.limpygnome.daemon.remote.service.InstanceIdentityService;
+import com.limpygnome.daemon.remote.service.VersionService;
 import com.limpygnome.daemon.remote.service.auth.AuthProviderService;
 import com.limpygnome.daemon.util.RestClient;
 import org.apache.logging.log4j.LogManager;
@@ -24,6 +27,11 @@ public class StatsForwarderThread extends ExtendedThread
     private StatsForwarderService statsForwarderService;
     private InstanceIdentityService instanceIdentityService;
     private AuthProviderService authProviderService;
+    private VersionService versionService;
+    private HostInformationService hostInformationService;
+
+    private String LedDaemonPatternEndpointUrl;
+    private String systemDaemonStatsEndpointUrl;
 
     public StatsForwarderThread(Controller controller, StatsForwarderService statsForwarderService)
     {
@@ -31,11 +39,26 @@ public class StatsForwarderThread extends ExtendedThread
         this.statsForwarderService = statsForwarderService;
         this.instanceIdentityService = (InstanceIdentityService) controller.getServiceByName(InstanceIdentityService.SERVICE_NAME);
         this.authProviderService = (AuthProviderService) controller.getServiceByName(AuthProviderService.SERVICE_NAME);
+        this.versionService = (VersionService) controller.getServiceByName(VersionService.SERVICE_NAME);
+        this.hostInformationService = (HostInformationService) controller.getServiceByName(HostInformationService.SERVICE_NAME);
+
+        // Load daemon port settings
+        long ledDaemonport = controller.getSettings().getLong("local-ports/led-daemon");
+        long systemDaemonPort = controller.getSettings().getLong("local-ports/system-daemon");
+
+        // Build endpoint URLs
+        LedDaemonPatternEndpointUrl = "http://localhost:" + ledDaemonport + "/led-daemon/leds/get";
+        systemDaemonStatsEndpointUrl = "http://localhost:" + systemDaemonPort + "/system-daemon/stats";
     }
 
     @Override
     public void run()
     {
+        LOG.debug("Waiting for controller to finish loading...");
+        controller.waitForState(ControllerState.RUNNING);
+
+        LOG.debug("Started...");
+
         long frequency = statsForwarderService.getFrequency();
         boolean infoSent = false;
 
@@ -49,7 +72,7 @@ public class StatsForwarderThread extends ExtendedThread
             else
             {
                 // Send update to endpoint
-                sendUpdate("online");
+                sendUpdate("online", true);
             }
 
             // Sleep...
@@ -61,25 +84,34 @@ public class StatsForwarderThread extends ExtendedThread
         }
 
         // Send an update we're shutting down...
-        sendUpdate("shutdown");
+        LOG.debug("Sending shutdown update...");
+
+        sendUpdate("shutdown", false);
+
+        LOG.debug("Thread finished");
     }
 
     private boolean sendInfo()
     {
+        LOG.debug("Sending info...");
+
         try
         {
             // Build info object
             JSONObject request = new JSONObject();
-            request.put("uuid", instanceIdentityService.getInstanceUuid());
+
+            request.put("uuid", instanceIdentityService.getInstanceUuid().toString());
             request.put("title", instanceIdentityService.getTitle());
-            request.put("hostname", null);
-            request.put("port", 123);
+            request.put("hostname", hostInformationService.getHostname());
+            request.put("port", hostInformationService.getRestPort());
             request.put("auth", authProviderService.getAuthToken());
-            request.put("version", null);
+            request.put("version", versionService.getVersion());
 
             // Send to endpoint
             RestClient restClient = new RestClient(STATS_FORWARDER_USER_AGENT, -1);
             restClient.executePost(statsForwarderService.getEndpointUrlInfo(), request);
+
+            LOG.debug("Successfully sent info");
 
             return true;
         }
@@ -90,8 +122,9 @@ public class StatsForwarderThread extends ExtendedThread
         }
     }
 
-    private void sendUpdate(String status)
+    private void sendUpdate(String status, boolean fetchExternalData)
     {
+        LOG.debug("Sending update...");
 
         try
         {
@@ -103,7 +136,7 @@ public class StatsForwarderThread extends ExtendedThread
 
             // Build update packet object
             JSONObject request = new JSONObject();
-            request.put("uuid", instanceIdentityService.getInstanceUuid());
+            request.put("uuid", instanceIdentityService.getInstanceUuid().toString());
             request.put("status", status);
             request.put("buildIndicator", buildIndicator);
             request.put("metrics", jsonArrayStats);
@@ -111,6 +144,8 @@ public class StatsForwarderThread extends ExtendedThread
             // Send to endpoint
             RestClient restClient = new RestClient(STATS_FORWARDER_USER_AGENT, -1);
             restClient.executePost(statsForwarderService.getEndpointUrlUpdate(), request);
+
+            LOG.debug("Successfully sent update");
         }
         catch (Exception e)
         {
@@ -118,16 +153,55 @@ public class StatsForwarderThread extends ExtendedThread
         }
     }
 
-    private String fetchBuildIndicator()
+    private String fetchBuildIndicator(boolean fetchExternalData)
     {
-        // TODO: unstub this...
-        return "build-ok";
+        if (!fetchExternalData)
+        {
+            return null;
+        }
+
+        try
+        {
+            LOG.debug("Fetching build indicator - url: {}", LedDaemonPatternEndpointUrl);
+
+            RestClient restClient = new RestClient(STATS_FORWARDER_USER_AGENT, -1);
+            JSONObject response = restClient.executeJson(LedDaemonPatternEndpointUrl);
+            String pattern = (String) ((JSONObject) response.get("current")).get("pattern");
+
+            LOG.debug("Current build indicator retrieved - pattern: {}", pattern);
+
+            return pattern;
+        }
+        catch (Exception e)
+        {
+            LOG.error("Failed to retrieve build indicator from LED daemon", e);
+            return null;
+        }
     }
 
-    private JSONArray fetchStatistics()
+    private JSONArray fetchStatistics(boolean fetchExternalData)
     {
-        // TODO: unstub this...
-        return null;
+        if (!fetchExternalData)
+        {
+            return null;
+        }
+
+        try
+        {
+            LOG.debug("Fetching statistics - url: {}", systemDaemonStatsEndpointUrl);
+
+            RestClient restClient = new RestClient(STATS_FORWARDER_USER_AGENT, -1);
+            JSONArray response = (JSONArray) restClient.executeGet(systemDaemonStatsEndpointUrl);
+
+            LOG.debug("Retrieved statistics - metrics: {}", response.size());
+
+            return response;
+        }
+        catch (Exception e)
+        {
+            LOG.error("Failed to retrieve statistics from system daemon", e);
+            return null;
+        }
     }
 
 }

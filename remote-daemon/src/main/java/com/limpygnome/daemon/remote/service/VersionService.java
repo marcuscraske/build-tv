@@ -2,6 +2,8 @@ package com.limpygnome.daemon.remote.service;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Service;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -14,6 +16,8 @@ import java.util.UUID;
  */
 public class VersionService implements Service
 {
+    private static final Logger LOG = LogManager.getLogger(VersionService.class);
+
     public static final String SERVICE_NAME = "version";
 
     private static final String VERSION_FILENAME = "version.json";
@@ -34,29 +38,20 @@ public class VersionService implements Service
             // Parse version
             this.version = (String) root.get("version");
 
-            LOG.
-
-            // Parse UUID
-            String rawUuid = (String) root.get("uuid");
-            this.uuid = UUID.fromString(rawUuid);
-
-            // Parse title
-            String title = (String) root.get("title");
-
-            LOG.info("Loaded identity for this instance - uuid: {}, title: {}", this.uuid, this.title);
+            LOG.info("Loaded version data - version: {}", this.version);
         }
         catch (Exception e)
         {
             String absPath = file.getAbsolutePath();
-            LOG.error("Failed to read existing uuid - path: {}", absPath, e);
-            throw new RuntimeException("Failed to load UUID from file - path: " + absPath, e);
+            LOG.error("Failed to read version file - path: {}", absPath, e);
+            throw new RuntimeException("Failed to load version from file - path: " + absPath, e);
         }
     }
 
     @Override
     public void stop(Controller controller)
     {
-        this.version = version;
+        this.version = null;
     }
 
     public String getVersion()

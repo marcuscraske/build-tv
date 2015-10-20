@@ -24,6 +24,8 @@ public class RestProxyService implements Service, RestServiceHandler
 {
     private static final Logger LOG = LogManager.getLogger(RestProxyService.class);
 
+    public static final String SERVICE_NAME = "rest-proxy";
+
     /**
      * The user agent for proxied requests to other daemons.
      */
