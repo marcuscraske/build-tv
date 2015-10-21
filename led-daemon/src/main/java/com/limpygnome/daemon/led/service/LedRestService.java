@@ -60,6 +60,8 @@ public class LedRestService implements Service, RestServiceHandler
             return false;
         }
 
+        LOG.debug("Source: {}, pattern: {}, priority: {}", source, pattern, priority);
+
         // Read, clean and validate requested LED pattern
         pattern = pattern.trim().toLowerCase();
 
@@ -67,7 +69,7 @@ public class LedRestService implements Service, RestServiceHandler
         {
             throw new IllegalArgumentException("Invalid source specified in web request");
         }
-        else if (!pattern.matches("^[a-z0-9\\_\\-]+$"))
+        else if (priority != 0 && !pattern.matches("^[a-z0-9\\_\\-]+$"))
         {
             throw new IllegalArgumentException("Invalid pattern specified in web request");
         }

@@ -129,10 +129,10 @@ public class StatsForwarderThread extends ExtendedThread
         try
         {
             // Fetch latest stats
-            JSONArray jsonArrayStats = fetchStatistics();
+            JSONArray jsonArrayStats = fetchStatistics(fetchExternalData);
 
             // Fetch latest build indicator
-            String buildIndicator = fetchBuildIndicator();
+            String buildIndicator = fetchBuildIndicator(fetchExternalData);
 
             // Build update packet object
             JSONObject request = new JSONObject();

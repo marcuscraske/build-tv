@@ -14,8 +14,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import java.awt.Color;
+import java.io.File;
+import java.io.FileReader;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,9 +29,14 @@ public class JenkinsStatusThread extends ExtendedThread
 {
     private static final Logger LOG = LogManager.getLogger(JenkinsStatusThread.class);
 
+    private static final String JENKINS_SETTINGS_FILENAME = "jenkins.json";
+
+    private static final String USER_AGENT = "Build TV";
+
     private LedTimeService ledTimeService;
     private NotificationService notificationService;
     private long pollRateMs;
+    private int bufferSizeBytes;
     private PatternSource patternSource;
 
     private JenkinsHost[] jenkinsHosts;
@@ -38,18 +46,11 @@ public class JenkinsStatusThread extends ExtendedThread
     {
         Settings settings = controller.getSettings();
 
-        // Read global settings
-        this.pollRateMs = settings.getLong("jenkins/poll-rate-ms");
-
-        // Parse hosts to poll
-        JSONArray rawHosts = settings.getJsonArray("jenkins/hosts");
-        this.jenkinsHosts = parseHosts(rawHosts);
+        // Load configuration from file
+        loadConfigurationFromFile(controller);
 
         // Setup REST client
-        int bufferSizeBytes = settings.getInt("jenkins/max-buffer-bytes");
-        String userAgent = settings.getString("jenkins/user-agent");
-
-        this.restClient = new RestClient(userAgent, bufferSizeBytes);
+        this.restClient = new RestClient(USER_AGENT, bufferSizeBytes);
 
         // Setup a new LED pattern source for this thread
         this.patternSource = new PatternSource("Jenkins Status", LedPattern.BUILD_UNKNOWN, 1);
@@ -59,6 +60,35 @@ public class JenkinsStatusThread extends ExtendedThread
 
         // Fetch notifications service
         this.notificationService = (NotificationService) controller.getServiceByName(NotificationService.SERVICE_NAME);
+    }
+
+    private void loadConfigurationFromFile(Controller controller)
+    {
+        // Retrieve file instance of Jenkins file
+        File file = controller.findConfigFile(JENKINS_SETTINGS_FILENAME);
+
+        try
+        {
+            // Load JSON from file
+            JSONParser jsonParser = new JSONParser();
+            JSONObject root = (JSONObject) jsonParser.parse(new FileReader(file));
+
+            // Load mandatory configuration
+            this.pollRateMs = (long) root.get("poll-rate-ms");
+            this.bufferSizeBytes = (int) (long) root.get("max-buffer-bytes");
+
+            LOG.debug("Poll rate: {}, max buffer bytes: {}", pollRateMs, bufferSizeBytes);
+
+            // Parse JSON into hosts
+            JSONArray rawHosts = (JSONArray) root.get("hosts");
+            this.jenkinsHosts = parseHosts(rawHosts);
+        }
+        catch (Exception e)
+        {
+            String absPath = file.getAbsolutePath();
+            LOG.error("Failed to load Jenkins hosts file - path: {}", absPath, e);
+            throw new RuntimeException("Failed to load Jenkins hosts file - path: " + absPath);
+        }
     }
 
     private JenkinsHost[] parseHosts(JSONArray rawHosts)
