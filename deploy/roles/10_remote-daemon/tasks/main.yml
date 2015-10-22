@@ -1,5 +1,5 @@
 - name: Copying Remote Daemon JAR
-  copy: src={{ remote_daemon }}/target/remote-daemon-2.0.jar
+  copy: src={{ remote_daemon }}/target/remote-daemon.jar
         dest={{ deploy_path }}
         mode=0770
         owner=rpi-daemon

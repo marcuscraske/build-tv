@@ -53,6 +53,7 @@
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
 					<appendAssemblyId>false</appendAssemblyId>
+                    <finalName>led-daemon</finalName>
 				</configuration>
 			</plugin>
 			

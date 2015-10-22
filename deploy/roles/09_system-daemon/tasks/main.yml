@@ -1,5 +1,5 @@
 - name: Copying System Daemon JAR
-  copy: src={{ system_daemon }}/target/system-daemon-2.0.jar
+  copy: src={{ system_daemon }}/target/system-daemon.jar
         dest={{ deploy_path }}
         mode=0770
         owner=rpi-daemon

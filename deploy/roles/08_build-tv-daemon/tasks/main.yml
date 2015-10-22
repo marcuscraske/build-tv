@@ -1,5 +1,5 @@
 - name: Copying Build TV JAR
-  copy: src={{ build_tv_daemon }}/target/build-tv-daemon-2.0.jar
+  copy: src={{ build_tv_daemon }}/target/build-tv-daemon.jar
         dest={{ deploy_path }}
         mode=0770
         owner=rpi-daemon

@@ -8,19 +8,15 @@ import com.limpygnome.daemon.api.rest.RestServiceHandler;
 import com.limpygnome.daemon.buildtv.model.Notification;
 
 import com.limpygnome.daemon.util.EnvironmentUtil;
-import com.limpygnome.daemon.util.StreamUtil;
-import com.sun.net.httpserver.HttpExchange;
 import java.awt.*;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.util.Enumeration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 
 /**
- * Created by limpygnome on 27/08/15.
+ * A service for providing notifications to a notification client.
  */
 public class NotificationService implements Service, RestServiceHandler
 {

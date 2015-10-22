@@ -1,5 +1,5 @@
 - name: Copying LED daemon JAR
-  copy: src={{ led_daemon }}/target/led-daemon-2.0.jar
+  copy: src={{ led_daemon }}/target/led-daemon.jar
         dest={{ deploy_path }}
         mode=0770
         owner=rpi-daemon

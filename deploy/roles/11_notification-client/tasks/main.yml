@@ -1,5 +1,5 @@
 - name: Copying Notification Client JAR
-  copy: src={{ notification_client }}/target/notification-client-2.0.jar
+  copy: src={{ notification_client }}/target/notification-client.jar
         dest={{ deploy_path }}
         mode=0770
         owner=wallboard
