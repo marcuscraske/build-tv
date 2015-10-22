@@ -2,11 +2,24 @@ package com.limpygnome.daemon.remote.model;
 
 /**
  * The type of local daemon.
+ *
+ * Used for matching the first path/directory of an incoming request to a local daemon port for forwarding/proxying.
  */
 public enum DaemonType
 {
+    /**
+     * The LED daemon - LED strip etc.
+     */
     LED_DAEMON("led-daemon", "local-ports/led-daemon"),
+
+    /**
+     * The system daemon - statistics, screen, power etc.
+     */
     SYSTEM_DAEMON("system-daemon", "local-ports/system-daemon"),
+
+    /**
+     * The build TV daemon - Jenkins etc.
+     */
     BUILD_TV_DAEMON("build-tv-daemon", "local-ports/build-tv-daemon")
     ;
 

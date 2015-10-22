@@ -41,6 +41,12 @@ public class Controller
             );
         }
 
+        // Check service does not already exist
+        if (services.containsKey(serviceName))
+        {
+            throw new RuntimeException("Service '" + serviceName + "' already exists");
+        }
+
         // Add service
         services.put(serviceName, service);
     }

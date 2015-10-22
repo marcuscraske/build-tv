@@ -5,7 +5,7 @@ import com.limpygnome.daemon.api.Service;
 import com.limpygnome.daemon.util.EnvironmentUtil;
 
 /**
- * Created by limpygnome on 20/10/15.
+ * A service used to provide the hostname and REST port of this daemon.
  */
 public class HostInformationService implements Service
 {

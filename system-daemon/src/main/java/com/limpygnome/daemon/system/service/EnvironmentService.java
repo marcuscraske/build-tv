@@ -12,7 +12,7 @@ import java.io.InputStreamReader;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by limpygnome on 13/10/15.
+ * A service for interfacing with the system environment, such as for executing processes.
  */
 public class EnvironmentService implements Service
 {

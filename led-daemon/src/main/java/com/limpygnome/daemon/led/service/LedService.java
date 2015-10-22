@@ -182,6 +182,11 @@ public class LedService implements Service
         return currentLedSource;
     }
 
+    public synchronized Map<String, LedSource> getLedSources()
+    {
+        return new HashMap<>(ledSources);
+    }
+
     private synchronized void checkLedSource()
     {
         // Fetch highest item

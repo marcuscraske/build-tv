@@ -7,10 +7,12 @@ import com.limpygnome.daemon.api.rest.RestResponse;
 import com.limpygnome.daemon.api.rest.RestServiceHandler;
 
 /**
- * Created by limpygnome on 13/10/15.
+ * A power management service.
  */
-public class PowerService implements Service, RestServiceHandler
+public class PowerManagementService implements Service, RestServiceHandler
 {
+    public static final String SERVICE_NAME = "power-management";
+
     private EnvironmentService environmentService;
 
     private static final long PROCESS_TIMEOUT = 2000;

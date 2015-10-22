@@ -13,7 +13,10 @@ import java.io.FileWriter;
 import java.util.UUID;
 
 /**
- * Responsible for generating and loading the UUID associated with this system and its series of daemons.
+ * A service responsible for generating and loading the UUID and title associated with this system and its series of
+ * daemons.
+ *
+ * This information can be used to uniquely identity this system.
  */
 public class InstanceIdentityService implements Service
 {

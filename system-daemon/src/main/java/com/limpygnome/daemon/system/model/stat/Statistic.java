@@ -3,7 +3,9 @@ package com.limpygnome.daemon.system.model.stat;
 import java.io.Serializable;
 
 /**
- * Created by limpygnome on 16/10/15.
+ * Represents a measurable system metric, such as CPU usage.
+ *
+ * This is produced by an implementation of a {@link com.limpygnome.daemon.system.service.stat.AbstractStatService}.
  */
 public class Statistic implements Serializable
 {

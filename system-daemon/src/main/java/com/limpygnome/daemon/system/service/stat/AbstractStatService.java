@@ -12,6 +12,9 @@ import com.limpygnome.daemon.system.service.EnvironmentService;
  */
 public abstract class AbstractStatService implements Service
 {
+    /**
+     * Default timeout for processes used to retrieve system metrics.
+     */
     protected final long DEFAULT_PROCESS_TIMEOUT = 5000;
     protected EnvironmentService environmentService;
 

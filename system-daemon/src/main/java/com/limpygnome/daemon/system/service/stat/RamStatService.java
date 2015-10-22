@@ -6,7 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Created by limpygnome on 19/10/15.
+ * A stat service implementation to measure RAM usage.
  */
 public class RamStatService extends AbstractStatService
 {
@@ -26,9 +26,14 @@ public class RamStatService extends AbstractStatService
         super.start(controller);
 
         // Fetch max memory available
-        maxMemory = environmentService.execute(BASH_COMMANDS_MAX_MEMORY, DEFAULT_PROCESS_TIMEOUT);
-//        maxMemory = environmentService.execute("free -m | grep Mem", DEFAULT_PROCESS_TIMEOUT);
-//        maxMemory = environmentService.execute("ifconfig", DEFAULT_PROCESS_TIMEOUT);
+        try
+        {
+            maxMemory = environmentService.execute(BASH_COMMANDS_MAX_MEMORY, DEFAULT_PROCESS_TIMEOUT);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException("Unable to retrieve maximum system memory", e);
+        }
     }
 
     @Override

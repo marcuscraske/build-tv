@@ -6,19 +6,21 @@ import com.limpygnome.daemon.api.rest.RestRequest;
 import com.limpygnome.daemon.api.rest.RestResponse;
 import com.limpygnome.daemon.api.rest.RestServiceHandler;
 import com.limpygnome.daemon.remote.model.DaemonType;
-import com.limpygnome.daemon.remote.service.auth.AuthProviderService;
+import com.limpygnome.daemon.remote.service.auth.AuthTokenProviderService;
 import com.limpygnome.daemon.util.RestClient;
 import com.limpygnome.daemon.util.StreamUtil;
 import org.apache.http.HttpResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.simple.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Forwards REST requests, based on their top-level path, to the appropriate daemon.
+ * A service to forward REST requests, based on their top-level path, to the appropriate daemon.
+ *
+ * This allows other daemons to listen on only the local interface, whilst this daemon proxies requests whilst
+ * providing authentication, acting as a firewall.
  */
 public class RestProxyService implements Service, RestServiceHandler
 {
@@ -36,13 +38,13 @@ public class RestProxyService implements Service, RestServiceHandler
      */
     private static final int BUFFER_SIZE = 4096;
 
-    private AuthProviderService authProviderService;
+    private AuthTokenProviderService authProviderService;
     private Map<DaemonType, String> daemonUrls;
 
     @Override
     public void start(Controller controller)
     {
-        authProviderService = (AuthProviderService) controller.getServiceByName("auth");
+        authProviderService = (AuthTokenProviderService) controller.getServiceByName("auth");
 
         // Build URLs for local daemons using settings
         daemonUrls = new HashMap<>();

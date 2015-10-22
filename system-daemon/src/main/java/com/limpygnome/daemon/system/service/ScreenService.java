@@ -15,6 +15,8 @@ public class ScreenService implements Service, RestServiceHandler
 {
     private static final Logger LOG = LogManager.getLogger(ScreenService.class);
 
+    public static final String SERVICE_NAME = "screen";
+
     /**
      * The timeout between requests. Any requests during the timeout period are ignored. It's expected that
      * external services will periodically call this daemon, irregardless of the screen state changing. THis is to

@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Retrieves statistics for the system, which can be reported to an external source.
+ * A service for retrieving statistics for the system, which can be reported to an external source.
  */
 public class StatsService implements Service, RestServiceHandler
 {

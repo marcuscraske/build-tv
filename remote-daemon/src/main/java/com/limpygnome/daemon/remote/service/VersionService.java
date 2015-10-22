@@ -12,7 +12,7 @@ import java.io.FileReader;
 import java.util.UUID;
 
 /**
- * Created by limpygnome on 20/10/15.
+ * A service for retrieving the current version of this system's daemons etc.
  */
 public class VersionService implements Service
 {

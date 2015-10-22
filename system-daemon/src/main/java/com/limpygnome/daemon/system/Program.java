@@ -18,8 +18,8 @@ public class Program
 
         // Add services
         controller.add(EnvironmentService.SERVICE_NAME, new EnvironmentService());
-        controller.add("screen", new ScreenService());
-        controller.add("power", new PowerService());
+        controller.add(ScreenService.SERVICE_NAME, new ScreenService());
+        controller.add(PowerManagementService.SERVICE_NAME, new PowerManagementService());
         controller.add(StatsService.SERVICE_NAME, new StatsService());
 
         // -- Stat services

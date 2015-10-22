@@ -8,7 +8,10 @@ import com.limpygnome.daemon.api.rest.RestServiceHandler;
 import com.limpygnome.daemon.led.model.LedSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
+import java.util.Map;
 
 /**
  * A REST service/handler to handle requests to control the {@link LedService}.
@@ -105,23 +108,37 @@ public class LedRestService implements Service, RestServiceHandler
 
     private boolean handleGetLed(RestRequest restRequest, RestResponse restResponse)
     {
-        // TODO: change this to provide all led sources currently at LED daemon
         // Retrieve current pattern
         LedSource currentLedSource = ledService.getCurrentLedSource();
 
         // Build json response
         JSONObject response = new JSONObject();
 
-        JSONObject current = new JSONObject();
-        current.put("source", currentLedSource.getSource());
-        current.put("pattern", currentLedSource.getPattern().getName());
-        current.put("priority", currentLedSource.getPriority());
+        response.put("current", ledPatternToJsonObject(currentLedSource));
 
-        response.put("current", current);
+        JSONArray arraySources = new JSONArray();
+
+        Map<String, LedSource> sources = ledService.getLedSources();
+        for (Map.Entry<String, LedSource> kv : sources.entrySet())
+        {
+            arraySources.add(ledPatternToJsonObject(kv.getValue()));
+        }
+        response.put("sources", arraySources);
 
         restResponse.writeJsonResponseIgnoreExceptions(restResponse, response);
 
         return true;
+    }
+
+    private JSONObject ledPatternToJsonObject(LedSource ledSource)
+    {
+        JSONObject jsonObject = new JSONObject();
+
+        jsonObject.put("source", ledSource.getSource());
+        jsonObject.put("pattern", ledSource.getPattern().getName());
+        jsonObject.put("priority", ledSource.getPriority());
+
+        return jsonObject;
     }
 
 }

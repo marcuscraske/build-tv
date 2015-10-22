@@ -7,7 +7,7 @@ import com.limpygnome.daemon.remote.service.HostInformationService;
 import com.limpygnome.daemon.remote.service.StatsForwarderService;
 import com.limpygnome.daemon.remote.service.InstanceIdentityService;
 import com.limpygnome.daemon.remote.service.VersionService;
-import com.limpygnome.daemon.remote.service.auth.AuthProviderService;
+import com.limpygnome.daemon.remote.service.auth.AuthTokenProviderService;
 import com.limpygnome.daemon.util.RestClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,7 +26,7 @@ public class StatsForwarderThread extends ExtendedThread
     private Controller controller;
     private StatsForwarderService statsForwarderService;
     private InstanceIdentityService instanceIdentityService;
-    private AuthProviderService authProviderService;
+    private AuthTokenProviderService authProviderService;
     private VersionService versionService;
     private HostInformationService hostInformationService;
 
@@ -38,7 +38,7 @@ public class StatsForwarderThread extends ExtendedThread
         this.controller = controller;
         this.statsForwarderService = statsForwarderService;
         this.instanceIdentityService = (InstanceIdentityService) controller.getServiceByName(InstanceIdentityService.SERVICE_NAME);
-        this.authProviderService = (AuthProviderService) controller.getServiceByName(AuthProviderService.SERVICE_NAME);
+        this.authProviderService = (AuthTokenProviderService) controller.getServiceByName(AuthTokenProviderService.SERVICE_NAME);
         this.versionService = (VersionService) controller.getServiceByName(VersionService.SERVICE_NAME);
         this.hostInformationService = (HostInformationService) controller.getServiceByName(HostInformationService.SERVICE_NAME);
 

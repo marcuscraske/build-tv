@@ -8,9 +8,12 @@ import org.json.simple.JSONObject;
 /**
  * An interface for an auth provider, which authenticates a REST handler request.
  */
-public interface AuthProviderService extends Service
+public interface AuthTokenProviderService extends Service
 {
 
+    /**
+     * All implementations of this service should use this constant as the service name.
+     */
     String SERVICE_NAME = "auth";
 
     /**
@@ -21,6 +24,11 @@ public interface AuthProviderService extends Service
      */
     boolean isAuthorised(RestRequest restRequest);
 
+    /**
+     * Retrieves the auth token currently used for authentication.
+     *
+     * @return The current auth token
+     */
     String getAuthToken();
 
 }

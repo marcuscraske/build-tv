@@ -7,7 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Created by limpygnome on 19/10/15.
+ * A stat service implementation for measuring the CPU temperature.
  */
 public class TemperatureStatService extends AbstractStatService
 {

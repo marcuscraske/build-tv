@@ -2,10 +2,8 @@ package com.limpygnome.daemon.remote.service.auth;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.rest.RestRequest;
-import com.sun.net.httpserver.HttpExchange;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.simple.JSONObject;
 
 import java.security.SecureRandom;
 
@@ -14,9 +12,9 @@ import java.security.SecureRandom;
  *
  * TODO: block IPs with too many incorrect attempts, prevent brute force; reset on successful auth, limt of e.g. 5 per 15 mins
  */
-public class RandomKeyAuthProviderService implements AuthProviderService
+public class RandomTokenAuthProviderService implements AuthTokenProviderService
 {
-    private static final Logger LOG = LogManager.getLogger(RandomKeyAuthProviderService.class);
+    private static final Logger LOG = LogManager.getLogger(RandomTokenAuthProviderService.class);
 
     /**
      * The length of auth keys generated.
