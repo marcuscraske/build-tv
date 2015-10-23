@@ -8,6 +8,7 @@ import com.limpygnome.daemon.remote.service.StatsForwarderService;
 import com.limpygnome.daemon.remote.service.InstanceIdentityService;
 import com.limpygnome.daemon.remote.service.VersionService;
 import com.limpygnome.daemon.remote.service.auth.AuthTokenProviderService;
+import com.limpygnome.daemon.util.JsonUtil;
 import com.limpygnome.daemon.util.RestClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,7 +16,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 /**
- * Created by limpygnome on 20/10/15.
+ * A thread responsible for initially sending information about the system to an endpoint. Periodic updates regarding
+ * the system are sent to the same endpoint too.
  */
 public class StatsForwarderThread extends ExtendedThread
 {
@@ -32,6 +34,7 @@ public class StatsForwarderThread extends ExtendedThread
 
     private String LedDaemonPatternEndpointUrl;
     private String systemDaemonStatsEndpointUrl;
+    private String buildTvDaemonDashboardEndpointUrl;
 
     public StatsForwarderThread(Controller controller, StatsForwarderService statsForwarderService)
     {
@@ -45,10 +48,12 @@ public class StatsForwarderThread extends ExtendedThread
         // Load daemon port settings
         long ledDaemonport = controller.getSettings().getLong("local-ports/led-daemon");
         long systemDaemonPort = controller.getSettings().getLong("local-ports/system-daemon");
+        long buildTvDaemonPort = controller.getSettings().getLong("local-ports/build-tv-daemon");
 
         // Build endpoint URLs
         LedDaemonPatternEndpointUrl = "http://localhost:" + ledDaemonport + "/led-daemon/leds/get";
         systemDaemonStatsEndpointUrl = "http://localhost:" + systemDaemonPort + "/system-daemon/stats";
+        buildTvDaemonDashboardEndpointUrl = "http://localhost:" + buildTvDaemonPort + "/build-tv-daemon/dashboard/get";
     }
 
     @Override
@@ -93,12 +98,18 @@ public class StatsForwarderThread extends ExtendedThread
 
     private boolean sendInfo()
     {
-        LOG.debug("Sending info...");
+        LOG.debug("Building message...");
 
+        JSONObject request;
+
+        // Build info request
         try
         {
+            // Fetch Jira dashboard
+            Long jiraDashboard = fetchJiraDashboard(true);
+
             // Build info object
-            JSONObject request = new JSONObject();
+            request = new JSONObject();
 
             request.put("uuid", instanceIdentityService.getInstanceUuid().toString());
             request.put("title", instanceIdentityService.getTitle());
@@ -106,7 +117,19 @@ public class StatsForwarderThread extends ExtendedThread
             request.put("port", hostInformationService.getRestPort());
             request.put("auth", authProviderService.getAuthToken());
             request.put("version", versionService.getVersion());
+            request.put("dashboard", jiraDashboard);
+        }
+        catch (Exception e)
+        {
+            LOG.error("Failed to build info message", e);
+            return false;
+        }
 
+        // Send info request
+        LOG.debug("Sending info...");
+
+        try
+        {
             // Send to endpoint
             RestClient restClient = new RestClient(STATS_FORWARDER_USER_AGENT, -1);
             restClient.executePost(statsForwarderService.getEndpointUrlInfo(), request);
@@ -155,51 +178,79 @@ public class StatsForwarderThread extends ExtendedThread
 
     private String fetchBuildIndicator(boolean fetchExternalData)
     {
-        if (!fetchExternalData)
-        {
-            return null;
-        }
+        String pattern = (String) fetchJsonObjectFromUrl(LedDaemonPatternEndpointUrl, new String[]{ "current", "pattern" }, fetchExternalData);
 
-        try
-        {
-            LOG.debug("Fetching build indicator - url: {}", LedDaemonPatternEndpointUrl);
+        LOG.debug("Current build indicator retrieved - pattern: {}", pattern);
 
-            RestClient restClient = new RestClient(STATS_FORWARDER_USER_AGENT, -1);
-            JSONObject response = restClient.executeJson(LedDaemonPatternEndpointUrl);
-            String pattern = (String) ((JSONObject) response.get("current")).get("pattern");
-
-            LOG.debug("Current build indicator retrieved - pattern: {}", pattern);
-
-            return pattern;
-        }
-        catch (Exception e)
-        {
-            LOG.error("Failed to retrieve build indicator from LED daemon", e);
-            return null;
-        }
+        return pattern;
     }
 
     private JSONArray fetchStatistics(boolean fetchExternalData)
     {
-        if (!fetchExternalData)
+        JSONArray response = (JSONArray) fetchDataFromUrl(systemDaemonStatsEndpointUrl, fetchExternalData);
+        LOG.debug("Retrieved statistics - metrics: {}", response.size());
+
+        return response;
+    }
+
+    private Long fetchJiraDashboard(boolean fetchExternalData)
+    {
+        Long response = (Long) fetchJsonObjectFromUrl(buildTvDaemonDashboardEndpointUrl, new String[]{"id"}, fetchExternalData);
+        LOG.debug("Retrieved Jira dashboard - dashboard ID: {}", response);
+
+        return response;
+    }
+
+    private Object fetchJsonObjectFromUrl(String url, String[] path, boolean fetchExternalData)
+    {
+        Object response = fetchDataFromUrl(url, fetchExternalData);
+
+        if (response != null)
+        {
+            // Check object is correct type
+            if (!(response instanceof JSONObject))
+            {
+                LOG.warn("Incorrect type returned, expected JSONObject - url: {}, class: {}", url, response.getClass().getName());
+                return null;
+            }
+
+            // Check key present
+            JSONObject jsonRoot = (JSONObject) response;
+            Object value = JsonUtil.getNestedNode(jsonRoot, path);
+
+            if (value == null)
+            {
+                LOG.warn("Value not present in JSON response - url: {}, path: {}", url, path);
+            }
+
+            return value;
+        }
+        else
         {
             return null;
         }
+    }
 
+    private Object fetchDataFromUrl(String url, boolean fetchExternalData)
+    {
+        // Check we're allowed to fetch external data
+        if (!fetchExternalData)
+        {
+            LOG.debug("Ignored request to fetch data, external flag set is false - url: {}", url);
+            return null;
+        }
+
+        // Attempt to fetch data
         try
         {
-            LOG.debug("Fetching statistics - url: {}", systemDaemonStatsEndpointUrl);
+            LOG.debug("Fetching data - url: {}", url);
 
             RestClient restClient = new RestClient(STATS_FORWARDER_USER_AGENT, -1);
-            JSONArray response = (JSONArray) restClient.executeGet(systemDaemonStatsEndpointUrl);
-
-            LOG.debug("Retrieved statistics - metrics: {}", response.size());
-
-            return response;
+            return restClient.executeGet(url);
         }
         catch (Exception e)
         {
-            LOG.error("Failed to retrieve statistics from system daemon", e);
+            LOG.error("Failed to retrieve data - url: " + url, e);
             return null;
         }
     }

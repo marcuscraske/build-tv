@@ -12,6 +12,8 @@ public class LedTimeService implements Service
 {
     private LedTimeThread ledTimeThread;
 
+    public static final String SERVICE_NAME = "led-time";
+
     @Override
     public synchronized void start(Controller controller)
     {

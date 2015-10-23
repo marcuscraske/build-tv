@@ -1,10 +1,7 @@
 package com.limpygnome.daemon.buildtv;
 
 import com.limpygnome.daemon.api.Controller;
-import com.limpygnome.daemon.buildtv.service.IntervalLedService;
-import com.limpygnome.daemon.buildtv.service.JenkinsService;
-import com.limpygnome.daemon.buildtv.service.LedTimeService;
-import com.limpygnome.daemon.buildtv.service.NotificationService;
+import com.limpygnome.daemon.buildtv.service.*;
 import com.limpygnome.daemon.service.RestService;
 
 /**
@@ -17,10 +14,11 @@ public class Program
         Controller controller = new Controller("build-tv-daemon");
 
         // Add services
-        controller.add("led-time", new LedTimeService());
-        controller.add("jenkins-status", new JenkinsService());
-        controller.add("interval-leds", new IntervalLedService(controller));
+        controller.add(LedTimeService.SERVICE_NAME, new LedTimeService());
+        controller.add(JenkinsService.SERVICE_NAME, new JenkinsService());
+        controller.add(IntervalLedService.SERVICE_NAME, new IntervalLedService(controller));
         controller.add(NotificationService.SERVICE_NAME, new NotificationService());
+        controller.add(JiraDashboardService.SERVICE_NAME, new JiraDashboardService());
 
         // Attach REST handlers
         RestService.attachControllerRestHandlerServices(controller);

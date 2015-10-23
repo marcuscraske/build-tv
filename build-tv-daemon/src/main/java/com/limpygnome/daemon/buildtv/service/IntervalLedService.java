@@ -24,6 +24,8 @@ public class IntervalLedService implements Service
 {
     private static final Logger LOG = LogManager.getLogger(IntervalLedService.class);
 
+    public static final String SERVICE_NAME = "interval-leds";
+
     private static final String INTERVAL_JSON_FILE = "led-patterns.json";
 
     private Controller controller;

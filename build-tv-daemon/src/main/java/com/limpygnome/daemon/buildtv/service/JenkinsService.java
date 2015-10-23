@@ -13,6 +13,8 @@ public class JenkinsService implements Service
 {
     private static final Logger LOG = LogManager.getLogger(JenkinsService.class);
 
+    public static final String SERVICE_NAME = "jenkins-status";
+
     private JenkinsStatusThread jenkinsStatusThread;
 
     public JenkinsService()
