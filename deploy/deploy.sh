@@ -89,6 +89,8 @@ else
     DEPLOY_TAGS="${1}"
 fi
 
+# Reset terminal colour
+echo -e "\033[0m"
 
 # Check user wants to continue
 echo ""
