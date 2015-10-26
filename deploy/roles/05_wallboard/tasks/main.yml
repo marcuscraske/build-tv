@@ -41,8 +41,8 @@
       src:          "{{ files_dest }}/wallboard/wallboard.properties",
       dest:         "/home/wallboard/wallboard.properties",
       owner:        "wallboard",
-      group:        "wallboard",
-      perms:        "700",
+      group:        "rpi-group",
+      perms:        "750",
 
       sudo:         true
   }

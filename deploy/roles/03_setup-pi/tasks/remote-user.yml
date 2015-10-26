@@ -2,6 +2,11 @@
   shell: "{{ files_dest }}/setup-scripts/ssh-speedup.sh"
   sudo: true
 
+- name: Creating shared group for users
+  group:  name=rpi-group
+          state=present
+  sudo: true
+
 - name: Creating managed user for SSH (with password specified)
   user: name=monitor
         password={{ monitor_password }}
@@ -10,6 +15,7 @@
         comment="Account for managed SSH access"
         createhome=yes
         append=no
+        groups=rpi-group
   sudo: true
   when: monitor_password is defined
 
@@ -20,6 +26,7 @@
         comment="Account for managed SSH access"
         createhome=yes
         append=no
+        groups=rpi-group
   sudo: true
   when: monitor_password is not defined
 
@@ -30,6 +37,7 @@
         comment="Account for non-root daemons"
         createhome=no
         append=no
+        groups=rpi-group
   sudo: true
 
 - name: Configuring managed user for nopasswd sudo access

@@ -2,7 +2,15 @@
   file: path={{ deploy_path }}
         state=directory
         owner=monitor
-        group=monitor
+        group=rpi-group
+  sudo: true
+
+- name: Creating logs directory
+  file: path={{ deploy_path }}/logs
+        state=directory
+        owner=monitor
+        group=rpi-group
+        mode=775
   sudo: true
 
 - {
@@ -12,8 +20,8 @@
       src:          "{{ files_dest }}/config/",
       dest:         "{{ deploy_path }}/config/",
       owner:        "monitor",
-      group:        "monitor",
-      perms:        "774",
+      group:        "rpi-group",
+      perms:        "775",
 
       sudo:         true
   }

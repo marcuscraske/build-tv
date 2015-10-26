@@ -26,13 +26,12 @@ public class LedTimeThread extends ExtendedThread
     private Controller controller;
     private String ledDaemonUrlLeds;
     private long ledDaemonPriority;
-    private String systemDaemonUrlScreen;
     private HashMap<String, PatternSource> patterns;
 
     public LedTimeThread(Controller controller, String ledDaemonUrl, long ledDaemonPriority)
     {
         this.controller = controller;
-        this.ledDaemonUrlLeds = ledDaemonUrl + "/led-daemon/leds";
+        this.ledDaemonUrlLeds = ledDaemonUrl;
         this.ledDaemonPriority = ledDaemonPriority;
         this.patterns = new HashMap<>();
     }

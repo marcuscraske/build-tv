@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.FileReader;
 
 /**
- * Created by limpygnome on 18/08/15.
+ * Used to read a JSON settings file.
  */
 public class Settings
 {
@@ -19,35 +19,56 @@ public class Settings
 
     private static final String SETTINGS_EXTENSION = ".json";
 
-    private Controller controller;
     private JSONObject root;
 
-    Settings(Controller controller)
+    public Settings() { }
+
+    /**
+     * Reloads settings from default controller config file.
+     *
+     * Current format:
+     * .settings.[controller name].json
+     *
+     * @param controller The current controller instance
+     */
+    public synchronized void reload(Controller controller)
     {
-        this.controller = controller;
+        File defaultControllerSettingsFile = controller.findConfigFile(".settings." + controller.getControllerName() + SETTINGS_EXTENSION);
+        reload(defaultControllerSettingsFile);
     }
 
-    public synchronized void reload()
+    /**
+     * Reloads settings from a global configuration file.
+     *
+     * @param controller The current controller instance
+     * @param fileName The global configuration file
+     */
+    public synchronized void reload(Controller controller, String fileName)
+    {
+        File fileSettings = controller.findConfigFile(fileName);
+        reload(fileSettings);
+    }
+
+    public synchronized void reload(File fileSettings)
     {
         LOG.info("Reloading settings...");
+        LOG.debug("Using settings at {}", fileSettings.getAbsolutePath());
 
-        // Fetch settings file
-        File fileSettings = controller.findConfigFile("settings." + controller.getControllerName() + SETTINGS_EXTENSION);
-
-        LOG.info("Using settings at: {}", fileSettings.getAbsolutePath());
+        // Clear existing settings
+        this.root = null;
 
         // Attempt to parse as json
         try
         {
             JSONParser jsonParser = new JSONParser();
             root = (JSONObject) jsonParser.parse(new FileReader(fileSettings));
+
+            LOG.info("Finished reloading settings successfully");
         }
         catch (Exception e)
         {
             throw new RuntimeException("Unable to load settings - path: '" + fileSettings.getAbsolutePath() + "'", e);
         }
-
-        LOG.info("Finished reloading settings");
     }
 
     public synchronized JSONObject getRoot()

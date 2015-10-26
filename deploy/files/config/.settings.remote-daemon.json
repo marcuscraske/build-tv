@@ -1,0 +1,14 @@
+{
+    "rest" :
+    {
+        "local-only" : false,
+        "port" : 2000
+    },
+
+    "local-ports" :
+    {
+        "led-daemon" :      2500,
+        "system-daemon" :   2600,
+        "build-tv-daemon" : 2700
+    }
+}

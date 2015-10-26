@@ -3,7 +3,7 @@
         dest={{ deploy_path }}
         mode=0770
         owner=rpi-daemon
-        group=rpi-daemon
+        group=rpi-group
   sudo: true
 
 - {

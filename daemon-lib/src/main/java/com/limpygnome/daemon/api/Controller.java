@@ -28,7 +28,7 @@ public class Controller
         this.controllerName = controllerName;
         this.state = ControllerState.STOPPED;
         this.services = new HashMap<>();
-        this.settings = new Settings(this);
+        this.settings = new Settings();
     }
 
     public synchronized void add(String serviceName, Service service)
@@ -58,7 +58,7 @@ public class Controller
         setState(ControllerState.STARTING);
 
         // Reload settings
-        settings.reload();
+        settings.reload(this);
 
         // Start all services
         for (Map.Entry<String, Service> kv : services.entrySet())
