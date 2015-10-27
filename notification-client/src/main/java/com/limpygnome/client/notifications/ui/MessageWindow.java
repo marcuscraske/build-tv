@@ -1,5 +1,7 @@
 package com.limpygnome.client.notifications.ui;
 
+import com.limpygnome.daemon.util.EnvironmentUtil;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -27,7 +29,12 @@ public class MessageWindow extends JFrame
         // Set form properties
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Notification Client");
-        setAlwaysOnTop(true);
+
+        // We don't want this when developing...
+        if (!EnvironmentUtil.isDevEnvironment())
+        {
+            setAlwaysOnTop(true);
+        }
 
         // Disable window frame
         setUndecorated(true);

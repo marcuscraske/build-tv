@@ -20,6 +20,13 @@ public class IntervalPatternSource extends PatternSource
 {
     private static final Logger LOG = LogManager.getLogger(IntervalPatternSource.class);
 
+    private static final String NOTIFICATION_SOURCE = "pattern-source";
+
+    /**
+     * The default priority for notifications created by this type.
+     */
+    public static final int NOTIFICATION_DEFAULT_PRIORITY = 25;
+
     private int startMinuteOfDay;
     private int endMinuteOfDay;
     private boolean screenOff;
@@ -88,7 +95,7 @@ public class IntervalPatternSource extends PatternSource
             );
 
             // Set current notification to our notification
-            notificationService.updateCurrentNotification(notification);
+            notificationService.updateCurrentNotification(NOTIFICATION_SOURCE, notification);
         }
     }
 

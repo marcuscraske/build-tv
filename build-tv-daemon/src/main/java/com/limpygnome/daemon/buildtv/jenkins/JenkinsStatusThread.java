@@ -1,7 +1,6 @@
 package com.limpygnome.daemon.buildtv.jenkins;
 
 import com.limpygnome.daemon.api.Controller;
-import com.limpygnome.daemon.api.Settings;
 import com.limpygnome.daemon.buildtv.led.pattern.LedPattern;
 import com.limpygnome.daemon.buildtv.led.pattern.source.PatternSource;
 import com.limpygnome.daemon.buildtv.model.JenkinsHostUpdateResult;
@@ -29,23 +28,27 @@ public class JenkinsStatusThread extends ExtendedThread
 {
     private static final Logger LOG = LogManager.getLogger(JenkinsStatusThread.class);
 
+    /* The global configuration file for Jenkins. */
     private static final String JENKINS_SETTINGS_FILENAME = "jenkins.json";
 
+    /* The HTTP user agent for any requests made by the build TV to Jenkins. */
     private static final String USER_AGENT = "Build TV";
+
+    /* The source name for notifications sent to the notification service. */
+    private static final String NOTIFICATION_SOURCE_NAME = "build-tv-jenkins";
 
     private LedTimeService ledTimeService;
     private NotificationService notificationService;
     private long pollRateMs;
     private int bufferSizeBytes;
     private PatternSource patternSource;
+    private LedPattern lastLedPattern;
 
     private JenkinsHost[] jenkinsHosts;
     private RestClient restClient;
 
     public JenkinsStatusThread(Controller controller)
     {
-        Settings settings = controller.getSettings();
-
         // Load configuration from file
         loadConfigurationFromFile(controller);
 
@@ -60,6 +63,9 @@ public class JenkinsStatusThread extends ExtendedThread
 
         // Fetch notifications service
         this.notificationService = (NotificationService) controller.getServiceByName(NotificationService.SERVICE_NAME);
+
+        // Set last pattern to null; will be used to track last led pattern for deciding if to update notification
+        this.lastLedPattern = null;
     }
 
     private void loadConfigurationFromFile(Controller controller)
@@ -170,54 +176,67 @@ public class JenkinsStatusThread extends ExtendedThread
 
     private void updateNotificationFromJenkinsResult(JenkinsHostUpdateResult hostsResult)
     {
-        // Build notification
-        Notification notification;
-
         // TODO: probably shouldn't have magic values here, clean it up eventually using config with fallback default values
-        switch (hostsResult.getLedPattern())
-        {
-            case BUILD_FAILURE:
-                notification = new Notification("build failure", null, 60000, Color.decode("#CC3300"));
-                break;
-            case BUILD_OK:
-                notification = new Notification("build success", null, 10000, Color.decode("#339933"));
-                break;
-            case BUILD_PROGRESS:
-                notification = new Notification("build in progress...", null, 10000, Color.decode("#003D99"));
-                break;
-            case BUILD_UNSTABLE:
-                notification = new Notification("build unstable", null, 60000, Color.decode("#FF9933"));
-                break;
-            case JENKINS_UNAVAILABLE:
-                notification = new Notification("Jenkins offline", null, 0, Color.decode("#CC0000"));
-                break;
-            default:
-                notification = null;
-                break;
-        }
+        LedPattern currentLedPattern = hostsResult.getLedPattern();
 
-        // Build text showing affected jobs
-        List<String> affectedJobs = hostsResult.getAffectedJobs();
-
-        if (affectedJobs.size() > 4)
+        if (this.lastLedPattern == null || this.lastLedPattern != currentLedPattern)
         {
-            notification.setText(affectedJobs.size() + " jobs affected");
-        }
-        else if (!affectedJobs.isEmpty())
-        {
-            StringBuilder buffer = new StringBuilder();
+            // Update last led pattern to avoid sending multiple notifications
+            this.lastLedPattern = currentLedPattern;
 
-            for (String job : affectedJobs)
+            // Build text showing affected jobs
+            String text;
+            List<String> affectedJobs = hostsResult.getAffectedJobs();
+
+            if (affectedJobs.size() > 4)
             {
-                buffer.append(job).append("\n");
+                text = affectedJobs.size() + " jobs affected";
             }
-            buffer.delete(buffer.length()-1, buffer.length());
+            else if (!affectedJobs.isEmpty())
+            {
+                StringBuilder buffer = new StringBuilder();
 
-            notification.setText(buffer.toString());
+                for (String job : affectedJobs)
+                {
+                    buffer.append(job).append("\n");
+                }
+                buffer.delete(buffer.length()-1, buffer.length());
+
+                text = buffer.toString();
+            }
+            else
+            {
+                text = null;
+            }
+
+            // Build notification
+            Notification notification;
+
+            switch (hostsResult.getLedPattern())
+            {
+                case BUILD_FAILURE:
+                    notification = new Notification("build failure", text, 60000, Color.decode("#CC3300"), 10);
+                    break;
+                case BUILD_OK:
+                    notification = new Notification("build success", text, 10000, Color.decode("#339933"), 10);
+                    break;
+                case BUILD_PROGRESS:
+                    notification = new Notification("build in progress...", text, 10000, Color.decode("#003D99"), 10);
+                    break;
+                case BUILD_UNSTABLE:
+                    notification = new Notification("build unstable", text, 60000, Color.decode("#FF9933"), 10);
+                    break;
+                case JENKINS_UNAVAILABLE:
+                    notification = new Notification("Jenkins offline", text, 0, Color.decode("#CC0000"), 10);
+                    break;
+                default:
+                    notification = null;
+                    break;
+            }
+
+            // Update via service
+            notificationService.updateCurrentNotification(NOTIFICATION_SOURCE_NAME, notification);
         }
-
-        // Update via service
-        notificationService.updateCurrentNotification(notification);
     }
 
     private JenkinsHostUpdateResult pollHosts()

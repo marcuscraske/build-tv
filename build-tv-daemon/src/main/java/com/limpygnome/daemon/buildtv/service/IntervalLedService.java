@@ -113,7 +113,8 @@ public class IntervalLedService implements Service
                 (String) root.get("header"),
                 (String) root.get("text"),
                 (long) root.get("lifespan"),
-                Color.decode((String) root.get("background"))
+                Color.decode((String) root.get("background")),
+                root.containsKey("priority") ? (int) root.get("priority") : IntervalPatternSource.NOTIFICATION_DEFAULT_PRIORITY
         );
     }
 
@@ -129,4 +130,5 @@ public class IntervalLedService implements Service
         intervalPatterns.clear();
         ledTimeService = null;
     }
+
 }

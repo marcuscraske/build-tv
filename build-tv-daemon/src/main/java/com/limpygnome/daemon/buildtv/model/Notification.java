@@ -3,7 +3,7 @@ package com.limpygnome.daemon.buildtv.model;
 import java.awt.*;
 
 /**
- * Created by limpygnome on 27/08/15.
+ * Represents a notification.
  */
 public class Notification
 {
@@ -11,24 +11,19 @@ public class Notification
     private String text;
     private long lifespan;
     private Color background;
+    private int priority;
 
     private long timeStamp;
 
-    public Notification(String header, String text, long lifespan, Color background)
+    public Notification(String header, String text, long lifespan, Color background, int priority)
     {
         this.header = header;
         this.text = text;
         this.lifespan = lifespan;
         this.background = background;
-        this.timeStamp = System.currentTimeMillis();
-    }
+        this.priority = priority;
 
-    public boolean isDifferentBesidesTimestamp(Notification notification)
-    {
-        return  (header != null && !header.equals(notification.header)) ||
-                (text != null && !text.equals(notification.text)) ||
-                lifespan != notification.lifespan ||
-                (background != null && !background.equals(notification.background));
+        this.timeStamp = System.currentTimeMillis();
     }
 
     public String getHeader()
@@ -36,24 +31,9 @@ public class Notification
         return header;
     }
 
-    public void setHeader(String header)
-    {
-        this.header = header;
-    }
-
     public String getText()
     {
         return text;
-    }
-
-    /**
-     * Sets the text displayed with the notification.
-     *
-     * @param text The text; can be null
-     */
-    public void setText(String text)
-    {
-        this.text = text;
     }
 
     public long getLifespan()
@@ -61,23 +41,19 @@ public class Notification
         return lifespan;
     }
 
-    public void setLifespan(long lifespan)
-    {
-        this.lifespan = lifespan;
-    }
-
     public Color getBackground()
     {
         return background;
     }
 
-    public void setBackground(Color background)
+    public int getPriority()
     {
-        this.background = background;
+        return priority;
     }
 
     public long getTimeStamp()
     {
         return timeStamp;
     }
+
 }
