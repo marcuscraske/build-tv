@@ -66,6 +66,12 @@ public class NotificationListenerThread extends ExtendedThread
 
     public synchronized void handleMessage(JSONObject response)
     {
+        // Check a message is available
+        if (!response.containsKey("timestamp"))
+        {
+            return;
+        }
+
         // Check message is different
         long timestamp = (long) response.get("timestamp");
 

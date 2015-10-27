@@ -28,7 +28,19 @@ public class NotificationSource implements Comparable<NotificationSource>
      */
     public boolean isExpired()
     {
-        return (notification.getTimeStamp() + notification.getLifespan()) < System.currentTimeMillis();
+        long lifeSpan = notification.getLifespan();
+
+        if (lifeSpan > 0)
+        {
+            long currentTime = System.currentTimeMillis();
+            long expireTime = notification.getTimeStamp() + lifeSpan;
+
+            return currentTime > expireTime;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public String getSource()

@@ -13,6 +13,8 @@ import org.json.simple.parser.JSONParser;
  */
 public class RestRequest
 {
+    private static final int REQUEST_SIZE_LIMIT = 4096;
+
     private HttpExchange httpExchange;
     private JSONObject jsonRoot;
     private String path;
@@ -23,7 +25,7 @@ public class RestRequest
         this.httpExchange = httpExchange;
 
         // Parse request data
-        String request = StreamUtil.readInputStream(httpExchange.getRequestBody(), 4096);
+        String request = StreamUtil.readInputStream(httpExchange.getRequestBody(), REQUEST_SIZE_LIMIT);
 
         // Attempt to parse as JSON
         try

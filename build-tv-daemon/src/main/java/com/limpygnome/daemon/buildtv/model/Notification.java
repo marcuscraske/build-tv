@@ -15,11 +15,11 @@ public class Notification
 
     private long timeStamp;
 
-    public Notification(String header, String text, long lifespan, Color background, int priority)
+    public Notification(String header, String text, long lifespanMs, Color background, int priority)
     {
         this.header = header;
         this.text = text;
-        this.lifespan = lifespan;
+        this.lifespan = lifespanMs;
         this.background = background;
         this.priority = priority;
 

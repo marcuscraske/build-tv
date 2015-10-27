@@ -20,7 +20,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 
 /**
- * A service for providing notifications to a notification client.
+ * A service for providing notificationSources to a notification client.
  */
 public class NotificationService implements Service, RestServiceHandler
 {
@@ -31,12 +31,12 @@ public class NotificationService implements Service, RestServiceHandler
     private static final String LOCAL_SOURCE_NAME = "notifications-service";
 
     /* Key is the source, value is the notification. */
-    private Map<String, NotificationSource> notifications;
+    private Map<String, NotificationSource> notificationSources;
 
 
     public NotificationService()
     {
-        this.notifications = new HashMap<>();
+        this.notificationSources = new HashMap<>();
     }
 
     @Override
@@ -51,7 +51,7 @@ public class NotificationService implements Service, RestServiceHandler
         }
 
         Notification notification = new Notification(
-            getHostname(), "ip: " + ip, 10000, Color.DARK_GRAY, 0
+            getHostname(), "ip: " + ip, 30000, Color.DARK_GRAY, 0
         );
 
         updateCurrentNotification(LOCAL_SOURCE_NAME, notification);
@@ -60,14 +60,20 @@ public class NotificationService implements Service, RestServiceHandler
     @Override
     public void stop(Controller controller)
     {
-        // Wipe notifications
-        notifications.clear();
+        // Wipe notificationSources
+        notificationSources.clear();
+    }
+
+    public synchronized void removeNotificationSource(String source)
+    {
+        notificationSources.remove(source);
+        LOG.info("Removed notification - source: {}", source);
     }
 
     public synchronized void updateCurrentNotification(String source, Notification notification)
     {
         // Check if we locally have another notification
-        NotificationSource notificationSource = notifications.get(LOCAL_SOURCE_NAME);
+        NotificationSource notificationSource = notificationSources.get(source);
 
         if (notificationSource != null)
         {
@@ -77,8 +83,8 @@ public class NotificationService implements Service, RestServiceHandler
         else
         {
             // Create new local source
-            notificationSource = new NotificationSource(LOCAL_SOURCE_NAME, notification);
-            notifications.put(notificationSource.getSource(), notificationSource);
+            notificationSource = new NotificationSource(source, notification);
+            notificationSources.put(notificationSource.getSource(), notificationSource);
 
             LOG.debug("Notification source created - source: {}, notification: {}", source, notification);
         }
@@ -90,7 +96,7 @@ public class NotificationService implements Service, RestServiceHandler
         NotificationSource highest = null;
         NotificationSource notificationSource;
 
-        Iterator<Map.Entry<String, NotificationSource>> iterator = notifications.entrySet().iterator();
+        Iterator<Map.Entry<String, NotificationSource>> iterator = notificationSources.entrySet().iterator();
         Map.Entry<String, NotificationSource> kv;
 
         while (iterator.hasNext())
@@ -133,9 +139,13 @@ public class NotificationService implements Service, RestServiceHandler
         {
             return handleNotificationGet(restRequest, restResponse);
         }
-        else if (restRequest.isPathMatch(new String[] { "build-tv-daemon", "notifications", "set" }))
+        else if (restRequest.isJsonRequest() && restRequest.isPathMatch(new String[] { "build-tv-daemon", "notifications", "set" }))
         {
             return handleNotificationSet(restRequest, restResponse);
+        }
+        else if (restRequest.isJsonRequest() && restRequest.isPathMatch(new String[]{ "build-tv-daemon", "notifications", "remove" }))
+        {
+            return handleNotificationRemove(restRequest, restResponse);
         }
         else
         {
@@ -174,7 +184,6 @@ public class NotificationService implements Service, RestServiceHandler
         else
         {
             // No object available, just provide empty json object...
-            // TODO: consider if this is correct...
             restResponse.writeResponseIgnoreExceptions(restResponse, "{}");
         }
 
@@ -183,11 +192,41 @@ public class NotificationService implements Service, RestServiceHandler
 
     public boolean handleNotificationSet(RestRequest restRequest, RestResponse restResponse)
     {
+        JSONObject request = restRequest.getJsonRoot();
+
         // Read required params
+        // -- Notification
+        String header = (String) request.get("header");
+        String text = (String) request.get("text");
+        long lifespan = (long) request.get("lifespan");
+        float backgroundR = ((long) request.get("backgroundR")) / 255.0f;
+        float backgroundG = ((long) request.get("backgroundG")) / 255.0f;
+        float backgroundB = ((long) request.get("backgroundB")) / 255.0f;
+
+        // -- Source
+        String source = (String) request.get("source");
+        int priority = (int) (long) request.get("priority");
 
         // Build notification
+        Color background = new Color(backgroundR, backgroundG, backgroundB);
+        Notification notification = new Notification(header, text, lifespan, background, priority);
 
         // Update current notification
+        updateCurrentNotification(source, notification);
+
+        return true;
+    }
+
+    public boolean handleNotificationRemove(RestRequest restRequest, RestResponse restResponse)
+    {
+        JSONObject request = restRequest.getJsonRoot();
+
+        String source = (String) request.get("source");
+
+        if (source != null)
+        {
+            removeNotificationSource(source);
+        }
 
         return true;
     }
