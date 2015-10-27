@@ -1,6 +1,7 @@
 package com.limpygnome.daemon.buildtv.jenkins;
 
 import com.limpygnome.daemon.api.Controller;
+import com.limpygnome.daemon.api.ControllerState;
 import com.limpygnome.daemon.buildtv.led.pattern.LedPattern;
 import com.limpygnome.daemon.buildtv.led.pattern.source.PatternSource;
 import com.limpygnome.daemon.buildtv.model.JenkinsHostUpdateResult;
@@ -37,6 +38,7 @@ public class JenkinsStatusThread extends ExtendedThread
     /* The source name for notifications sent to the notification service. */
     private static final String NOTIFICATION_SOURCE_NAME = "build-tv-jenkins";
 
+    private Controller controller;
     private LedTimeService ledTimeService;
     private NotificationService notificationService;
     private long pollRateMs;
@@ -49,6 +51,8 @@ public class JenkinsStatusThread extends ExtendedThread
 
     public JenkinsStatusThread(Controller controller)
     {
+        this.controller = controller;
+
         // Load configuration from file
         loadConfigurationFromFile(controller);
 
@@ -140,6 +144,9 @@ public class JenkinsStatusThread extends ExtendedThread
     public void run()
     {
         Thread.currentThread().setName("Jenkins Status");
+
+        // Wait until all services running...
+        controller.waitForState(ControllerState.RUNNING);
 
         // Add our pattern to LED time service
         ledTimeService.addPatternSource(patternSource);

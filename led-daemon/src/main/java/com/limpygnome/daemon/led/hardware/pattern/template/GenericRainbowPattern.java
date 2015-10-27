@@ -13,6 +13,7 @@ public class GenericRainbowPattern
     {
         rainbow(ledRenderThread, ledController, frameDelay, -1);
     }
+
     public static void rainbow(LedRenderThread ledRenderThread, LedController ledController, long frameDelay, int iterations) throws InterruptedException
     {
         int ledCount = ledController.getLedsCount();
@@ -25,10 +26,10 @@ public class GenericRainbowPattern
             for (int j = 0; j < ledCount; j++)
             {
                 value = wheel(
-                        ((iteration * 256) / ledCount) + j
+                        (iteration + j) & 255
                 );
 
-                ledController.setPixel(j, value[0] & 255, value[1] & 255, value[2] & 255);
+                ledController.setPixel(j, value[0], value[1], value[2]);
             }
 
             ledController.render();
@@ -44,7 +45,7 @@ public class GenericRainbowPattern
         {
             return new int[] {
                     pos * 3,
-                    255 - pos * 3,
+                    255 - (pos * 3),
                     0
             };
         }
@@ -53,7 +54,7 @@ public class GenericRainbowPattern
             pos -= 85;
 
             return new int[] {
-                    255 - pos * 3,
+                    255 - (pos * 3),
                     0,
                     pos * 3
             };
@@ -65,7 +66,7 @@ public class GenericRainbowPattern
             return new int[] {
                     0,
                     pos * 3,
-                    255 - pos * 3
+                    255 - (pos * 3)
             };
         }
     }

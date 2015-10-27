@@ -15,7 +15,9 @@
             {
                 "header"        : null,
                 "text"          : "Standup",
-                "background"    : "#F00"
+                "background"    : "#333",
+                "priority"      : 50,
+                "lifespan"      : 60000
             }
         },
         {

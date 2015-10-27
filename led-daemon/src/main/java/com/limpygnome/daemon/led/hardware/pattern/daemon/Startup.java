@@ -18,6 +18,13 @@ public class Startup implements Pattern
             ledController.setStrip(i, i, i);
             ledController.render();
 
+            Thread.sleep(40);
+        }
+
+        // Repeat infinite white strip until new pattern or exit...
+        while (!ledRenderThread.isExit())
+        {
+            ledController.setStrip(255, 255, 255);
             Thread.sleep(100);
         }
     }

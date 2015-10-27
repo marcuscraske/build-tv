@@ -56,4 +56,14 @@ public class Notification
         return timeStamp;
     }
 
+    @Override
+    public String toString()
+    {
+        return  "[" +
+                "header: " + header + ", " +
+                "text: " + text + ", " +
+                "lifespan: " + lifespan + ", " +
+                "priority: " + priority +
+                "]";
+    }
 }

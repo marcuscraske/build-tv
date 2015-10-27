@@ -1,6 +1,7 @@
 package com.limpygnome.daemon.buildtv.led;
 
 import com.limpygnome.daemon.api.Controller;
+import com.limpygnome.daemon.api.ControllerState;
 import com.limpygnome.daemon.buildtv.led.pattern.source.IntervalPatternSource;
 import com.limpygnome.daemon.buildtv.led.pattern.LedPattern;
 import com.limpygnome.daemon.buildtv.led.pattern.source.PatternSource;
@@ -44,7 +45,7 @@ public class LedTimeThread extends ExtendedThread
     public synchronized void addPattern(PatternSource patternSource)
     {
         patterns.put(patternSource.getName(), patternSource);
-        LOG.debug("Added pattern source - name: {}, priority: {}", patternSource.getName(), patternSource.getPriority());
+        LOG.debug("Added pattern source - source: {}", patternSource);
     }
 
     public synchronized void removePattern(PatternSource patternSource)
@@ -56,6 +57,11 @@ public class LedTimeThread extends ExtendedThread
     @Override
     public void run()
     {
+        // Wait for services to startup...
+        controller.waitForState(ControllerState.RUNNING);
+
+        // Update LED pattern based on highest source
+        // TODO: could be improved with semaphores / state based
         final long UPDATE_INTERVAL = 1000;
 
         PatternSource currentPatternSource;
@@ -75,6 +81,7 @@ public class LedTimeThread extends ExtendedThread
                 if (currentPatternSource != null)
                 {
                     currentPatternSource.eventNowCurrentPatternSource(controller);
+                    LOG.debug("Current pattern changed - pattern: {}", currentPatternSource);
                 }
 
                 lastPatternSource = currentPatternSource;

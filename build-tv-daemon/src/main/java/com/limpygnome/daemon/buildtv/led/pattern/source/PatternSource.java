@@ -67,4 +67,14 @@ public class PatternSource
         // Nothing by default...
     }
 
+    @Override
+    public String toString()
+    {
+        return  "[" +
+                "name: " + name + ", " +
+                "pattern: " + currentLedPattern.PATTERN + ", " +
+                "priority: " + priority +
+                "]";
+    }
+
 }

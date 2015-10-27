@@ -85,7 +85,7 @@ public class IntervalLedService implements Service
     {
         Notification notification;
 
-        if (root.containsKey("notfication"))
+        if (root.containsKey("notification"))
         {
             notification = parseIntervalPatternSourceNotification((JSONObject) root.get("notification"));
         }
@@ -114,7 +114,7 @@ public class IntervalLedService implements Service
                 (String) root.get("text"),
                 (long) root.get("lifespan"),
                 Color.decode((String) root.get("background")),
-                root.containsKey("priority") ? (int) root.get("priority") : IntervalPatternSource.NOTIFICATION_DEFAULT_PRIORITY
+                root.containsKey("priority") ? (int) (long) root.get("priority") : IntervalPatternSource.NOTIFICATION_DEFAULT_PRIORITY
         );
     }
 

@@ -88,6 +88,7 @@ public class LedService implements Service
         addPattern(new Shutdown());
         addPattern(new Startup());
         addPattern(new Test());
+        addPattern(new Rainbow());
 
         addPattern(new Standup());
 

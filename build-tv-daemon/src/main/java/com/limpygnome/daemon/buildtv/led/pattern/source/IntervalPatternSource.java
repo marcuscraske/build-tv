@@ -89,6 +89,8 @@ public class IntervalPatternSource extends PatternSource
     {
         if (notification != null)
         {
+            LOG.debug("Updating notification... - name: {}, notification: {}", getName(), notification);
+
             // Fetch notification service
             NotificationService notificationService = (NotificationService) controller.getServiceByName(
                     NotificationService.SERVICE_NAME
@@ -124,6 +126,16 @@ public class IntervalPatternSource extends PatternSource
         {
             LOG.error("Failed to make system daemon request", e);
         }
+    }
+
+    @Override
+    public String toString()
+    {
+        return  super.toString() + "->[" +
+                "start: " + startMinuteOfDay + ", " +
+                "end: " + endMinuteOfDay + ", " +
+                "notification: " + notification +
+                "]";
     }
 
 }
