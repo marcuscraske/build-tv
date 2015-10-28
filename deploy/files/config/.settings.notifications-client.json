@@ -1,6 +1,7 @@
 {
     "notifications" :
     {
-        "endpoint" : "http://localhost:2700/build-tv-daemon/notifications/get"
+        "enabled"   : true,
+        "endpoint"  : "http://localhost:2700/build-tv-daemon/notifications/get"
     }
 }

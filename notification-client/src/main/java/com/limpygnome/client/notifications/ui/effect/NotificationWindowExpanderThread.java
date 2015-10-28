@@ -1,26 +1,27 @@
-package com.limpygnome.client.notifications.ui;
+package com.limpygnome.client.notifications.ui.effect;
 
+import com.limpygnome.client.notifications.ui.NotificationWindow;
 import com.limpygnome.daemon.common.ExtendedThread;
 
 import java.awt.*;
 
 /**
- * Created by limpygnome on 26/08/15.
+ * A UI effect to gradually expand the notification window.
  */
-public class MessageWindowExpanderThread extends ExtendedThread
+public class NotificationWindowExpanderThread extends ExtendedThread
 {
-    private MessageWindow messageWindow;
+    private NotificationWindow notificationWindow;
     private int targetWidth;
     private int targetHeight;
     private long delay;
 
-    public MessageWindowExpanderThread(MessageWindow messageWindow, long delay)
+    public NotificationWindowExpanderThread(NotificationWindow notificationWindow, long delay)
     {
-        this.messageWindow = messageWindow;
+        this.notificationWindow = notificationWindow;
         this.delay = delay;
 
         // Compute target size
-        Dimension screenSize = messageWindow.getScreenSize();
+        Dimension screenSize = notificationWindow.getScreenSize();
         this.targetWidth = (int) (screenSize.getWidth() * 0.8);
         this.targetHeight = (int) (screenSize.getHeight() * 0.8);
     }
@@ -37,8 +38,8 @@ public class MessageWindowExpanderThread extends ExtendedThread
 
         do
         {
-            windowWidth = messageWindow.getWidth();
-            windowHeight = messageWindow.getHeight();
+            windowWidth = notificationWindow.getWidth();
+            windowHeight = notificationWindow.getHeight();
 
             start = System.currentTimeMillis();
 
@@ -52,7 +53,7 @@ public class MessageWindowExpanderThread extends ExtendedThread
                     incrementAmount = targetWidth - windowWidth;
                 }
 
-                messageWindow.setSize(windowWidth + incrementAmount, windowHeight);
+                notificationWindow.setSize(windowWidth + incrementAmount, windowHeight);
             }
             else if (windowHeight < targetHeight)
             {
@@ -63,11 +64,11 @@ public class MessageWindowExpanderThread extends ExtendedThread
                     incrementAmount = targetHeight - windowHeight;
                 }
 
-                messageWindow.setSize(windowWidth, windowHeight + incrementAmount);
+                notificationWindow.setSize(windowWidth, windowHeight + incrementAmount);
             }
 
             // Ensure window centered
-            messageWindow.centerOnScreen();
+            notificationWindow.centerOnScreen();
 
             // Delay before continuing
             try
@@ -84,7 +85,7 @@ public class MessageWindowExpanderThread extends ExtendedThread
         while (!isExit() && (windowWidth < targetWidth || windowHeight < targetHeight));
 
         // Show message since resize complete
-        messageWindow.showMessage();
+        notificationWindow.showMessage();
     }
 
 }

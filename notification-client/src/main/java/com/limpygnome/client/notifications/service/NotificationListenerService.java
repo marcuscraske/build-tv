@@ -7,15 +7,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Created by limpygnome on 26/08/15.
+ * A service used to manage the thread for listening to a notifications endpoint.
  */
-public class NotificationListener implements Service
+public class NotificationListenerService implements Service
 {
-    private static final Logger LOG = LogManager.getLogger(NotificationListener.class);
+    private static final Logger LOG = LogManager.getLogger(NotificationListenerService.class);
 
     private NotificationListenerThread notificationListenerThread;
 
-    public NotificationListener()
+    public NotificationListenerService()
     {
         this.notificationListenerThread = null;
     }
@@ -23,9 +23,17 @@ public class NotificationListener implements Service
     @Override
     public void start(Controller controller)
     {
+        // Check client is even enabled
+        if (!controller.getSettings().getBoolean("notifications/enabled"))
+        {
+            throw new RuntimeException("Notifications client not enabled, aborting startup");
+        }
+
+        // Fetch endpoint
         String notificationsEndpoint = controller.getSettings().getString("notifications/endpoint");
         LOG.debug("Notifications endpoint - url: {}", notificationsEndpoint);
 
+        // Start thread
         notificationListenerThread = new NotificationListenerThread(notificationsEndpoint);
         notificationListenerThread.start();
     }
@@ -39,4 +47,5 @@ public class NotificationListener implements Service
             notificationListenerThread = null;
         }
     }
+
 }

@@ -1,5 +1,7 @@
 package com.limpygnome.client.notifications.ui;
 
+import com.limpygnome.client.notifications.ui.effect.NotificationWindowExpanderThread;
+import com.limpygnome.client.notifications.ui.effect.NotificationWindowFlashThread;
 import com.limpygnome.daemon.util.EnvironmentUtil;
 
 import javax.swing.*;
@@ -8,18 +10,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 
 /**
- * Created by limpygnome on 26/08/15.
+ * A notification window, used to visually display a notification.
+ *
+ * Consists of a header (optional), text (optional), lifespan and background colour.
  */
-public class MessageWindow extends JFrame
+public class NotificationWindow extends JFrame
 {
     private JPanel jPanel;
     private JLabel jLabelHeader;
     private JLabel jLabelText;
 
-    private MessageWindowExpanderThread expander;
-    private MessageWindowFlashThread flasher;
+    private NotificationWindowExpanderThread expander;
+    private NotificationWindowFlashThread flasher;
 
-    public MessageWindow(String header, String text, long lifespanMs, int backgroundR, int backgroundG, int backgroundB)
+    public NotificationWindow(String header, String text, long lifespanMs, int backgroundR, int backgroundG, int backgroundB)
     {
         Dimension screenSize = getScreenSize();
         double screenWidth = screenSize.getWidth();
@@ -88,11 +92,11 @@ public class MessageWindow extends JFrame
 
         // Gradually expand window
         // TODO: graphics are not powerful/optimised enough, consider removal
-//        expander = new MessageWindowExpanderThread(this, 60);
+//        expander = new NotificationWindowExpanderThread(this, 60);
 //        expander.start();
 
         // TODO: opacity not supported on Pi, consider removal
-//        flasher = new MessageWindowFlashThread(this, 100);
+//        flasher = new NotificationWindowFlashThread(this, 100);
 //        flasher.start();
 
         showMessage();
@@ -178,7 +182,7 @@ public class MessageWindow extends JFrame
     public void close()
     {
         // This will correctly close and dispose the window whilst firing events
-        dispatchEvent(new WindowEvent(MessageWindow.this, WindowEvent.WINDOW_CLOSING));
+        dispatchEvent(new WindowEvent(NotificationWindow.this, WindowEvent.WINDOW_CLOSING));
     }
 
 }

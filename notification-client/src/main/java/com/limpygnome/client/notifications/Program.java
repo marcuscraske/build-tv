@@ -1,6 +1,6 @@
 package com.limpygnome.client.notifications;
 
-import com.limpygnome.client.notifications.service.NotificationListener;
+import com.limpygnome.client.notifications.service.NotificationListenerService;
 import com.limpygnome.daemon.api.Controller;
 
 /**
@@ -14,7 +14,7 @@ public class Program
         Controller controller = new Controller("notifications-client");
 
         // Add services
-        controller.add("notifications-listener", new NotificationListener());
+        controller.add("notifications-listener", new NotificationListenerService());
 
         // Start forever...
         controller.hookAndStartAndWaitForExit();

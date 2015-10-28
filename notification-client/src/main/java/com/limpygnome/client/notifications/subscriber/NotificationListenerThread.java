@@ -1,6 +1,6 @@
 package com.limpygnome.client.notifications.subscriber;
 
-import com.limpygnome.client.notifications.ui.MessageWindow;
+import com.limpygnome.client.notifications.ui.NotificationWindow;
 import com.limpygnome.daemon.common.ExtendedThread;
 import com.limpygnome.daemon.util.RestClient;
 import org.apache.logging.log4j.LogManager;
@@ -8,19 +8,24 @@ import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 
 /**
- * Created by limpygnome on 27/08/15.
+ * A thread used to periodically poll an endpoint for notification data and manage notification windows.
  */
 public class NotificationListenerThread extends ExtendedThread
 {
     private static final Logger LOG = LogManager.getLogger(NotificationListenerThread.class);
 
-    private MessageWindow messageWindow;
+    /* The current notification window. */
+    private NotificationWindow notificationWindow;
+
+    /* The URL of the notifications endpoint. */
     private String notificationsEndpoint;
+
+    /* The timestamp of the current notification; used to check if the notification has changed. */
     private long currentTimestamp;
 
     public NotificationListenerThread(String notificationsEndpoint)
     {
-        this.messageWindow = null;
+        this.notificationWindow = null;
         this.notificationsEndpoint = notificationsEndpoint;
         this.currentTimestamp = 0;
     }
@@ -97,7 +102,7 @@ public class NotificationListenerThread extends ExtendedThread
                 int backgroundG = (int) (long) jsonBackground.get("g");
                 int backgroundB = (int) (long) jsonBackground.get("b");
 
-                messageWindow = new MessageWindow(
+                notificationWindow = new NotificationWindow(
                         header, text, lifespan, backgroundR, backgroundG, backgroundB
                 );
 
@@ -108,9 +113,9 @@ public class NotificationListenerThread extends ExtendedThread
 
     public synchronized void closeCurrentWindow()
     {
-        if (messageWindow != null)
+        if (notificationWindow != null)
         {
-            messageWindow.close();
+            notificationWindow.close();
             LOG.info("Closed existing window");
         }
     }

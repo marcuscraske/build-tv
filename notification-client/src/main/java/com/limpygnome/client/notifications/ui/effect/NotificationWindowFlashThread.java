@@ -1,20 +1,21 @@
-package com.limpygnome.client.notifications.ui;
+package com.limpygnome.client.notifications.ui.effect;
 
+import com.limpygnome.client.notifications.ui.NotificationWindow;
 import com.limpygnome.daemon.common.ExtendedThread;
 
 /**
- * Created by limpygnome on 26/08/15.
+ * A UI effect to gradually increase the opacity of the notification window.
  */
-public class MessageWindowFlashThread extends ExtendedThread
+public class NotificationWindowFlashThread extends ExtendedThread
 {
     private static final float OPACITY_MIN = 0.7f;
 
-    private MessageWindow messageWindow;
+    private NotificationWindow notificationWindow;
     private long delay;
 
-    public MessageWindowFlashThread(MessageWindow messageWindow, long delay)
+    public NotificationWindowFlashThread(NotificationWindow notificationWindow, long delay)
     {
-        this.messageWindow = messageWindow;
+        this.notificationWindow = notificationWindow;
         this.delay = delay;
     }
 
@@ -31,11 +32,11 @@ public class MessageWindowFlashThread extends ExtendedThread
             // Change opacity
             if (additiveOpacity)
             {
-                newOpacity = messageWindow.getOpacity() + AMOUNT_STEP;
+                newOpacity = notificationWindow.getOpacity() + AMOUNT_STEP;
             }
             else
             {
-                newOpacity = messageWindow.getOpacity() - AMOUNT_STEP;
+                newOpacity = notificationWindow.getOpacity() - AMOUNT_STEP;
             }
 
             // Clamp opacity
@@ -51,7 +52,7 @@ public class MessageWindowFlashThread extends ExtendedThread
             }
 
             // Set new opacity
-            messageWindow.setOpacity(newOpacity);
+            notificationWindow.setOpacity(newOpacity);
 
             // Delay before next step
             try
