@@ -7,6 +7,7 @@ import com.limpygnome.daemon.api.rest.RestResponse;
 import com.limpygnome.daemon.api.rest.RestServiceHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.simple.JSONObject;
 
 /**
  * A service used to control the attached screen.
@@ -122,11 +123,20 @@ public class ScreenService implements Service, RestServiceHandler
     public boolean handleRequestInChain(RestRequest restRequest, RestResponse restResponse)
     {
         // Check we can handle the request
-        if (!restRequest.isJsonRequest() || !restRequest.isPathMatch(new String[]{"system-daemon", "screen" }))
+        if (restRequest.isJsonRequest() && restRequest.isPathMatch(new String[]{"system-daemon", "screen", "set" }))
         {
-            return false;
+            return handleScreenSet(restRequest, restResponse);
+        }
+        else if (restRequest.isPathMatch(new String[]{ "system-daemon", "screen", "get" }))
+        {
+            return handleScreenGet(restRequest, restResponse);
         }
 
+        return false;
+    }
+
+    public boolean handleScreenSet(RestRequest restRequest, RestResponse restResponse)
+    {
         // Check request has JSON body
         String action = (String) restRequest.getJsonElement(new String[]{ "action" });
 
@@ -144,6 +154,18 @@ public class ScreenService implements Service, RestServiceHandler
         }
 
         return false;
+    }
+
+    public boolean handleScreenGet(RestRequest restRequest, RestResponse restResponse)
+    {
+        // Build response
+        JSONObject response = new JSONObject();
+        response.put("on", screenOn);
+
+        // Write response
+        restResponse.writeJsonResponseIgnoreExceptions(restResponse, response);
+
+        return true;
     }
 
 }
