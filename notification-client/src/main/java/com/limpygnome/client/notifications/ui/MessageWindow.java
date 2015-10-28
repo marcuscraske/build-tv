@@ -129,7 +129,14 @@ public class MessageWindow extends JFrame
 
     private String prepareLabelText(String text)
     {
-        return "<html><center>" + text.replace("\n", "<br />") + "</center></html>";
+        if (text != null)
+        {
+            return "<html><center>" + text.replace("\n", "<br />") + "</center></html>";
+        }
+        else
+        {
+            return "";
+        }
     }
 
     public void centerOnScreen()

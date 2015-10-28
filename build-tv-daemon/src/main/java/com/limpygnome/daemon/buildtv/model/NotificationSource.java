@@ -50,15 +50,7 @@ public class NotificationSource implements Comparable<NotificationSource>
 
     public void setNotification(Notification notification)
     {
-        // Check new notification is different and has the same or greater priority
-        if (this.notification.getPriority() > notification.getPriority())
-        {
-            LOG.debug("Notification not updated, priority is less than current notification from source");
-        }
-        else
-        {
-            this.notification = notification;
-        }
+        this.notification = notification;
     }
 
     public Notification getNotification()

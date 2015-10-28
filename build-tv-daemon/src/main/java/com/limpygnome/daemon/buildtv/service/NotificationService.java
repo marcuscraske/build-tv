@@ -79,6 +79,8 @@ public class NotificationService implements Service, RestServiceHandler
         {
             // Attempt to update the current notification for the source
             notificationSource.setNotification(notification);
+
+            LOG.debug("Notification source updated - source: {}, notification: {}", source, notification);
         }
         else
         {
