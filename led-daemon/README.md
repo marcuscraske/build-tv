@@ -1,18 +1,8 @@
-# NeoPixel WS281x Daemon
-This daemon is intended to be used with the Raspberry Pi 2 Model B, using Java with JNI (Java Native Interface) for interfacing with the onboard GPIO.
+# LED Daemon
+The purpose of this daemon is to control physical LEDs, with segregation from other daemons allowing this daemon to load system libraries and unexpectedly fail independently.
 
-## Getting Started
-- Run the 
+## NeoPixel ws281x Support
+This daemon by default supports only the ws281x LED strip, configured for 60 LEDs. Configuration can be found at `../deploy/config`, in the file `.settings.led-daemon.json`.
 
-## Support for Raspberry Pi
-The original Raspberry Pi can be supported by switching the directory *lib/ws281x* with a library supporting the original Raspberry Pi. Refer to credits section for original repositories repsonsible for code.
-
-## Credit
-The *lib/ws281x* directory contains code from the following repositories:
-
-- Original library for Raspberry Pi: https://github.com/jgarff/rpi_ws281x
-
-- Changes to support Raspberry Pi 2: https://github.com/richardghirst/rpi_ws281x
-
-Refer to LICENSE file within directory for licensing.
-
+## Supporting Other Hardware
+You should be able to add support for additional hardware by implementing `LedController` and switching the implementation used by `LedService.start`.
