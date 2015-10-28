@@ -1,6 +1,12 @@
-- name: Copying proxy setting
+- name: Copying global proxy setting
   command: cp "{{ files_dest }}/system/environment" "/etc/environment"
   sudo: true
+  when: noproxy is not defined
+
+- name: Copying apt-get proxy setting
+  command: cp "{{ files_dest }}/system/apt-get-proxy-settings" "/etc/apt/apt.conf.d/10proxy"
+  sudo: true
+  when: noproxy is not defined
 
 - {
       name:         Update Pi boot configuration,

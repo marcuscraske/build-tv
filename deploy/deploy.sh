@@ -71,9 +71,11 @@ EXTRA_VARS+="system_daemon=\"${PATH_SYSTEM_DAEMON}\" "
 EXTRA_VARS+="remote_daemon=\"${PATH_REMOTE_DAEMON}\" "
 EXTRA_VARS+="notification_client=\"${PATH_NOTIFICATION_CLIENT}\" "
 
+# Attach any args after first as variables
+EXTRA_VARS+="${@:2} "
 
 # Build tags
-if [[ -z "${1}" ]]; then
+if [[ -z "${1}" || "${1}" == "*" ]]; then
     DEPLOY_TAGS+="remove-deploy,"
     DEPLOY_TAGS+="setup-pi,"
     DEPLOY_TAGS+="wallboard,"
@@ -97,6 +99,9 @@ echo ""
 echo ""
 echo "You are about to perform an automated deployment with the following tags:"
 echo "${DEPLOY_TAGS}"
+echo ""
+echo "And the following variables:"
+echo "${EXTRA_VARS}"
 echo ""
 echo "Running deployment..."
 
