@@ -1,8 +1,5 @@
 package com.limpygnome.daemon.buildtv.model;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 /**
  * A container for a notification, with metadata regarding its priority and source.
  *
@@ -10,8 +7,6 @@ import org.apache.logging.log4j.Logger;
  */
 public class NotificationSource implements Comparable<NotificationSource>
 {
-    private static final Logger LOG = LogManager.getLogger(NotificationSource.class);
-
     private String source;
     private Notification notification;
 

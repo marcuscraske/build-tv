@@ -53,6 +53,8 @@ public class PatternSource
 
     /**
      * Invoked once when this pattern becomes the current pattern source.
+     *
+     * @param controller The current instance of the controller
      */
     public void eventNowCurrentPatternSource(Controller controller)
     {
@@ -60,7 +62,20 @@ public class PatternSource
     }
 
     /**
+     * Invoked when this pattern is no longer the current pattern, just before the next pattern has its
+     * {@link #eventNowCurrentPatternSource(Controller)} method invoked.
+     *
+     * @param controller The current instance of the controller
+     */
+    public void eventNoLongerCurrentPatternSource(Controller controller)
+    {
+        // Nothing by default...
+    }
+
+    /**
      * Invoked every time the current source pattern is updated and is this instance.
+     *
+     * @param controller The current instance of the controller
      */
     public void update(Controller controller)
     {

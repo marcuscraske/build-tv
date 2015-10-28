@@ -77,13 +77,19 @@ public class LedTimeThread extends ExtendedThread
             // Check if pattern has changed
             if (lastPatternSource == null || currentPatternSource != lastPatternSource)
             {
+                // Inform current pattern source they're no longer the current pattern
+                if (lastPatternSource != null)
+                {
+                    lastPatternSource.eventNoLongerCurrentPatternSource(controller);
+                }
+
                 // Inform current pattern they're now the current pattern
                 if (currentPatternSource != null)
                 {
                     currentPatternSource.eventNowCurrentPatternSource(controller);
-                    LOG.debug("Current pattern changed - pattern: {}", currentPatternSource);
                 }
 
+                LOG.debug("Current pattern changed - old pattern: {}, new pattern: {}", lastPatternSource, currentPatternSource);
                 lastPatternSource = currentPatternSource;
             }
 

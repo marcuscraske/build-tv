@@ -72,6 +72,12 @@ public class IntervalPatternSource extends PatternSource
     }
 
     @Override
+    public void eventNoLongerCurrentPatternSource(Controller controller)
+    {
+        removeNotification(controller);
+    }
+
+    @Override
     public void update(Controller controller)
     {
         // Turn screen on/off
@@ -98,6 +104,22 @@ public class IntervalPatternSource extends PatternSource
 
             // Set current notification to our notification
             notificationService.updateCurrentNotification(NOTIFICATION_SOURCE, notification);
+        }
+    }
+
+    private void removeNotification(Controller controller)
+    {
+        if (notification != null)
+        {
+            LOG.debug("Removing notification... - name: {}, notification: {}", getName(), notification);
+
+            // Fetch notification service
+            NotificationService notificationService = (NotificationService) controller.getServiceByName(
+                    NotificationService.SERVICE_NAME
+            );
+
+            // Remove source
+            notificationService.removeNotificationSource(NOTIFICATION_SOURCE);
         }
     }
 
