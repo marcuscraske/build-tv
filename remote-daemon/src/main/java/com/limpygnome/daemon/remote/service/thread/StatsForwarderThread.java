@@ -32,7 +32,7 @@ public class StatsForwarderThread extends ExtendedThread
     private VersionService versionService;
     private HostInformationService hostInformationService;
 
-    private String LedDaemonPatternEndpointUrl;
+    private String ledDaemonPatternEndpointUrl;
     private String systemDaemonStatsEndpointUrl;
     private String systemDaemonScreenGetEndpointUrl;
     private String buildTvDaemonDashboardEndpointUrl;
@@ -46,16 +46,41 @@ public class StatsForwarderThread extends ExtendedThread
         this.versionService = (VersionService) controller.getServiceByName(VersionService.SERVICE_NAME);
         this.hostInformationService = (HostInformationService) controller.getServiceByName(HostInformationService.SERVICE_NAME);
 
-        // Load daemon port settings
-        long ledDaemonPort = controller.getSettings().getLong("local-ports/led-daemon");
-        long systemDaemonPort = controller.getSettings().getLong("local-ports/system-daemon");
-        long buildTvDaemonPort = controller.getSettings().getLong("local-ports/build-tv-daemon");
+        // BUild endpoint URLs for available daemons
+        // -- build-tv-daemon
+        if (controller.isDaemonEnabled("build-tv-daemon"))
+        {
+            long buildTvDaemonPort = controller.getSettings().getLong("local-ports/build-tv-daemon");
+            buildTvDaemonDashboardEndpointUrl = "http://localhost:" + buildTvDaemonPort + "/build-tv-daemon/dashboard/get";
+        }
+        else
+        {
+            buildTvDaemonDashboardEndpointUrl = null;
+        }
 
-        // Build endpoint URLs
-        LedDaemonPatternEndpointUrl = "http://localhost:" + ledDaemonPort + "/led-daemon/leds/get";
-        systemDaemonStatsEndpointUrl = "http://localhost:" + systemDaemonPort + "/system-daemon/stats";
-        systemDaemonScreenGetEndpointUrl = "http://localhost:" + systemDaemonPort + "/system-daemon/screen/get";
-        buildTvDaemonDashboardEndpointUrl = "http://localhost:" + buildTvDaemonPort + "/build-tv-daemon/dashboard/get";
+        // -- led-daemon
+        if (controller.isDaemonEnabled("led-daemon"))
+        {
+            long ledDaemonPort = controller.getSettings().getLong("local-ports/led-daemon");
+            ledDaemonPatternEndpointUrl = "http://localhost:" + ledDaemonPort + "/led-daemon/leds/get";
+        }
+        else
+        {
+            ledDaemonPatternEndpointUrl = null;
+        }
+
+        // -- system-daemon
+        if (controller.isDaemonEnabled("system-daemon"))
+        {
+            long systemDaemonPort = controller.getSettings().getLong("local-ports/system-daemon");
+            systemDaemonStatsEndpointUrl = "http://localhost:" + systemDaemonPort + "/system-daemon/stats";
+            systemDaemonScreenGetEndpointUrl = "http://localhost:" + systemDaemonPort + "/system-daemon/screen/get";
+        }
+        else
+        {
+            systemDaemonStatsEndpointUrl = null;
+            systemDaemonScreenGetEndpointUrl = null;
+        }
     }
 
     @Override
@@ -156,11 +181,23 @@ public class StatsForwarderThread extends ExtendedThread
             // Fetch latest stats
             JSONArray jsonArrayStats = fetchStatistics(fetchExternalData);
 
+            if (jsonArrayStats == null) {
+                jsonArrayStats = new JSONArray();
+            }
+
             // Fetch latest build indicator
             String buildIndicator = fetchBuildIndicator(fetchExternalData);
 
+            if (buildIndicator == null) {
+                buildIndicator = "shutdown";
+            }
+
             // Fetch screen state
-            boolean screenState = fetchScreenState(fetchExternalData);
+            Boolean screenState = fetchScreenState(fetchExternalData);
+
+            if (screenState == null) {
+                screenState = false;
+            }
 
             // Build update packet object
             JSONObject response = new JSONObject();
@@ -185,7 +222,7 @@ public class StatsForwarderThread extends ExtendedThread
 
     private String fetchBuildIndicator(boolean fetchExternalData)
     {
-        String pattern = (String) fetchJsonObjectFromUrl(LedDaemonPatternEndpointUrl, new String[]{"current", "pattern"}, fetchExternalData);
+        String pattern = (String) fetchJsonObjectFromUrl(ledDaemonPatternEndpointUrl, new String[]{"current", "pattern"}, fetchExternalData);
 
         LOG.debug("Current build indicator retrieved - pattern: {}", pattern);
 
@@ -195,7 +232,7 @@ public class StatsForwarderThread extends ExtendedThread
     private JSONArray fetchStatistics(boolean fetchExternalData)
     {
         JSONArray response = (JSONArray) fetchDataFromUrl(systemDaemonStatsEndpointUrl, fetchExternalData);
-        LOG.debug("Retrieved statistics - metrics: {}", response.size());
+        LOG.debug("Retrieved statistics - metrics: {}", response != null ? response.size() : 0);
 
         return response;
     }
@@ -208,9 +245,9 @@ public class StatsForwarderThread extends ExtendedThread
         return response;
     }
 
-    public boolean fetchScreenState(boolean fetchExternalData)
+    public Boolean fetchScreenState(boolean fetchExternalData)
     {
-        boolean screenState = (boolean) fetchJsonObjectFromUrl(systemDaemonScreenGetEndpointUrl, new String[]{ "on" }, fetchExternalData);
+        Boolean screenState = (Boolean) fetchJsonObjectFromUrl(systemDaemonScreenGetEndpointUrl, new String[]{ "on" }, fetchExternalData);
         LOG.debug("Retrieved screen state - on: {}", screenState);
 
         return screenState;
@@ -259,6 +296,12 @@ public class StatsForwarderThread extends ExtendedThread
         if (!fetchExternalData)
         {
             LOG.debug("Ignored request to fetch data, external flag set is false - url: {}", url);
+            return null;
+        }
+        // Check daemon is available
+        else if (url == null)
+        {
+            LOG.debug("Ignored request to fetch data, daemon unavailable");
             return null;
         }
 

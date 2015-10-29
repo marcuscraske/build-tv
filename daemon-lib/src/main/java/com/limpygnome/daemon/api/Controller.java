@@ -13,24 +13,53 @@ import java.util.Map;
  */
 public class Controller
 {
+    private static final Logger LOG = LogManager.getLogger(Controller.class);
+
+    /*
+        Relative path to config in a development environment.
+     */
     private final static String CONFIG_PATH_DEV = "deploy/files/config";
+
+    /*
+        Relative path to config in a production/live system.
+     */
     private final static String CONFIG_PATH_PRODUCTION = "config";
 
-    private static final Logger LOG = LogManager.getLogger(Controller.class);
+    /*
+        The global settings file used to check if a daemon is available on the system.
+     */
+    private static final String GLOBAL_SETTINGS_DAEMONS_ENABLED = "daemons-enabled.json";
+
 
     private String controllerName;
     private ControllerState state;
     private HashMap<String, Service> services;
     private Settings settings;
+    private Settings daemonsAvailable;
 
+
+    /**
+     * Creates a new instance.
+     *
+     * @param controllerName The name of the controller, used for building path to global daemon settings file
+     */
     public Controller(String controllerName)
     {
         this.controllerName = controllerName;
         this.state = ControllerState.STOPPED;
         this.services = new HashMap<>();
         this.settings = new Settings();
+        this.daemonsAvailable = null;
     }
 
+    /**
+     * Adds a service to the controller.
+     *
+     * This can only be done whilst the controller is not running.
+     *
+     * @param serviceName The name for the service
+     * @param service The service instance
+     */
     public synchronized void add(String serviceName, Service service)
     {
         // Check controller is not already running...
@@ -51,6 +80,9 @@ public class Controller
         services.put(serviceName, service);
     }
 
+    /**
+     * Starts the controller.
+     */
     public synchronized void start()
     {
         LOG.info("Starting controller...");
@@ -59,6 +91,10 @@ public class Controller
 
         // Reload settings
         settings.reload(this);
+
+        // Reload daemons available
+        daemonsAvailable = new Settings();
+        daemonsAvailable.reload(findConfigFile(GLOBAL_SETTINGS_DAEMONS_ENABLED));
 
         // Start all services
         for (Map.Entry<String, Service> kv : services.entrySet())
@@ -75,6 +111,12 @@ public class Controller
         LOG.info("Controller started successfully");
     }
 
+    /**
+     * Stops the controller.
+     *
+     * A service should not invoke this method if the service its self uses synchronization, else this will result in
+     * a dead-lock.
+     */
     public synchronized void stop()
     {
         LOG.info("Controller stopping...");
@@ -91,16 +133,29 @@ public class Controller
             LOG.debug("Stopped service - name: {}", kv.getKey());
         }
 
+        // Reset daemons available
+        daemonsAvailable = null;
+
+        // Update state
         setState(ControllerState.STOPPED);
 
         LOG.info("Controller has stopped");
     }
 
+    /**
+     * Hangs the invoking thread until the controller stops.
+     */
     public synchronized void waitForExit()
     {
         waitForState(ControllerState.STOPPED);
     }
 
+    /**
+     * Hangs the invoking thread until a lifecycle state equal or greater than the specified state occurs. Greater
+     * in the sense of a lifecycle state occuring later than the specified state.
+     *
+     * @param state The desired state
+     */
     public synchronized void waitForState(ControllerState state)
     {
         while (this.state.LIFECYCLE_STEP < state.LIFECYCLE_STEP)
@@ -115,6 +170,9 @@ public class Controller
         }
     }
 
+    /**
+     * Hangs the invoking thread until the controller stops.
+     */
     public synchronized void hookShutdown()
     {
         // This will hook an event to stop the controller when the JVM is shutting down
@@ -130,6 +188,10 @@ public class Controller
         LOG.debug("Hooked runtime shutdown event");
     }
 
+    /**
+     * Hooks the JVM shutdown/exit event to terminate the controller and hangs the invoking thread until the
+     * controller stops.
+     */
     public synchronized void hookAndStartAndWaitForExit()
     {
         hookShutdown();
@@ -178,11 +240,23 @@ public class Controller
         }
     }
 
+    /**
+     * Retrieves the name of this controller.
+     *
+     * @return The name of this controller
+     */
     public String getControllerName()
     {
         return controllerName;
     }
 
+    /**
+     * Retrieves a service by name.
+     *
+     * @param serviceName The name of the service
+     * @return An instance of the service
+     * @throws RuntimeException If the service is not available
+     */
     public synchronized Service getServiceByName(String serviceName)
     {
         Service service = services.get(serviceName);
@@ -203,11 +277,32 @@ public class Controller
         LOG.debug("Changed state of controller - state: {}", this.state);
     }
 
+    /**
+     * Retrieves global settings for this daemon.
+     *
+     * @return Settings instance
+     */
     public Settings getSettings()
     {
         return settings;
     }
 
+    /**
+     * Indicates if a daemon is available on the system.
+     *
+     * @param daemonName The name of the daemon
+     * @return True = available, false = not present/not available
+     */
+    public boolean isDaemonEnabled(String daemonName)
+    {
+        return daemonsAvailable.getBoolean(daemonName);
+    }
+
+    /**
+     * Retrieves a cloned map of available services.
+     *
+     * @return Cloned map
+     */
     public synchronized Map<String, Service> getServices()
     {
         return new HashMap<>(services);

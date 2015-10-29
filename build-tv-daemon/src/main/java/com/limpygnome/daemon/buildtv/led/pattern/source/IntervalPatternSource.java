@@ -125,28 +125,36 @@ public class IntervalPatternSource extends PatternSource
 
     private void changeScreen(Controller controller, ScreenAction screenAction)
     {
-        // Fetch system-daemon screen endpoint
-        String systemDaemonScreenEndpoint = controller.getSettings().getString("system-daemon.screen.rest.url");
-
-        try
+        // Check daemon is available
+        if (controller.isDaemonEnabled("led-daemon"))
         {
-            // Build JSON object
-            JSONObject jsonRoot = new JSONObject();
-            jsonRoot.put("action", screenAction.ACTION);
+            // Fetch system-daemon screen endpoint
+            String systemDaemonScreenEndpoint = controller.getSettings().getString("system-daemon.screen.rest.url");
 
-            // Make request
-            RestClient restClient = new RestClient();
-            restClient.executePost(systemDaemonScreenEndpoint, jsonRoot);
+            try
+            {
+                // Build JSON object
+                JSONObject jsonRoot = new JSONObject();
+                jsonRoot.put("action", screenAction.ACTION);
 
-            LOG.debug("Screen action sent - action: {}", screenAction);
+                // Make request
+                RestClient restClient = new RestClient();
+                restClient.executePost(systemDaemonScreenEndpoint, jsonRoot);
+
+                LOG.debug("Screen action sent - action: {}", screenAction);
+            }
+            catch (ConnectException e)
+            {
+                LOG.error("Failed to connect to system daemon - url: {}", systemDaemonScreenEndpoint);
+            }
+            catch (Exception e)
+            {
+                LOG.error("Failed to make system daemon request", e);
+            }
         }
-        catch (ConnectException e)
+        else
         {
-            LOG.error("Failed to connect to system daemon - url: {}", systemDaemonScreenEndpoint);
-        }
-        catch (Exception e)
-        {
-            LOG.error("Failed to make system daemon request", e);
+            LOG.debug("Ignored request to change screen, screen daemon unavailable - screen-action: {}", screenAction);
         }
     }
 

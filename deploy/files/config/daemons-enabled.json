@@ -1,0 +1,6 @@
+{
+    "build-tv-daemon"   : true,
+    "led-daemon"        : true,
+    "remote-daemon"     : true,
+    "system-daemon"     : true
+}

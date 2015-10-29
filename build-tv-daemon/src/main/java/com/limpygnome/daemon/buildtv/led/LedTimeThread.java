@@ -29,6 +29,13 @@ public class LedTimeThread extends ExtendedThread
     private long ledDaemonPriority;
     private HashMap<String, PatternSource> patterns;
 
+    /**
+     * Creates a new instance.
+     *
+     * @param controller The current controller
+     * @param ledDaemonUrl The LED daemon endpoint URL, can be null to disable outgoing requests
+     * @param ledDaemonPriority The priority of patterns sent by this daemon, versus the priority of patterns sent by other daemons
+     */
     public LedTimeThread(Controller controller, String ledDaemonUrl, long ledDaemonPriority)
     {
         this.controller = controller;
@@ -141,6 +148,13 @@ public class LedTimeThread extends ExtendedThread
 
     private void changePattern(LedPattern pattern)
     {
+        // Check LED daemon is available...
+        if (ledDaemonUrlLeds == null)
+        {
+            LOG.debug("Ignoring pattern change request, LED daemon unavailable - pattern: {}", pattern.PATTERN);
+            return;
+        }
+
         try
         {
             // Build JSON object

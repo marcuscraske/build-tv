@@ -17,7 +17,18 @@ public class LedTimeService implements Service
     @Override
     public synchronized void start(Controller controller)
     {
-        String ledDaemonUrl = controller.getSettings().getString("led-daemon.rest.url");
+        String ledDaemonUrl;
+
+        // Check daemon is available
+        if (controller.isDaemonEnabled("led-daemon"))
+        {
+            ledDaemonUrl = controller.getSettings().getString("led-daemon.rest.url");
+        }
+        else
+        {
+            ledDaemonUrl = null;
+        }
+
         long ledDaemonPriority = controller.getSettings().getLong("led-daemon.priority");
 
         ledTimeThread = new LedTimeThread(
