@@ -47,11 +47,18 @@ public class EnvironmentService implements Service
                 Process process = Runtime.getRuntime().exec(command);
 
                 // Wait for process to finish, or kill it
-                if (!process.waitFor(processTimeout, TimeUnit.MILLISECONDS))
+                long start = System.currentTimeMillis();
+
+                while (process.isAlive() && ((System.currentTimeMillis() - start) < processTimeout)) {
+                    Thread.sleep(1);
+                }
+
+                // Check if to kill the process...
+                if (process.isAlive())
                 {
                     process.destroy();
 
-                    LOG.warn("Forcibly killed process executing command - cmd: {}", command);
+                    LOG.warn("Killed process executing command, timeout exceeded - timeout: {}, cmd: {}", processTimeout, command);
                 }
 
             }
