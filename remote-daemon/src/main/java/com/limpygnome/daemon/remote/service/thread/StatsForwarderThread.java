@@ -34,6 +34,7 @@ public class StatsForwarderThread extends ExtendedThread
 
     private String LedDaemonPatternEndpointUrl;
     private String systemDaemonStatsEndpointUrl;
+    private String systemDaemonScreenGetEndpointUrl;
     private String buildTvDaemonDashboardEndpointUrl;
 
     public StatsForwarderThread(Controller controller, StatsForwarderService statsForwarderService)
@@ -46,13 +47,14 @@ public class StatsForwarderThread extends ExtendedThread
         this.hostInformationService = (HostInformationService) controller.getServiceByName(HostInformationService.SERVICE_NAME);
 
         // Load daemon port settings
-        long ledDaemonport = controller.getSettings().getLong("local-ports/led-daemon");
+        long ledDaemonPort = controller.getSettings().getLong("local-ports/led-daemon");
         long systemDaemonPort = controller.getSettings().getLong("local-ports/system-daemon");
         long buildTvDaemonPort = controller.getSettings().getLong("local-ports/build-tv-daemon");
 
         // Build endpoint URLs
-        LedDaemonPatternEndpointUrl = "http://localhost:" + ledDaemonport + "/led-daemon/leds/get";
+        LedDaemonPatternEndpointUrl = "http://localhost:" + ledDaemonPort + "/led-daemon/leds/get";
         systemDaemonStatsEndpointUrl = "http://localhost:" + systemDaemonPort + "/system-daemon/stats";
+        systemDaemonScreenGetEndpointUrl = "http://localhost:" + systemDaemonPort + "/system-daemon/screen/get";
         buildTvDaemonDashboardEndpointUrl = "http://localhost:" + buildTvDaemonPort + "/build-tv-daemon/dashboard/get";
     }
 
@@ -157,16 +159,21 @@ public class StatsForwarderThread extends ExtendedThread
             // Fetch latest build indicator
             String buildIndicator = fetchBuildIndicator(fetchExternalData);
 
+            // Fetch screen state
+            boolean screenState = fetchScreenState(fetchExternalData);
+
             // Build update packet object
-            JSONObject request = new JSONObject();
-            request.put("uuid", instanceIdentityService.getInstanceUuid().toString());
-            request.put("status", status);
-            request.put("buildIndicator", buildIndicator);
-            request.put("metrics", jsonArrayStats);
+            JSONObject response = new JSONObject();
+
+            response.put("uuid", instanceIdentityService.getInstanceUuid().toString());
+            response.put("status", status);
+            response.put("buildIndicator", buildIndicator);
+            response.put("metrics", jsonArrayStats);
+            response.put("screen", screenState);
 
             // Send to endpoint
             RestClient restClient = new RestClient(STATS_FORWARDER_USER_AGENT, -1);
-            restClient.executePost(statsForwarderService.getEndpointUrlUpdate(), request);
+            restClient.executePost(statsForwarderService.getEndpointUrlUpdate(), response);
 
             LOG.debug("Successfully sent update");
         }
@@ -178,7 +185,7 @@ public class StatsForwarderThread extends ExtendedThread
 
     private String fetchBuildIndicator(boolean fetchExternalData)
     {
-        String pattern = (String) fetchJsonObjectFromUrl(LedDaemonPatternEndpointUrl, new String[]{ "current", "pattern" }, fetchExternalData);
+        String pattern = (String) fetchJsonObjectFromUrl(LedDaemonPatternEndpointUrl, new String[]{"current", "pattern"}, fetchExternalData);
 
         LOG.debug("Current build indicator retrieved - pattern: {}", pattern);
 
@@ -201,6 +208,14 @@ public class StatsForwarderThread extends ExtendedThread
         return response;
     }
 
+    public boolean fetchScreenState(boolean fetchExternalData)
+    {
+        boolean screenState = (boolean) fetchJsonObjectFromUrl(systemDaemonScreenGetEndpointUrl, new String[]{ "on" }, fetchExternalData);
+        LOG.debug("Retrieved screen state - on: {}", screenState);
+
+        return screenState;
+    }
+
     private Object fetchJsonObjectFromUrl(String url, String[] path, boolean fetchExternalData)
     {
         Object response = fetchDataFromUrl(url, fetchExternalData);
@@ -215,15 +230,22 @@ public class StatsForwarderThread extends ExtendedThread
             }
 
             // Check key present
-            JSONObject jsonRoot = (JSONObject) response;
-            Object value = JsonUtil.getNestedNode(jsonRoot, path);
-
-            if (value == null)
+            if (path != null)
             {
-                LOG.warn("Value not present in JSON response - url: {}, path: {}", url, path);
-            }
+                JSONObject jsonRoot = (JSONObject) response;
+                Object value = JsonUtil.getNestedNode(jsonRoot, path);
 
-            return value;
+                if (value == null)
+                {
+                    LOG.warn("Value not present in JSON response - url: {}, path: {}", url, path);
+                }
+
+                return value;
+            }
+            else
+            {
+                return response;
+            }
         }
         else
         {

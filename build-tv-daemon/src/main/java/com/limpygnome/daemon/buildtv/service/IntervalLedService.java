@@ -94,17 +94,27 @@ public class IntervalLedService implements Service
             notification = null;
         }
 
-        return new IntervalPatternSource(
-                (String) root.get("name"),
-                LedPattern.getByName((String) root.get("pattern")),
-                (int) (long) root.get("priority"),
-                (int) (long) root.get("startHour"),
-                (int) (long) root.get("startMinute"),
-                (int) (long) root.get("endHour"),
-                (int) (long) root.get("endMinute"),
-                (boolean) root.get("screenOff"),
-                notification
-        );
+        try
+        {
+            return new IntervalPatternSource(
+                    (String) root.get("name"),
+                    LedPattern.getByName((String) root.get("pattern")),
+                    (int) (long) root.get("priority"),
+                    (int) (long) root.get("startHour"),
+                    (int) (long) root.get("startMinute"),
+                    (int) (long) root.get("endHour"),
+                    (int) (long) root.get("endMinute"),
+                    (boolean) root.get("screenOff"),
+                    notification
+            );
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(
+                    "Failed to parse LED pattern - data: " + (root != null ? root.toJSONString() : "null"),
+                    e
+            );
+        }
     }
 
     private Notification parseIntervalPatternSourceNotification(JSONObject root)

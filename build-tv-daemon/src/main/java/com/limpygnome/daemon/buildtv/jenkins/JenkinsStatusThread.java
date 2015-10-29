@@ -153,7 +153,6 @@ public class JenkinsStatusThread extends ExtendedThread
 
         // Run until thread exits, polling Jenkins for status and updating pattern source
         JenkinsHostUpdateResult hostsResult;
-        Notification notification;
 
         while (!isExit())
         {
