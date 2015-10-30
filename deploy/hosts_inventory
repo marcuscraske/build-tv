@@ -1,6 +1,24 @@
+########################################################################################################################
+# Example host
+########################################################################################################################
+[pi2-team-example]
+pi2-team-example
+
+[pi2-team-example:vars]
+ansible_ssh_user="monitor"
+hostname_override="pi2-team-example"
+
+
+########################################################################################################################
+# Global configuration
+########################################################################################################################
+
 [pi2]
-pi2-team-example    ansible_ssh_user="monitor"      hostname_override="pi2-team-7"      monitor_password="password123"
+pi2-team-example
 
 [pi2:vars]
 deploy_path=/rpi-misc
+backup_path=/rpi-backups
 files_dest="{{ deploy_path }}/temp_files"
+monitor_password="password123"
+

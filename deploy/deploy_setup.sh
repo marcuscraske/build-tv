@@ -1,2 +1,2 @@
 #!/bin/bash
-./deploy.sh setup-pi,reboot
+./deploy.sh backup,remove,setup-pi,reboot

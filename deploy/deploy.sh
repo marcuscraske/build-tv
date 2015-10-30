@@ -15,6 +15,8 @@ ${SCRIPT_HEADER}
 \033[1;32m
 "
 
+# Target hosts group
+TARGET_HOSTS="pi2"
 
 # Define paths
 PATH_CURR=$(pwd)
@@ -58,12 +60,15 @@ echo "Path - notification client:   ${PATH_NOTIFICATION_CLIENT}"
 
 
 # Build extra vars
+# -- Path to base of all files
 EXTRA_VARS+="files_base=\"${PATH_FILES_BASE}\" "
 
+# -- Path to file overrides
 if [[ !( -z "${PATH_FILES_OVERRIDE}") ]]; then
     EXTRA_VARS+="files_override=\"${PATH_FILES_OVERRIDE}\" "
 fi
 
+# -- Paths to daemons/apps etc
 EXTRA_VARS+="ws281x_lib=\"${PATH_NEOPIXEL_WS281X_LIB}\" "
 EXTRA_VARS+="led_daemon=\"${PATH_LED_DAEMON}\" "
 EXTRA_VARS+="build_tv_daemon=\"${PATH_BUILDTV_DAEMON}\" "
@@ -76,7 +81,8 @@ EXTRA_VARS+="${@:2} "
 
 # Build tags
 if [[ -z "${1}" || "${1}" == "*" ]]; then
-    DEPLOY_TAGS+="remove-deploy,"
+    DEPLOY_TAGS+="backup,"
+    DEPLOY_TAGS+="remove,"
     DEPLOY_TAGS+="setup-pi,"
     DEPLOY_TAGS+="wallboard,"
     DEPLOY_TAGS+="config,"
@@ -107,4 +113,4 @@ echo "Running deployment..."
 
 
 # Run deployment"
-ansible-playbook deploy.yml -v -i ${INVENTORY} --extra-vars "${EXTRA_VARS}" --tags "${DEPLOY_TAGS}"
+ansible-playbook deploy.yml -v -i "${INVENTORY}" -l "${TARGET_HOSTS}" --extra-vars "${EXTRA_VARS}" --tags "${DEPLOY_TAGS}"
