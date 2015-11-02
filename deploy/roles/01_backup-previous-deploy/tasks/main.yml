@@ -16,6 +16,10 @@
   register: logs_exist
   sudo: true
 
+- name: Fetching date time string
+  shell: date "+%Y-%m-%d_%H-%M-%S"
+  register: backup_datetime
+
 - name: Removing logs directory
   command: rm -r "{{ deploy_path }}/logs"
   sudo: true
@@ -26,7 +30,7 @@
       include:      ../../common/tasks/copyOnRemote.yml,
 
       src:          "{{ deploy_path }}/",
-      dest:         "{{ backup_path }}/{{ ansible_date_time.date }}_{{ ansible_date_time.time }}/",
+      dest:         "{{ backup_path }}/{{ backup_datetime.stdout }}/",
       owner:        "monitor",
       group:        "rpi-group",
       perms:        "775",
