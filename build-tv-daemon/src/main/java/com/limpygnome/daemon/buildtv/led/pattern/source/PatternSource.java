@@ -1,7 +1,9 @@
 package com.limpygnome.daemon.buildtv.led.pattern.source;
 
 import com.limpygnome.daemon.api.Controller;
+import com.limpygnome.daemon.buildtv.led.ScreenAction;
 import com.limpygnome.daemon.buildtv.led.pattern.LedPattern;
+import com.limpygnome.daemon.buildtv.service.HardwareCommsService;
 
 /**
  * Represents a source of a LED pattern, with the priority and enable status used to determine which
@@ -76,10 +78,12 @@ public class PatternSource
      * Invoked every time the current source pattern is updated and is this instance.
      *
      * @param controller The current instance of the controller
+     * @param hardwareCommsService The hardware comms service
      */
-    public void update(Controller controller)
+    public void update(Controller controller, HardwareCommsService hardwareCommsService)
     {
-        // Nothing by default...
+        // By default, keep the screen on...
+        hardwareCommsService.changeScreen(controller, ScreenAction.ON);
     }
 
     @Override

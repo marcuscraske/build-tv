@@ -5,6 +5,7 @@ import com.limpygnome.daemon.api.ControllerState;
 import com.limpygnome.daemon.buildtv.led.pattern.source.IntervalPatternSource;
 import com.limpygnome.daemon.buildtv.led.pattern.LedPattern;
 import com.limpygnome.daemon.buildtv.led.pattern.source.PatternSource;
+import com.limpygnome.daemon.buildtv.service.HardwareCommsService;
 import com.limpygnome.daemon.common.ExtendedThread;
 import com.limpygnome.daemon.util.RestClient;
 import org.apache.logging.log4j.LogManager;
@@ -22,26 +23,21 @@ public class LedTimeThread extends ExtendedThread
 {
     private static final Logger LOG = LogManager.getLogger(LedTimeThread.class);
 
-    private static final String LED_DAEMON_SOURCE = "build-tv";
-
     private Controller controller;
-    private String ledDaemonUrlLeds;
-    private long ledDaemonPriority;
+    private HardwareCommsService hardwareCommsService;
+
     private HashMap<String, PatternSource> patterns;
 
     /**
      * Creates a new instance.
      *
      * @param controller The current controller
-     * @param ledDaemonUrl The LED daemon endpoint URL, can be null to disable outgoing requests
-     * @param ledDaemonPriority The priority of patterns sent by this daemon, versus the priority of patterns sent by other daemons
      */
-    public LedTimeThread(Controller controller, String ledDaemonUrl, long ledDaemonPriority)
+    public LedTimeThread(Controller controller)
     {
         this.controller = controller;
-        this.ledDaemonUrlLeds = ledDaemonUrl;
-        this.ledDaemonPriority = ledDaemonPriority;
         this.patterns = new HashMap<>();
+        this.hardwareCommsService = (HardwareCommsService) controller.getServiceByName(HardwareCommsService.SERVICE_NAME);
     }
 
     /**
@@ -104,14 +100,14 @@ public class LedTimeThread extends ExtendedThread
             if (currentPatternSource != null)
             {
                 // Update LED pattern
-                changePattern(currentPatternSource.getCurrentLedPattern());
+                hardwareCommsService.changeLedPattern(currentPatternSource.getCurrentLedPattern());
 
                 // Run pattern logic
-                currentPatternSource.update(controller);
+                currentPatternSource.update(controller, hardwareCommsService);
             }
             else
             {
-                changePattern(LedPattern.BUILD_UNKNOWN);
+                hardwareCommsService.changeLedPattern(LedPattern.BUILD_UNKNOWN);
             }
 
             // Sleep for a while
@@ -144,39 +140,6 @@ public class LedTimeThread extends ExtendedThread
         }
 
         return highestPatternSource;
-    }
-
-    private void changePattern(LedPattern pattern)
-    {
-        // Check LED daemon is available...
-        if (ledDaemonUrlLeds == null)
-        {
-            LOG.debug("Ignoring pattern change request, LED daemon unavailable - pattern: {}", pattern.PATTERN);
-            return;
-        }
-
-        try
-        {
-            // Build JSON object
-            JSONObject jsonRoot = new JSONObject();
-            jsonRoot.put("source", LED_DAEMON_SOURCE);
-            jsonRoot.put("pattern", pattern.PATTERN);
-            jsonRoot.put("priority", ledDaemonPriority);
-
-            // Make request
-            RestClient restClient = new RestClient();
-            restClient.executePost(ledDaemonUrlLeds, jsonRoot);
-
-            LOG.debug("LED daemon update request sent - pattern: {}", pattern.PATTERN);
-        }
-        catch (ConnectException e)
-        {
-            LOG.error("Failed to connect to LED daemon - url: {}, pattern: {}", ledDaemonUrlLeds, pattern.PATTERN);
-        }
-        catch (Exception e)
-        {
-            LOG.error("Failed to make LED daemon request", e);
-        }
     }
 
 }

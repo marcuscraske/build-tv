@@ -4,6 +4,7 @@ import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.buildtv.led.ScreenAction;
 import com.limpygnome.daemon.buildtv.led.pattern.LedPattern;
 import com.limpygnome.daemon.buildtv.model.Notification;
+import com.limpygnome.daemon.buildtv.service.HardwareCommsService;
 import com.limpygnome.daemon.buildtv.service.NotificationService;
 import com.limpygnome.daemon.util.RestClient;
 import org.apache.logging.log4j.LogManager;
@@ -78,16 +79,16 @@ public class IntervalPatternSource extends PatternSource
     }
 
     @Override
-    public void update(Controller controller)
+    public void update(Controller controller, HardwareCommsService hardwareCommsService)
     {
         // Turn screen on/off
         if (screenOff)
         {
-            changeScreen(controller, ScreenAction.OFF);
+            hardwareCommsService.changeScreen(controller, ScreenAction.OFF);
         }
         else
         {
-            changeScreen(controller, ScreenAction.ON);
+            hardwareCommsService.changeScreen(controller, ScreenAction.ON);
         }
     }
 
@@ -120,41 +121,6 @@ public class IntervalPatternSource extends PatternSource
 
             // Remove source
             notificationService.removeNotificationSource(NOTIFICATION_SOURCE);
-        }
-    }
-
-    private void changeScreen(Controller controller, ScreenAction screenAction)
-    {
-        // Check daemon is available
-        if (controller.isDaemonEnabled("led-daemon"))
-        {
-            // Fetch system-daemon screen endpoint
-            String systemDaemonScreenEndpoint = controller.getSettings().getString("system-daemon.screen.rest.url");
-
-            try
-            {
-                // Build JSON object
-                JSONObject jsonRoot = new JSONObject();
-                jsonRoot.put("action", screenAction.ACTION);
-
-                // Make request
-                RestClient restClient = new RestClient();
-                restClient.executePost(systemDaemonScreenEndpoint, jsonRoot);
-
-                LOG.debug("Screen action sent - action: {}", screenAction);
-            }
-            catch (ConnectException e)
-            {
-                LOG.error("Failed to connect to system daemon - url: {}", systemDaemonScreenEndpoint);
-            }
-            catch (Exception e)
-            {
-                LOG.error("Failed to make system daemon request", e);
-            }
-        }
-        else
-        {
-            LOG.debug("Ignored request to change screen, screen daemon unavailable - screen-action: {}", screenAction);
         }
     }
 

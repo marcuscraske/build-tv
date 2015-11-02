@@ -19,6 +19,7 @@ public class Program
         controller.add(IntervalLedService.SERVICE_NAME, new IntervalLedService(controller));
         controller.add(NotificationService.SERVICE_NAME, new NotificationService());
         controller.add(JiraDashboardService.SERVICE_NAME, new JiraDashboardService());
+        controller.add(HardwareCommsService.SERVICE_NAME, new HardwareCommsService());
 
         // Attach REST handlers
         RestService.attachControllerRestHandlerServices(controller);

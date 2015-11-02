@@ -23,7 +23,7 @@
         {
             "name"          : "Build Indicator Off",
             "priority"      : 200,
-            "startHour"     : 11,
+            "startHour"     : 20,
             "startMinute"   : 0,
             "endHour"       : 6,
             "endMinute"     : 30,
