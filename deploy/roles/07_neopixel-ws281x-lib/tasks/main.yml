@@ -2,11 +2,13 @@
   apt:  name=swig
         state=present
   sudo: true
+  when: nopackages is not defined
 
 - name: Install GCC
   apt:  name=gcc
         state=present
   sudo: true
+  when: nopackages is not defined
 
 - name: Check Library Files Exist
   stat: path={{ deploy_path }}/neopixel-ws281x-lib

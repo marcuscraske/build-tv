@@ -6,6 +6,7 @@
   apt:  name=fbi
         state=present
   sudo: true
+  when: nopackages is not defined
 
 - name: Copying daemon file for splash screen
   command: cp "{{ files_dest }}/boot-splash-screen/aaasplashscreen" "/etc/init.d/aaasplashscreen"

@@ -11,16 +11,19 @@
   apt:  name=x11-xserver-utils
         state=present
   sudo: true
+  when: nopackages is not defined
 
 - name: Installing Matchbox window manager
   apt:  name=matchbox-desktop
         state=present
   sudo: true
+  when: nopackages is not defined
 
 - name: Installing Chromium browser
   apt:  name=chromium-browser
         state=present
   sudo: true
+  when: nopackages is not defined
 
 - {
       name:         Setting up .xinitrc for wallboard user,

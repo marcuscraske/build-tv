@@ -22,6 +22,7 @@
 
 - name: Setting up packages...
   include: packages.yml
+  when: nopackages is not defined
 
 - name: Setting up timezone...
   include: timezone.yml
