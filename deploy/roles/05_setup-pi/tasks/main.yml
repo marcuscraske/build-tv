@@ -27,9 +27,6 @@
 - name: Setting up timezone...
   include: timezone.yml
 
-- name: Setting up remote SSH...
-  include: remote-user.yml
-
 - name: Setting up boot splash screen...
   include: boot-splash-screen.yml
 

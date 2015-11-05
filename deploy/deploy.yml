@@ -6,17 +6,18 @@
     - shell: hostname
 
   roles:
-    - { role: 01_backup-previous-deploy, tags: ["backup"] }
-    - { role: 02_remove-previous-deploy, tags: ["remove"] }
-    - { role: 03_setup-temp-files, tags: ["always"] }
-    - { role: 04_setup-pi, tags: ["setup-pi"] }
-    - { role: 05_shared-config, tags: ["config"] }
-    - { role: 06_wallboard, tags: ["wallboard"] }
-    - { role: 07_neopixel-ws281x-lib, tags: ["neopixel-lib"] }
-    - { role: 08_led-daemon, tags: ["led-daemon"] }
-    - { role: 09_build-tv-daemon, tags: ["build-tv-daemon"] }
-    - { role: 10_system-daemon, tags: ["system-daemon"] }
-    - { role: 11_remote-daemon, tags: ["remote-daemon"] }
-    - { role: 12_notification-client, tags: ["notification-client"] }
-    - { role: 13_remove-temp-files, tags: ["always"] }
-    - { role: 14_setup-reboot, tags: ["reboot"] }
+    - { role: 01_setup-users, tags: ["setup-pi"] }
+    - { role: 02_backup-previous-deploy, tags: ["backup"] }
+    - { role: 03_remove-previous-deploy, tags: ["remove"] }
+    - { role: 04_setup-temp-files, tags: ["always"] }
+    - { role: 05_setup-pi, tags: ["setup-pi"] }
+    - { role: 06_shared-config, tags: ["config"] }
+    - { role: 07_wallboard, tags: ["wallboard"] }
+    - { role: 08_neopixel-ws281x-lib, tags: ["neopixel-lib"] }
+    - { role: 09_led-daemon, tags: ["led-daemon"] }
+    - { role: 10_build-tv-daemon, tags: ["build-tv-daemon"] }
+    - { role: 11_system-daemon, tags: ["system-daemon"] }
+    - { role: 12_remote-daemon, tags: ["remote-daemon"] }
+    - { role: 13_notification-client, tags: ["notification-client"] }
+    - { role: 14_remove-temp-files, tags: ["always"] }
+    - { role: 15_setup-reboot, tags: ["reboot"] }
