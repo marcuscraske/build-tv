@@ -1,2 +1,2 @@
 #!/bin/bash
-./deploy.sh "*" noproxy=true
+./deploy.sh "*" "noproxy=true"
