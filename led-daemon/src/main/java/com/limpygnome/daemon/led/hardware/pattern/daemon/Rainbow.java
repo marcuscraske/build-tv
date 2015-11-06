@@ -13,7 +13,7 @@ public class Rainbow implements Pattern
     @Override
     public void render(LedRenderThread ledRenderThread, LedController ledController) throws InterruptedException
     {
-        GenericRainbowPattern.rainbow(ledRenderThread, ledController, 20);
+        GenericRainbowPattern.rainbow(ledRenderThread, ledController, 1);
     }
 
     @Override
