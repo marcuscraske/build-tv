@@ -23,11 +23,15 @@ public class NotificationListenerThread extends ExtendedThread
     /* The timestamp of the current notification; used to check if the notification has changed. */
     private long currentTimestamp;
 
+    /*   The ifespan of the current notification. */
+    private long currentLifespan;
+
     public NotificationListenerThread(String notificationsEndpoint)
     {
         this.notificationWindow = null;
         this.notificationsEndpoint = notificationsEndpoint;
         this.currentTimestamp = 0;
+        this.currentLifespan = 9;
     }
 
     @Override
@@ -53,12 +57,12 @@ public class NotificationListenerThread extends ExtendedThread
                 LOG.error("Failed to poll for notification updates", e);
             }
 
-            // Wait a while before continuing...
+            // Wait a while before re-polling...
             if (!isExit())
             {
                 try
                 {
-                    Thread.sleep(2000);
+                    Thread.sleep(1000);
                 }
                 catch (InterruptedException e) { }
             }
@@ -74,6 +78,11 @@ public class NotificationListenerThread extends ExtendedThread
         // Check a message is available
         if (!response.containsKey("timestamp"))
         {
+            // Check if current notification has lifespan, if not kill it
+            if (notificationWindow != null && currentLifespan == 0)
+            {
+                closeCurrentWindow();
+            }
             return;
         }
 
@@ -106,6 +115,8 @@ public class NotificationListenerThread extends ExtendedThread
                         header, text, lifespan, backgroundR, backgroundG, backgroundB
                 );
 
+                this.currentLifespan = lifespan;
+
                 LOG.info("Created new window - header: {}, text: {}", header, text);
             }
         }
@@ -116,6 +127,8 @@ public class NotificationListenerThread extends ExtendedThread
         if (notificationWindow != null)
         {
             notificationWindow.close();
+            notificationWindow = null;
+
             LOG.info("Closed existing window");
         }
     }

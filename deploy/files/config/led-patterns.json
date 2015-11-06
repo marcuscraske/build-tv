@@ -17,7 +17,7 @@
                 "text"          : null,
                 "background"    : "#666666",
                 "priority"      : 50,
-                "lifespan"      : 60000
+                "lifespan"      : 0
             }
         },
         {
