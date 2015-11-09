@@ -3,45 +3,52 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/maven-v4_0_0.xsd">
 
+    <name>Build Indicator - Daemons - Build TV Daemon</name>
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.limpygnome</groupId>
-        <artifactId>rpi-misc</artifactId>
+        <groupId>com.limpygnome.buildindicator</groupId>
+        <artifactId>daemons</artifactId>
         <version>2.0</version>
     </parent>
-    <artifactId>system-daemon</artifactId>
+    <groupId>com.limpygnome.buildindicator.daemons</groupId>
+    <artifactId>build-tv-daemon</artifactId>
     <packaging>jar</packaging>
 
-    <name>System Daemon</name>
 
     <dependencies>
 
         <!-- Local -->
 		<dependency>
-			<groupId>com.limpygnome</groupId>
+			<groupId>com.limpygnome.buildindicator.libs</groupId>
 			<artifactId>daemon-lib</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
-		<!-- HTTP Client -->
+		<!-- JSON Serialization -->
 		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.5</version>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+	
+        <!-- Joda -->
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.7</version>
 		</dependency>
 
-        <!-- JSON Serialization -->
+        <!-- Logging -->
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>2.6.3</version>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.2</version>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.6.3</version>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.2</version>
         </dependency>
-
 
     </dependencies>
 	
@@ -62,14 +69,14 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>com.limpygnome.daemon.system.Program</mainClass>
+							<mainClass>com.limpygnome.daemon.buildtv.Program</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
 					<appendAssemblyId>false</appendAssemblyId>
-                    <finalName>system-daemon</finalName>
+                    <finalName>build-tv-daemon</finalName>
 				</configuration>
 			</plugin>
 			

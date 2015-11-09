@@ -2,16 +2,17 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <name>Build Indicator - Libs - Daemon Shared Library</name>
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.limpygnome</groupId>
-        <artifactId>rpi-misc</artifactId>
+        <groupId>com.limpygnome.buildindicator</groupId>
+        <artifactId>libs</artifactId>
         <version>2.0</version>
     </parent>
+    <groupId>com.limpygnome.buildindicator.libs</groupId>
     <artifactId>daemon-lib</artifactId>
     <packaging>jar</packaging>
-
-    <name>Daemon Shared Library</name>
 
     <dependencies>
 

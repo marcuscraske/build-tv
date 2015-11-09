@@ -3,25 +3,22 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <name>Build Indicator - Project</name>
+    <name>Build Indicator - Daemons</name>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.limpygnome</groupId>
-    <artifactId>buildindicator</artifactId>
+    <parent>
+        <groupId>com.limpygnome</groupId>
+        <artifactId>buildindicator</artifactId>
+        <version>2.0</version>
+    </parent>
+    <groupId>com.limpygnome.buildindicator</groupId>
+    <artifactId>daemons</artifactId>
     <packaging>pom</packaging>
-    <version>2.0</version>
 
     <modules>
-        <!-- Libraries -->
-        <module>libs</module>
-
-        <!-- Daemons -->
-        <module>daemons</module>
-
-        <!-- Clients -->
-        <module>notification-client</module>
-
-        <!-- Deployment-->
-        <module>deploy</module>
+        <module>system-daemon</module>
+        <module>led-daemon</module>
+        <module>build-tv-daemon</module>
+        <module>remote-daemon</module>
     </modules>
 
     <build>

@@ -25,11 +25,11 @@ PATH_BASE=$(dirname "${PATH_CURR}")
 PATH_FILES_BASE="${PATH_CURR}/files"
 PATH_FILES_OVERRIDE="${PATH_CURR}/../../rpi-config/environments"
 
-PATH_NEOPIXEL_WS281X_LIB="${PATH_BASE}/neopixel-ws281x-lib"
-PATH_LED_DAEMON="${PATH_BASE}/led-daemon"
-PATH_BUILDTV_DAEMON="${PATH_BASE}/build-tv-daemon"
-PATH_SYSTEM_DAEMON="${PATH_BASE}/system-daemon"
-PATH_REMOTE_DAEMON="${PATH_BASE}/remote-daemon"
+PATH_NEOPIXEL_WS281X_LIB="${PATH_BASE}/libs/neopixel-ws281x-lib"
+PATH_LED_DAEMON="${PATH_BASE}/daemons/led-daemon"
+PATH_BUILDTV_DAEMON="${PATH_BASE}/daemons/build-tv-daemon"
+PATH_SYSTEM_DAEMON="${PATH_BASE}/daemons/system-daemon"
+PATH_REMOTE_DAEMON="${PATH_BASE}/daemons/remote-daemon"
 PATH_NOTIFICATION_CLIENT="${PATH_BASE}/notification-client"
 
 
