@@ -145,6 +145,13 @@ public class JenkinsStatusThread extends ExtendedThread
     {
         Thread.currentThread().setName("Jenkins Status");
 
+        // Check we have hosts, else terminate...
+        if (jenkinsHosts == null || jenkinsHosts.length == 0)
+        {
+            LOG.warn("No Jenkins hosts found, exiting thread...");
+            return;
+        }
+
         // Wait until all services running...
         controller.waitForState(ControllerState.RUNNING);
 

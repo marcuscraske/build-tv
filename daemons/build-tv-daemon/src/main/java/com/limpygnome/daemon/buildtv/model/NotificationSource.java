@@ -23,6 +23,12 @@ public class NotificationSource implements Comparable<NotificationSource>
      */
     public boolean isExpired()
     {
+        if (notification == null)
+        {
+            // No longer need source, no notification present...
+            return true;
+        }
+
         long lifeSpan = notification.getLifespan();
 
         if (lifeSpan > 0)

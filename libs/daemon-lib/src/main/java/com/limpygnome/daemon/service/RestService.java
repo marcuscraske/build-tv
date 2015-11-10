@@ -81,8 +81,11 @@ public class RestService implements Service, HttpHandler
     public synchronized void stop(Controller controller)
     {
         // Stop HTTP server
-        httpServer.stop(0);
-        httpServer = null;
+        if (httpServer != null)
+        {
+            httpServer.stop(0);
+            httpServer = null;
+        }
     }
 
     @Override

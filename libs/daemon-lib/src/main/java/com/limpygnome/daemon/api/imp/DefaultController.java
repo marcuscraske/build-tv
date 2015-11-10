@@ -82,12 +82,20 @@ public class DefaultController implements Controller
 
         setState(ControllerState.STARTING);
 
-        // Reload settings
-        settings.reload(this);
-
         // Reload daemons available
         daemonsAvailable = new Settings();
         daemonsAvailable.reload(findConfigFile(GLOBAL_SETTINGS_DAEMONS_ENABLED));
+
+        // Check daemon is enabled...
+        if (!isDaemonEnabled(controllerName))
+        {
+            LOG.error("Daemon is not enabled, stopped...");
+            setState(ControllerState.STOPPED);
+            return;
+        }
+
+        // Reload settings
+        settings.reload(this);
 
         // Start all services
         for (Map.Entry<String, Service> kv : services.entrySet())
@@ -106,6 +114,18 @@ public class DefaultController implements Controller
 
     public synchronized void stop()
     {
+        // Check controller can be stopped...
+        if (state == ControllerState.STOPPED)
+        {
+            return;
+        }
+        else if (state != ControllerState.RUNNING)
+        {
+            LOG.warn("Controller is not running, cannot stop...");
+            return;
+        }
+
+        // Update state to stopping...
         LOG.info("Controller stopping...");
 
         setState(ControllerState.STOPPING);
@@ -231,7 +251,14 @@ public class DefaultController implements Controller
 
     public boolean isDaemonEnabled(String daemonName)
     {
-        return daemonsAvailable.getBoolean(daemonName);
+        try
+        {
+            return daemonsAvailable.getBoolean(daemonName);
+        }
+        catch (RuntimeException e)
+        {
+            throw new RuntimeException("Daemon '" + daemonName + "' is not present in daemons available file", e);
+        }
     }
 
     public synchronized Map<String, Service> getServices()
