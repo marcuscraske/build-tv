@@ -13,6 +13,8 @@ public class NotificationListenerService implements Service
 {
     private static final Logger LOG = LogManager.getLogger(NotificationListenerService.class);
 
+    public static final String SERVICE_NAME = "notifications-listener";
+
     private NotificationListenerThread notificationListenerThread;
 
     public NotificationListenerService()

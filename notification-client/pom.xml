@@ -18,7 +18,7 @@
 
         <!-- Local -->
 		<dependency>
-			<groupId>com.limpygnome.buildindicator</groupId>
+			<groupId>com.limpygnome.buildindicator.libs</groupId>
 			<artifactId>daemon-lib</artifactId>
 			<version>${project.version}</version>
 		</dependency>

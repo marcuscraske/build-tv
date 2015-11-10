@@ -1,3 +1,3 @@
 - name: Setting up timezone to UK
-  shell: "{{ files_dest }}/setup-scripts/timezone-uk.sh"
+  shell: "{{ temp_path }}/setup-scripts/timezone-uk.sh"
   sudo: true

@@ -1,7 +1,6 @@
 package com.limpygnome.daemon.util;
 
-import com.limpygnome.daemon.api.rest.RestResponse;
-import com.sun.net.httpserver.HttpExchange;
+import com.limpygnome.daemon.common.rest.RestResponse;
 import org.json.simple.JSONObject;
 
 import java.io.*;

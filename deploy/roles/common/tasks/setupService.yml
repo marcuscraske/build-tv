@@ -8,7 +8,7 @@
   register: service_stopped
 
 - name: Copying service file to init.d
-  command: cp "{{ files_dest }}/daemons/{{ service_name }}" "/etc/init.d/{{service_name}}"
+  command: cp "{{ temp_path }}/daemons/{{ service_name }}" "/etc/init.d/{{service_name}}"
   sudo: true
 
 - name: Registering Service

@@ -2,7 +2,7 @@ package com.limpygnome.daemon.remote.service;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Service;
-import com.limpygnome.daemon.api.Settings;
+import com.limpygnome.daemon.common.Settings;
 import com.limpygnome.daemon.remote.service.thread.StatsForwarderThread;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

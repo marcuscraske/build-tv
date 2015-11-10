@@ -2,14 +2,11 @@
 
   gather_facts: no
 
-  pre_tasks:
-    - shell: hostname
-
   roles:
-    - { role: 01_setup-users, tags: ["setup-pi"] }
-    - { role: 02_backup-previous-deploy, tags: ["backup"] }
-    - { role: 03_remove-previous-deploy, tags: ["remove"] }
-    - { role: 04_setup-temp-files, tags: ["always"] }
+    - { role: 01_setup-temp-files, tags: ["always"] }
+    - { role: 02_setup-users, tags: ["setup-pi"] }
+    - { role: 03_backup-previous-deploy, tags: ["backup"] }
+    - { role: 04_remove-previous-deploy, tags: ["remove"] }
     - { role: 05_setup-pi, tags: ["setup-pi"] }
     - { role: 06_shared-config, tags: ["config"] }
     - { role: 07_wallboard, tags: ["wallboard"] }

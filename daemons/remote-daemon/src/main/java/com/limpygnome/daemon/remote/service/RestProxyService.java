@@ -2,9 +2,9 @@ package com.limpygnome.daemon.remote.service;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Service;
-import com.limpygnome.daemon.api.rest.RestRequest;
-import com.limpygnome.daemon.api.rest.RestResponse;
-import com.limpygnome.daemon.api.rest.RestServiceHandler;
+import com.limpygnome.daemon.common.rest.RestRequest;
+import com.limpygnome.daemon.common.rest.RestResponse;
+import com.limpygnome.daemon.api.RestServiceHandler;
 import com.limpygnome.daemon.remote.model.DaemonType;
 import com.limpygnome.daemon.remote.service.auth.AuthTokenProviderService;
 import com.limpygnome.daemon.util.RestClient;

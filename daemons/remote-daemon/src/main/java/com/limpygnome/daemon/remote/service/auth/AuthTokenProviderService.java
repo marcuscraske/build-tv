@@ -1,9 +1,7 @@
 package com.limpygnome.daemon.remote.service.auth;
 
 import com.limpygnome.daemon.api.Service;
-import com.limpygnome.daemon.api.rest.RestRequest;
-import com.sun.net.httpserver.HttpExchange;
-import org.json.simple.JSONObject;
+import com.limpygnome.daemon.common.rest.RestRequest;
 
 /**
  * An interface for an auth provider, which authenticates a REST handler request.

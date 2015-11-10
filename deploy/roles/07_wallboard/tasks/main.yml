@@ -5,45 +5,45 @@
         comment="Account for displaying wallboard"
         createhome=yes
         append=no
+  when: wallboard_config_only is not defined
   sudo: true
-  when: wallboard-config-only is not defined
 
 - name: Installing X11 utils for xset
   apt:  name=x11-xserver-utils
         state=present
+  when: nopackages is not defined and wallboard_config_only is not defined
   sudo: true
-  when: nopackages is not defined and wallboard-config-only is not defined
 
 - name: Installing Matchbox window manager
   apt:  name=matchbox-desktop
         state=present
+  when: nopackages is not defined and wallboard_config_only is not defined
   sudo: true
-  when: nopackages is not defined and wallboard-config-only is not defined
 
 - name: Installing Chromium browser
   apt:  name=chromium-browser
         state=present
+  when: nopackages is not defined and wallboard_config_only is not defined
   sudo: true
-  when: nopackages is not defined and wallboard-config-only is not defined
 
 - {
       name:         Setting up .xinitrc for wallboard user,
       include:      ../../common/tasks/copyOnRemote.yml,
 
-      src:          "{{ files_dest }}/wallboard/.xinitrc",
+      src:          "{{ temp_path }}/wallboard/.xinitrc",
       dest:         "/home/wallboard/.xinitrc",
       owner:        "wallboard",
       group:        "wallboard",
       perms:        "755",
       sudo:         true,
-      when:         wallboard-config-only is not defined
+      when:         wallboard_config_only is not defined
   }
 
 - {
       name:         Copying wallboard properties,
       include:      ../../common/tasks/copyOnRemote.yml,
 
-      src:          "{{ files_dest }}/wallboard/wallboard.properties",
+      src:          "{{ temp_path }}/wallboard/wallboard.properties",
       dest:         "/home/wallboard/wallboard.properties",
       owner:        "wallboard",
       group:        "rpi-group",
@@ -52,16 +52,16 @@
   }
 
 - name: Setting up automatic login of wallboard user
-  shell: "{{ files_dest }}/setup-scripts/automatic-login.sh wallboard"
-  sudo: true,
-  when: wallboard-config-only is not defined
+  shell: "{{ temp_path }}/setup-scripts/automatic-login.sh wallboard"
+  when: wallboard_config_only is not defined
+  sudo: true
 
 - name: Disabling blanking of monitor
-  shell: "{{ files_dest }}/setup-scripts/disable-blanking.sh"
-  sudo: true,
-  when: wallboard-config-only is not defined
+  shell: "{{ temp_path }}/setup-scripts/disable-blanking.sh"
+  when: wallboard_config_only is not defined
+  sudo: true
 
 - name: Setting up bashrc to run x11
-  shell: "{{ files_dest }}/setup-scripts/setup-bashrc-x11.sh"
-  sudo: true,
-  when: wallboard-config-only is not defined
+  shell: "{{ temp_path }}/setup-scripts/setup-bashrc-x11.sh"
+  when: wallboard_config_only is not defined
+  sudo: true

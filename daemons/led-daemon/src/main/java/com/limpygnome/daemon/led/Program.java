@@ -1,6 +1,7 @@
 package com.limpygnome.daemon.led;
 
 import com.limpygnome.daemon.api.Controller;
+import com.limpygnome.daemon.api.imp.DefaultController;
 import com.limpygnome.daemon.led.hardware.pattern.daemon.Test;
 import com.limpygnome.daemon.led.service.LedRestService;
 import com.limpygnome.daemon.led.service.LedService;
@@ -53,11 +54,11 @@ public class Program
 
     public static void runDaemon()
     {
-        Controller controller = new Controller(CONTROLLER_NAME);
+        Controller controller = new DefaultController(CONTROLLER_NAME);
 
         // Add services
-        controller.add("leds", new LedService());
-        controller.add("leds-rest", new LedRestService());
+        controller.add(LedService.SERVICE_NAME, new LedService());
+        controller.add(LedRestService.SERVICE_NAME, new LedRestService());
 
         // Attach REST handlers
         RestService.attachControllerRestHandlerServices(controller);
@@ -69,7 +70,7 @@ public class Program
     public static void runLedTest()
     {
         // Create minimal controller to read settings
-        Controller controller = new Controller(CONTROLLER_NAME);
+        Controller controller = new DefaultController(CONTROLLER_NAME);
 
         // Build JSON to invoke test pattern
         JSONObject jsonRoot = new JSONObject();

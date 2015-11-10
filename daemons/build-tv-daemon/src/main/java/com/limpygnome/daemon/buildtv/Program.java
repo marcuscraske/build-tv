@@ -1,6 +1,7 @@
 package com.limpygnome.daemon.buildtv;
 
 import com.limpygnome.daemon.api.Controller;
+import com.limpygnome.daemon.api.imp.DefaultController;
 import com.limpygnome.daemon.buildtv.service.*;
 import com.limpygnome.daemon.service.RestService;
 
@@ -11,7 +12,7 @@ public class Program
 {
     public static void main(String[] args)
     {
-        Controller controller = new Controller("build-tv-daemon");
+        Controller controller = new DefaultController("build-tv-daemon");
 
         // Add services
         controller.add(LedTimeService.SERVICE_NAME, new LedTimeService());

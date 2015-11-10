@@ -2,9 +2,9 @@ package com.limpygnome.daemon.led.service;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Service;
-import com.limpygnome.daemon.api.rest.RestRequest;
-import com.limpygnome.daemon.api.rest.RestResponse;
-import com.limpygnome.daemon.api.rest.RestServiceHandler;
+import com.limpygnome.daemon.common.rest.RestRequest;
+import com.limpygnome.daemon.common.rest.RestResponse;
+import com.limpygnome.daemon.api.RestServiceHandler;
 import com.limpygnome.daemon.led.model.LedSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +19,8 @@ import java.util.Map;
 public class LedRestService implements Service, RestServiceHandler
 {
     private static final Logger LOG = LogManager.getLogger(LedRestService.class);
+
+    public static final String SERVICE_NAME = "leds-rest";
 
     private LedService ledService;
 

@@ -1,5 +1,5 @@
 - name: Copying splash screen image
-  command: cp "{{ files_dest }}/boot-splash-screen/splash.png" "/etc/splash.png"
+  command: cp "{{ temp_path }}/boot-splash-screen/splash.png" "/etc/splash.png"
   sudo: true
 
 - name: Installing FBI for custom splash screen
@@ -9,7 +9,7 @@
   when: nopackages is not defined
 
 - name: Copying daemon file for splash screen
-  command: cp "{{ files_dest }}/boot-splash-screen/aaasplashscreen" "/etc/init.d/aaasplashscreen"
+  command: cp "{{ temp_path }}/boot-splash-screen/aaasplashscreen" "/etc/init.d/aaasplashscreen"
   sudo: true
 
 - name: Registering splash screen service

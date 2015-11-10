@@ -2,7 +2,7 @@
       name:         Copy motd script,
       include:      ../../common/tasks/copyOnRemote.yml,
 
-      src:          "{{ files_dest }}/system/motd.sh",
+      src:          "{{ temp_path }}/system/motd.sh",
       dest:         "/etc/profile.d/motd.sh",
       owner:        "root",
       group:        "root",
@@ -11,5 +11,5 @@
   }
 
 - name: Setup motd script
-  shell: "{{ files_dest }}/setup-scripts/setup-motd.sh"
+  shell: "{{ temp_path }}/setup-scripts/setup-motd.sh"
   sudo: true

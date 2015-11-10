@@ -17,7 +17,7 @@
       name:         Copying shared configuration,
       include:      ../../common/tasks/copyOnRemote.yml,
 
-      src:          "{{ files_dest }}/config/",
+      src:          "{{ temp_path }}/config/",
       dest:         "{{ deploy_path }}/config/",
       owner:        "monitor",
       group:        "rpi-group",

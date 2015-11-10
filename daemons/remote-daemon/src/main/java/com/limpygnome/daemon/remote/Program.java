@@ -1,6 +1,7 @@
 package com.limpygnome.daemon.remote;
 
 import com.limpygnome.daemon.api.Controller;
+import com.limpygnome.daemon.api.imp.DefaultController;
 import com.limpygnome.daemon.remote.service.HostInformationService;
 import com.limpygnome.daemon.remote.service.InstanceIdentityService;
 import com.limpygnome.daemon.remote.service.RestProxyService;
@@ -17,7 +18,7 @@ public class Program
 
     public static void main(String[] args)
     {
-        Controller controller = new Controller("remote-daemon");
+        Controller controller = new DefaultController("remote-daemon");
 
         // Add services
         controller.add(RandomTokenAuthProviderService.SERVICE_NAME, new RandomTokenAuthProviderService());

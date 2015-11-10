@@ -1,4 +1,7 @@
-package com.limpygnome.daemon.api.rest;
+package com.limpygnome.daemon.api;
+
+import com.limpygnome.daemon.common.rest.RestRequest;
+import com.limpygnome.daemon.common.rest.RestResponse;
 
 /**
  * An interface to implement a REST service handler.

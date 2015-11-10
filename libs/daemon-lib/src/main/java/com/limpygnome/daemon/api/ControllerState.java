@@ -1,7 +1,7 @@
 package com.limpygnome.daemon.api;
 
 /**
- * Created by limpygnome on 20/10/15.
+ * Used to represent the state of a {@link Controller}.
  */
 public enum ControllerState
 {

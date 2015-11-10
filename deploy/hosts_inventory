@@ -17,8 +17,7 @@ hostname_override="pi2-team-example"
 pi2-team-example
 
 [pi2:vars]
-deploy_path=/rpi-misc
-backup_path=/rpi-backups
-files_dest="{{ deploy_path }}/temp_files"
+deploy_path="/rpi-misc"
+backup_path="/rpi-backups"
+temp_path="/rpi-setup-files"
 monitor_password="password123"
-

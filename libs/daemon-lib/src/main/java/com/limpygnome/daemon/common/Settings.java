@@ -1,5 +1,6 @@
-package com.limpygnome.daemon.api;
+package com.limpygnome.daemon.common;
 
+import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.util.JsonUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

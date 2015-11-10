@@ -24,6 +24,8 @@ public class LedService implements Service
 {
     private static final Logger LOG = LogManager.getLogger(LedService.class);
 
+    public static final String SERVICE_NAME = "leds";
+
     /**
      * The name used by this daemon when internally setting an LED source.
      */

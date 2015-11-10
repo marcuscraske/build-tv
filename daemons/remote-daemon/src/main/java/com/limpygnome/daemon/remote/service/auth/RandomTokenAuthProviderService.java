@@ -1,7 +1,7 @@
 package com.limpygnome.daemon.remote.service.auth;
 
 import com.limpygnome.daemon.api.Controller;
-import com.limpygnome.daemon.api.rest.RestRequest;
+import com.limpygnome.daemon.common.rest.RestRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

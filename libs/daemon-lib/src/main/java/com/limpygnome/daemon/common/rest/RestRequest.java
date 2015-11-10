@@ -1,4 +1,4 @@
-package com.limpygnome.daemon.api.rest;
+package com.limpygnome.daemon.common.rest;
 
 import com.limpygnome.daemon.util.JsonUtil;
 import com.limpygnome.daemon.util.StreamUtil;

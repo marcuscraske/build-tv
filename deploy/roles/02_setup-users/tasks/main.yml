@@ -1,5 +1,5 @@
 - name: Optimizing SSH daemon by disabling reverse DNS
-  shell: "{{ files_dest }}/setup-scripts/ssh-speedup.sh"
+  shell: "{{ temp_path }}/setup-scripts/ssh-speedup.sh"
   sudo: true
 
 - name: Creating shared group for users
@@ -51,7 +51,7 @@
   sudo: true
 
 - name: Reading SSH keys
-  shell: cat "{{ files_dest }}/system/ssh_keys"
+  shell: cat "{{ temp_path }}/system/ssh_keys"
   register: ssh_keys
 
 - name: Displaying SSH keys for auditing purposes

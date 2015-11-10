@@ -1,10 +1,10 @@
 - name: Copying global proxy setting
-  command: cp "{{ files_dest }}/system/environment" "/etc/environment"
+  command: cp "{{ temp_path }}/system/environment" "/etc/environment"
   sudo: true
   when: noproxy is not defined
 
 - name: Copying apt-get proxy setting
-  command: cp "{{ files_dest }}/system/apt-get-proxy-settings" "/etc/apt/apt.conf.d/10proxy"
+  command: cp "{{ temp_path }}/system/apt-get-proxy-settings" "/etc/apt/apt.conf.d/10proxy"
   sudo: true
   when: noproxy is not defined
 
@@ -12,7 +12,7 @@
       name:         Update Pi boot configuration,
       include:      ../../common/tasks/copyOnRemote.yml,
 
-      src:          "{{ files_dest }}/system/config.txt",
+      src:          "{{ temp_path }}/system/config.txt",
       dest:         "/boot/config.txt",
       owner:        "root",
       group:        "root",

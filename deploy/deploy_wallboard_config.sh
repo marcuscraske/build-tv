@@ -1,2 +1,2 @@
 #!/bin/bash
-./deploy.sh "wallboard,reboot" "wallboard-config-only=true"
+./deploy.sh "wallboard,reboot" "wallboard_config_only=true"

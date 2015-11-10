@@ -2,19 +2,20 @@ package com.limpygnome.client.notifications;
 
 import com.limpygnome.client.notifications.service.NotificationListenerService;
 import com.limpygnome.daemon.api.Controller;
+import com.limpygnome.daemon.api.imp.DefaultController;
 
 /**
- * Created by limpygnome on 26/08/15.
+ * Entry point for the notification client.
  */
 public class Program
 {
 
     public static void main(String[] args)
     {
-        Controller controller = new Controller("notifications-client");
+        Controller controller = new DefaultController("notifications-client");
 
         // Add services
-        controller.add("notifications-listener", new NotificationListenerService());
+        controller.add(NotificationListenerService.SERVICE_NAME, new NotificationListenerService());
 
         // Start forever...
         controller.hookAndStartAndWaitForExit();

@@ -1,4 +1,4 @@
-package com.limpygnome.daemon.api.rest;
+package com.limpygnome.daemon.common.rest;
 
 import com.limpygnome.daemon.util.StreamUtil;
 import com.sun.net.httpserver.HttpExchange;
@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 
 /**
- * Created by limpygnome on 13/10/15.
+ * Used to provide a response to a REST request.
  */
 public class RestResponse
 {

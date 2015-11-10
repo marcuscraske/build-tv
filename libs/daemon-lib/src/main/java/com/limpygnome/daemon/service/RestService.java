@@ -1,9 +1,9 @@
 package com.limpygnome.daemon.service;
 
 import com.limpygnome.daemon.api.Controller;
-import com.limpygnome.daemon.api.rest.RestRequest;
-import com.limpygnome.daemon.api.rest.RestResponse;
-import com.limpygnome.daemon.api.rest.RestServiceHandler;
+import com.limpygnome.daemon.common.rest.RestRequest;
+import com.limpygnome.daemon.common.rest.RestResponse;
+import com.limpygnome.daemon.api.RestServiceHandler;
 import com.limpygnome.daemon.api.Service;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
