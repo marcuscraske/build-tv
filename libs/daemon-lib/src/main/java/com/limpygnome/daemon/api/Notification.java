@@ -1,9 +1,9 @@
-package com.limpygnome.daemon.buildtv.model;
+package com.limpygnome.daemon.api;
 
 import java.awt.*;
 
 /**
- * Represents a notification.
+ * Represents a notification, intended to be displayed on the screen/VHD connected to the system.
  */
 public class Notification
 {

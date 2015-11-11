@@ -1,8 +1,8 @@
-package com.limpygnome.daemon.buildtv.led.pattern.source;
+package com.limpygnome.daemon.interval.led.pattern.source;
 
 import com.limpygnome.daemon.api.Controller;
-import com.limpygnome.daemon.buildtv.led.ScreenAction;
-import com.limpygnome.daemon.buildtv.led.pattern.LedPattern;
+import com.limpygnome.daemon.api.ScreenAction;
+import com.limpygnome.daemon.api.LedPattern;
 import com.limpygnome.daemon.buildtv.service.HardwareCommsService;
 
 /**

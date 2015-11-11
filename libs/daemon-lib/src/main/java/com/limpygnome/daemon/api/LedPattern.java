@@ -1,7 +1,9 @@
-package com.limpygnome.daemon.buildtv.led.pattern;
+package com.limpygnome.daemon.api;
 
 /**
- * The LED pattern to use to reflect the status of the build server. Pattern with highest priority should be used.
+ * The LED patterns usable with the build/LED indicator (strip).
+ *
+ * This is consumed by the LED daemon, but can be used by other daemons to set the current pattern.
  */
 public enum LedPattern
 {

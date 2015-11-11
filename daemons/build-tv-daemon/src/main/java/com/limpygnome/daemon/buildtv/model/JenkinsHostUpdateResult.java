@@ -1,6 +1,6 @@
 package com.limpygnome.daemon.buildtv.model;
 
-import com.limpygnome.daemon.buildtv.led.pattern.LedPattern;
+import com.limpygnome.daemon.api.LedPattern;
 
 import java.util.LinkedList;
 import java.util.List;

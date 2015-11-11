@@ -1,6 +1,6 @@
 package com.limpygnome.daemon.buildtv.jenkins;
 
-import com.limpygnome.daemon.buildtv.led.pattern.LedPattern;
+import com.limpygnome.daemon.api.LedPattern;
 import com.limpygnome.daemon.buildtv.model.JenkinsHostUpdateResult;
 import com.limpygnome.daemon.util.RestClient;
 import org.apache.logging.log4j.LogManager;

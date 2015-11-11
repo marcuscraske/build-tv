@@ -1,23 +1,22 @@
-package com.limpygnome.daemon.buildtv;
+package com.limpygnome.daemon.interval;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.imp.DefaultController;
-import com.limpygnome.daemon.buildtv.service.*;
+import com.limpygnome.daemon.interval.service.IntervalService;
 import com.limpygnome.daemon.service.RestService;
 
 /**
- * Entry point into the build TV daemon.
+ * Entry point into the interval daemon.
  */
 public class Program
 {
 
     public static void main(String[] args)
     {
-        Controller controller = new DefaultController("build-tv-daemon");
+        Controller controller = new DefaultController("interval-daemon");
 
         // Add services
-        controller.add(JenkinsService.SERVICE_NAME, new JenkinsService());
-        controller.add(JiraDashboardService.SERVICE_NAME, new JiraDashboardService());
+        controller.add(IntervalService.SERVICE_NAME, new IntervalService());
 
         // Attach REST handlers
         RestService.attachControllerRestHandlerServices(controller);

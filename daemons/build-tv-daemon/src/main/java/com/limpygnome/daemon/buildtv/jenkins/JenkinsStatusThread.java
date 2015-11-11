@@ -2,13 +2,12 @@ package com.limpygnome.daemon.buildtv.jenkins;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.ControllerState;
-import com.limpygnome.daemon.buildtv.led.pattern.LedPattern;
-import com.limpygnome.daemon.buildtv.led.pattern.source.PatternSource;
+import com.limpygnome.daemon.api.LedPattern;
 import com.limpygnome.daemon.buildtv.model.JenkinsHostUpdateResult;
-import com.limpygnome.daemon.buildtv.model.Notification;
-import com.limpygnome.daemon.buildtv.service.LedTimeService;
-import com.limpygnome.daemon.buildtv.service.NotificationService;
+import com.limpygnome.daemon.api.Notification;
 import com.limpygnome.daemon.common.ExtendedThread;
+import com.limpygnome.daemon.common.rest.client.LedClient;
+import com.limpygnome.daemon.common.rest.client.NotificationClient;
 import com.limpygnome.daemon.util.RestClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,6 +28,8 @@ public class JenkinsStatusThread extends ExtendedThread
 {
     private static final Logger LOG = LogManager.getLogger(JenkinsStatusThread.class);
 
+    private static final String LED_SOURCE_NAME = "Jenkins Status";
+
     /* The global configuration file for Jenkins. */
     private static final String JENKINS_SETTINGS_FILENAME = "jenkins.json";
 
@@ -39,15 +40,15 @@ public class JenkinsStatusThread extends ExtendedThread
     private static final String NOTIFICATION_SOURCE_NAME = "build-tv-jenkins";
 
     private Controller controller;
-    private LedTimeService ledTimeService;
-    private NotificationService notificationService;
     private long pollRateMs;
     private int bufferSizeBytes;
-    private PatternSource patternSource;
+
+    private LedClient ledClient;
     private LedPattern lastLedPattern;
+    private NotificationClient notificationClient;
+    private RestClient restClient;
 
     private JenkinsHost[] jenkinsHosts;
-    private RestClient restClient;
 
     public JenkinsStatusThread(Controller controller)
     {
@@ -56,17 +57,17 @@ public class JenkinsStatusThread extends ExtendedThread
         // Load configuration from file
         loadConfigurationFromFile(controller);
 
+        // Setup LED client
+        this.ledClient = new LedClient(controller, LED_SOURCE_NAME);
+
+        // Set initial LED pattern
+        ledClient.changeLedPattern(LedPattern.BUILD_UNKNOWN);
+
+        // Setup notification client
+        this.notificationClient = new NotificationClient(controller, NOTIFICATION_SOURCE_NAME);
+
         // Setup REST client
-        this.restClient = new RestClient(USER_AGENT, bufferSizeBytes);
-
-        // Setup a new LED pattern source for this thread
-        this.patternSource = new PatternSource("Jenkins Status", LedPattern.BUILD_UNKNOWN, 1);
-
-        // Fetch LED time service for later
-        this.ledTimeService = (LedTimeService) controller.getServiceByName("led-time");
-
-        // Fetch notifications service
-        this.notificationService = (NotificationService) controller.getServiceByName(NotificationService.SERVICE_NAME);
+        this.restClient = new RestClient(USER_AGENT);
 
         // Set last pattern to null; will be used to track last led pattern for deciding if to update notification
         this.lastLedPattern = null;
@@ -155,9 +156,6 @@ public class JenkinsStatusThread extends ExtendedThread
         // Wait until all services running...
         controller.waitForState(ControllerState.RUNNING);
 
-        // Add our pattern to LED time service
-        ledTimeService.addPatternSource(patternSource);
-
         // Run until thread exits, polling Jenkins for status and updating pattern source
         JenkinsHostUpdateResult hostsResult;
 
@@ -169,7 +167,7 @@ public class JenkinsStatusThread extends ExtendedThread
                 hostsResult = pollHosts();
 
                 // Set LED pattern to highest found from hosts
-                patternSource.setCurrentLedPattern(hostsResult.getLedPattern());
+                ledClient.changeLedPattern(hostsResult.getLedPattern());
 
                 // Display notification for certain LED patterns
                 updateNotificationFromJenkinsResult(hostsResult);
@@ -184,7 +182,7 @@ public class JenkinsStatusThread extends ExtendedThread
         }
 
         // Remove our pattern from LED time service
-        ledTimeService.removePatternSource(patternSource);
+        ledClient.removeSource();
     }
 
     private void updateNotificationFromJenkinsResult(JenkinsHostUpdateResult hostsResult)
@@ -248,7 +246,7 @@ public class JenkinsStatusThread extends ExtendedThread
             }
 
             // Update via service
-            notificationService.updateCurrentNotification(NOTIFICATION_SOURCE_NAME, notification);
+            notificationClient.updateNotification(notification);
         }
     }
 

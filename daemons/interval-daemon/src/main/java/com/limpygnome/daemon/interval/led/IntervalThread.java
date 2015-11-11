@@ -1,27 +1,24 @@
-package com.limpygnome.daemon.buildtv.led;
+package com.limpygnome.daemon.interval.led;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.ControllerState;
-import com.limpygnome.daemon.buildtv.led.pattern.source.IntervalPatternSource;
-import com.limpygnome.daemon.buildtv.led.pattern.LedPattern;
-import com.limpygnome.daemon.buildtv.led.pattern.source.PatternSource;
+import com.limpygnome.daemon.interval.led.pattern.source.IntervalPatternSource;
+import com.limpygnome.daemon.api.LedPattern;
+import com.limpygnome.daemon.interval.led.pattern.source.PatternSource;
 import com.limpygnome.daemon.buildtv.service.HardwareCommsService;
 import com.limpygnome.daemon.common.ExtendedThread;
-import com.limpygnome.daemon.util.RestClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.simple.JSONObject;
 
-import java.net.ConnectException;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Used to decide which pattern to render.
  */
-public class LedTimeThread extends ExtendedThread
+public class IntervalThread extends ExtendedThread
 {
-    private static final Logger LOG = LogManager.getLogger(LedTimeThread.class);
+    private static final Logger LOG = LogManager.getLogger(IntervalThread.class);
 
     private Controller controller;
     private HardwareCommsService hardwareCommsService;
@@ -33,7 +30,7 @@ public class LedTimeThread extends ExtendedThread
      *
      * @param controller The current controller
      */
-    public LedTimeThread(Controller controller)
+    public IntervalThread(Controller controller)
     {
         this.controller = controller;
         this.patterns = new HashMap<>();

@@ -1,18 +1,16 @@
-package com.limpygnome.daemon.buildtv.led.pattern.source;
+package com.limpygnome.daemon.interval.led.pattern.source;
 
 import com.limpygnome.daemon.api.Controller;
-import com.limpygnome.daemon.buildtv.led.ScreenAction;
-import com.limpygnome.daemon.buildtv.led.pattern.LedPattern;
+import com.limpygnome.daemon.api.Notification;
+import com.limpygnome.daemon.api.ScreenAction;
+import com.limpygnome.daemon.api.LedPattern;
 import com.limpygnome.daemon.buildtv.model.Notification;
 import com.limpygnome.daemon.buildtv.service.HardwareCommsService;
 import com.limpygnome.daemon.buildtv.service.NotificationService;
-import com.limpygnome.daemon.util.RestClient;
+import com.limpygnome.daemon.service.ClientCommsService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
-import org.json.simple.JSONObject;
-
-import java.net.ConnectException;
 
 /**
  * Represents a pattern to be used during a specific interval of time of day.
@@ -79,7 +77,7 @@ public class IntervalPatternSource extends PatternSource
     }
 
     @Override
-    public void update(Controller controller, HardwareCommsService hardwareCommsService)
+    public void update(Controller controller, ClientCommsService hardwareCommsService)
     {
         // Turn screen on/off
         if (screenOff)

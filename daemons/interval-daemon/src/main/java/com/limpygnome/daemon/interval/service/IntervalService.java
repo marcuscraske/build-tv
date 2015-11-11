@@ -1,10 +1,11 @@
-package com.limpygnome.daemon.buildtv.service;
+package com.limpygnome.daemon.interval.service;
 
 import com.limpygnome.daemon.api.Controller;
+import com.limpygnome.daemon.api.LedPattern;
+import com.limpygnome.daemon.api.Notification;
 import com.limpygnome.daemon.api.Service;
-import com.limpygnome.daemon.buildtv.led.pattern.source.IntervalPatternSource;
-import com.limpygnome.daemon.buildtv.led.pattern.LedPattern;
-import com.limpygnome.daemon.buildtv.model.Notification;
+import com.limpygnome.daemon.interval.led.IntervalThread;
+import com.limpygnome.daemon.interval.led.pattern.source.IntervalPatternSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
@@ -15,37 +16,31 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.LinkedList;
 
 /**
- * A service for loading LED patterns to be displayed during intervals / time periods.
+ * Responsible for controlling the LED requests sent to the LED daemon.
  */
-public class IntervalLedService implements Service
+public class IntervalService implements Service
 {
-    private static final Logger LOG = LogManager.getLogger(IntervalLedService.class);
+    private static final Logger LOG = LogManager.getLogger(IntervalService.class);
 
-    public static final String SERVICE_NAME = "interval-leds";
+    public static final String SERVICE_NAME = "interval-service";
 
+    /**
+     * The file used for loading interval events.
+     */
     private static final String INTERVAL_JSON_FILE = "led-patterns.json";
 
-    private Controller controller;
-    private LedTimeService ledTimeService;
-    private LinkedList<IntervalPatternSource> intervalPatterns;
-
-    public IntervalLedService(Controller controller)
-    {
-        this.controller = controller;
-        this.intervalPatterns = new LinkedList<>();
-    }
+    private IntervalThread intervalThread;
 
     @Override
     public synchronized void start(Controller controller)
     {
-        // Fetch LED service instance
-        ledTimeService = (LedTimeService) controller.getServiceByName("led-time");
-
         // Fetch config file
         File ledPatternsConfig = controller.findConfigFile(INTERVAL_JSON_FILE);
+
+        // Create thread to handle intervals
+        intervalThread = new IntervalThread(controller);
 
         // Load all of the intervals
         try
@@ -66,8 +61,7 @@ public class IntervalLedService implements Service
                 intervalPattern = parseIntervalPatternSource(interval);
 
                 // Add to our own list for cleanup and then to the LED service
-                intervalPatterns.add(intervalPattern);
-                ledTimeService.addPatternSource(intervalPattern);
+                intervalThread.addPattern(intervalPattern);
             }
         }
         catch (FileNotFoundException e)
@@ -78,6 +72,20 @@ public class IntervalLedService implements Service
         catch (Exception e)
         {
             LOG.error("Cannot read interval LED JSON file", e);
+        }
+
+        // Start thread to handle intervals...
+        intervalThread.start();
+    }
+
+    @Override
+    public synchronized void stop(Controller controller)
+    {
+        // Kill the thread
+        if (intervalThread != null)
+        {
+            intervalThread.kill();
+            intervalThread = null;
         }
     }
 
@@ -126,19 +134,6 @@ public class IntervalLedService implements Service
                 Color.decode((String) root.get("background")),
                 root.containsKey("priority") ? (int) (long) root.get("priority") : IntervalPatternSource.NOTIFICATION_DEFAULT_PRIORITY
         );
-    }
-
-    @Override
-    public synchronized void stop(Controller controller)
-    {
-        // Remove patterns from service
-        for (IntervalPatternSource intervalPattern : intervalPatterns)
-        {
-            ledTimeService.removePatternSource(intervalPattern);
-        }
-
-        intervalPatterns.clear();
-        ledTimeService = null;
     }
 
 }

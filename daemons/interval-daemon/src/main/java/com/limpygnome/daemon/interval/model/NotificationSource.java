@@ -1,4 +1,6 @@
-package com.limpygnome.daemon.buildtv.model;
+package com.limpygnome.daemon.interval.model;
+
+import com.limpygnome.daemon.api.Notification;
 
 /**
  * A container for a notification, with metadata regarding its priority and source.

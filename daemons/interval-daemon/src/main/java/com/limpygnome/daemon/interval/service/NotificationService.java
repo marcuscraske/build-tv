@@ -1,13 +1,13 @@
-package com.limpygnome.daemon.buildtv.service;
+package com.limpygnome.daemon.interval.service;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Service;
 import com.limpygnome.daemon.common.rest.RestRequest;
 import com.limpygnome.daemon.common.rest.RestResponse;
 import com.limpygnome.daemon.api.RestServiceHandler;
-import com.limpygnome.daemon.buildtv.model.Notification;
+import com.limpygnome.daemon.api.Notification;
 
-import com.limpygnome.daemon.buildtv.model.NotificationSource;
+import com.limpygnome.daemon.interval.model.NotificationSource;
 import com.limpygnome.daemon.util.EnvironmentUtil;
 import java.awt.*;
 import java.net.InetAddress;
@@ -137,15 +137,15 @@ public class NotificationService implements Service, RestServiceHandler
     public boolean handleRequestInChain(RestRequest restRequest, RestResponse restResponse)
     {
         // Check request destined for us
-        if (restRequest.isPathMatch(new String[]{ "build-tv-daemon", "notifications", "get" }))
+        if (restRequest.isPathMatch(new String[]{ "interval-daemon", "notifications", "get" }))
         {
             return handleNotificationGet(restRequest, restResponse);
         }
-        else if (restRequest.isJsonRequest() && restRequest.isPathMatch(new String[] { "build-tv-daemon", "notifications", "set" }))
+        else if (restRequest.isJsonRequest() && restRequest.isPathMatch(new String[] { "interval-daemon", "notifications", "set" }))
         {
             return handleNotificationSet(restRequest, restResponse);
         }
-        else if (restRequest.isJsonRequest() && restRequest.isPathMatch(new String[]{ "build-tv-daemon", "notifications", "remove" }))
+        else if (restRequest.isJsonRequest() && restRequest.isPathMatch(new String[]{ "interval-daemon", "notifications", "remove" }))
         {
             return handleNotificationRemove(restRequest, restResponse);
         }

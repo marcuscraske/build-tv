@@ -27,8 +27,12 @@ public class RestClient
 
     public RestClient()
     {
-        this.userAgent = null;
-        this.bufferSize = -1;
+        this(null, -1);
+    }
+
+    public RestClient(String userAgent)
+    {
+        this(userAgent, -1);
     }
 
     public RestClient(String userAgent, int bufferSize)
