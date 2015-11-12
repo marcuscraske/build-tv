@@ -1,6 +1,8 @@
 package com.limpygnome.daemon.util;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
@@ -34,6 +36,54 @@ public class EnvironmentUtil
     public static boolean isDevEnvironment()
     {
         return DEV_ENVIRONMENT;
+    }
+
+    /**
+     * Retrieves the hostname.
+     *
+     * This will first attempt to read the hostname file (Linux), else fallback to using the hostname of the local
+     * adapter (which may return localhost sometimes).
+     *
+     * If no hostname can be determined, "unknown" is returned.
+     *
+     * @return The hostname
+     */
+    public static String getHostname()
+    {
+        String hostname = null;
+
+        // Attempt to access /etc/hostname
+        try
+        {
+            File file = new File("/etc/hostname");
+
+            if (file.exists() && file.canRead())
+            {
+                // Read first line of hostname file
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+                hostname = bufferedReader.readLine();
+                bufferedReader.close();
+            }
+        }
+        catch (Exception e)
+        {
+            // Bad but we don't care about the exception...
+        }
+
+        if (hostname == null || hostname.length() == 0)
+        {
+            // Use network adapter as fallback
+            try
+            {
+                return InetAddress.getLocalHost().getHostName();
+            }
+            catch (Exception e)
+            {
+                // Again, we don't care...
+            }
+        }
+
+        return hostname != null && hostname.length() > 0 ? hostname : "unknown";
     }
 
     /**

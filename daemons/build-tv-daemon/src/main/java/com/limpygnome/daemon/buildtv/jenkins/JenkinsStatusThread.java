@@ -28,7 +28,7 @@ public class JenkinsStatusThread extends ExtendedThread
 {
     private static final Logger LOG = LogManager.getLogger(JenkinsStatusThread.class);
 
-    private static final String LED_SOURCE_NAME = "Jenkins Status";
+    private static final String LED_SOURCE_NAME = "jenkins-status";
 
     /* The global configuration file for Jenkins. */
     private static final String JENKINS_SETTINGS_FILENAME = "jenkins.json";
@@ -61,7 +61,14 @@ public class JenkinsStatusThread extends ExtendedThread
         this.ledClient = new LedClient(controller, LED_SOURCE_NAME);
 
         // Set initial LED pattern
-        ledClient.changeLedPattern(LedPattern.BUILD_UNKNOWN);
+        try
+        {
+            ledClient.changeLedPattern(LedPattern.BUILD_UNKNOWN);
+        }
+        catch (Exception e)
+        {
+            LOG.error("Failed to set initial LED pattern", e);
+        }
 
         // Setup notification client
         this.notificationClient = new NotificationClient(controller, NOTIFICATION_SOURCE_NAME);
@@ -167,10 +174,24 @@ public class JenkinsStatusThread extends ExtendedThread
                 hostsResult = pollHosts();
 
                 // Set LED pattern to highest found from hosts
-                ledClient.changeLedPattern(hostsResult.getLedPattern());
+                try
+                {
+                    ledClient.changeLedPattern(hostsResult.getLedPattern());
+                }
+                catch (Exception e)
+                {
+                    LOG.error("Failed to update LED pattern", e);
+                }
 
                 // Display notification for certain LED patterns
-                updateNotificationFromJenkinsResult(hostsResult);
+                try
+                {
+                    updateNotificationFromJenkinsResult(hostsResult);
+                }
+                catch (Exception e)
+                {
+                    LOG.error("Failed to update current notification", e);
+                }
 
                 // Wait a while...
                 Thread.sleep(pollRateMs);

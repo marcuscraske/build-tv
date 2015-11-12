@@ -9,6 +9,7 @@
     {
         "led-daemon"        : 2500,
         "system-daemon"     : 2600,
-        "build-tv-daemon"   : 2700
+        "build-tv-daemon"   : 2700,
+        "interval-daemon"   : 2800
     }
 }

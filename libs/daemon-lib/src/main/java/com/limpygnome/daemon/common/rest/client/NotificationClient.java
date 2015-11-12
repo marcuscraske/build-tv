@@ -26,16 +26,6 @@ public class NotificationClient
      * Creates a new instance.
      *
      * @param controller The current instance
-     */
-    public NotificationClient(Controller controller)
-    {
-        this(controller, null);
-    }
-
-    /**
-     * Creates a new instance.
-     *
-     * @param controller The current instance
      * @oaram sourceName The source name / identifier for requests from this client
      */
     public NotificationClient(Controller controller, String sourceName)

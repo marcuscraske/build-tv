@@ -9,8 +9,8 @@
             "url"       : "https://builds.apache.org/view/All/",
             "jobs"      :
             [
-                "ZooKeeper_branch35_jdk7",
-                "maven-plugins-ITs-m2"
+                "xmlgraphics-fop",
+                "incubator-taverna-server"
             ]
         }
     ]

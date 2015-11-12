@@ -41,7 +41,7 @@ public class RestClient
         this.bufferSize = bufferSize;
     }
 
-    public HttpResponse executePost(String url, JSONObject jsonRoot) throws IOException, ConnectException
+    public HttpResponse executePost(String url, JSONObject jsonRoot) throws IOException
     {
         try
         {
@@ -64,7 +64,7 @@ public class RestClient
         }
         catch (ConnectException e)
         {
-            throw e;
+            throw new IOException("Unable to connect to endpoint - url: " + url);
         }
         catch (Exception e)
         {
@@ -84,6 +84,8 @@ public class RestClient
         }
 
         HttpResponse httpResponse = httpClient.execute(httpGet);
+        LOG.debug("Executed REST request - url: {}", url);
+
         return StreamUtil.readInputStream(httpResponse.getEntity().getContent(), bufferSize);
     }
 

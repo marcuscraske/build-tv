@@ -19,6 +19,8 @@ public class IntervalThread extends ExtendedThread
 {
     private static final Logger LOG = LogManager.getLogger(IntervalThread.class);
 
+    private static final String SOURCE_NAME = "interval-daemon";
+
     private Controller controller;
     private ClientAggregate clientAggregate;
     private HashMap<String, PatternSource> patterns;
@@ -31,7 +33,7 @@ public class IntervalThread extends ExtendedThread
     public IntervalThread(Controller controller)
     {
         this.controller = controller;
-        this.clientAggregate = new ClientAggregate(controller);
+        this.clientAggregate = new ClientAggregate(controller, SOURCE_NAME);
         this.patterns = new HashMap<>();
     }
 

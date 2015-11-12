@@ -72,7 +72,7 @@ public class LedRestService implements Service, RestServiceHandler
 
         if (!source.matches("^[a-z0-9\\_\\-]+$"))
         {
-            throw new IllegalArgumentException("Invalid source specified in web request");
+            throw new IllegalArgumentException("Invalid source specified in web request - name: " + source);
         }
         else if (priority != 0 && !pattern.matches("^[a-z0-9\\_\\-]+$"))
         {

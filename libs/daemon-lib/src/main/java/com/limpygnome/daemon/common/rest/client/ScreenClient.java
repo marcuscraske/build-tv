@@ -19,14 +19,6 @@ public class ScreenClient
     private RestClient restClient;
     private String screenEndpointUrl;
 
-    /**
-     *
-     * @param controller
-     */
-    public ScreenClient(Controller controller)
-    {
-        this(controller, null);
-    }
 
     /**
      * Creates a new instance.

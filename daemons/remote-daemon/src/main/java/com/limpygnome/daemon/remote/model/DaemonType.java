@@ -20,7 +20,12 @@ public enum DaemonType
     /**
      * The build TV daemon - Jenkins etc.
      */
-    BUILD_TV_DAEMON("build-tv-daemon", "local-ports/build-tv-daemon")
+    BUILD_TV_DAEMON("build-tv-daemon", "local-ports/build-tv-daemon"),
+
+    /**
+     * The interval daemon - timed patterns/notifications etc.
+     */
+    INTERVAL_DAEMON("interval-daemon", "local-ports/interval-daemon")
     ;
 
     public final String TOP_LEVEL_PATH;

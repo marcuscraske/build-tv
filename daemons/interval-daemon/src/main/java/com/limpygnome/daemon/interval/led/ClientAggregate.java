@@ -13,11 +13,6 @@ public class ClientAggregate
     private final LedClient ledClient;
     private final ScreenClient screenClient;
 
-    public ClientAggregate(Controller controller)
-    {
-        this(controller, null);
-    }
-
     public ClientAggregate(Controller controller, String sourceName)
     {
         this.ledClient = new LedClient(controller, sourceName);

@@ -46,7 +46,7 @@ public class StatsForwarderThread extends ExtendedThread
         this.versionService = (VersionService) controller.getServiceByName(VersionService.SERVICE_NAME);
         this.hostInformationService = (HostInformationService) controller.getServiceByName(HostInformationService.SERVICE_NAME);
 
-        // BUild endpoint URLs for available daemons
+        // Build endpoint URLs for available daemons
         // -- build-tv-daemon
         if (controller.isDaemonEnabled("build-tv-daemon"))
         {

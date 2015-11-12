@@ -2,6 +2,6 @@
     "notifications" :
     {
         "enabled"   : true,
-        "endpoint"  : "http://localhost:2900/interval-daemon/notifications/get"
+        "endpoint"  : "http://localhost:2800/interval-daemon/notifications/get"
     }
 }

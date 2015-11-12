@@ -24,20 +24,15 @@ public class LedClient
      * Creates a new instance.
      *
      * @param controller The current controller
-     */
-    public LedClient(Controller controller)
-    {
-        this(controller, null);
-    }
-
-    /**
-     * Creates a new instance.
-     *
-     * @param controller The current controller
      * @param sourceName The source name / unique identifier for LED changes
      */
     public LedClient(Controller controller, String sourceName)
     {
+        if (sourceName == null || sourceName.length() == 0)
+        {
+            throw new IllegalArgumentException("Source name must be specified!");
+        }
+
         this.restClient = new RestClient(sourceName);
         this.sourceName = sourceName;
 

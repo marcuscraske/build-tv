@@ -44,6 +44,7 @@ public class NotificationService implements Service, RestServiceHandler
     {
         // Set default startup notification to be hostname
         String ip = EnvironmentUtil.getIpAddress();
+        String hostname = EnvironmentUtil.getHostname();
 
         if (ip == null)
         {
@@ -51,7 +52,7 @@ public class NotificationService implements Service, RestServiceHandler
         }
 
         Notification notification = new Notification(
-            getHostname(), "ip: " + ip, 30000, Color.DARK_GRAY, 0
+            hostname, "ip: " + ip, 30000, Color.DARK_GRAY, 0
         );
 
         updateCurrentNotification(LOCAL_SOURCE_NAME, notification);
@@ -119,18 +120,6 @@ public class NotificationService implements Service, RestServiceHandler
         }
 
         return highest;
-    }
-
-    private String getHostname()
-    {
-        try
-        {
-            return InetAddress.getLocalHost().getHostName();
-        }
-        catch (Exception e)
-        {
-            return "unknown";
-        }
     }
 
     @Override
