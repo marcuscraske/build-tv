@@ -1,0 +1,52 @@
+#! /bin/sh
+
+# **********************************************************************************************************************
+# Daemon configuration
+# **********************************************************************************************************************
+
+DAEMON_NAME="interval-daemon"
+DAEMON_JAR="/rpi-misc/interval-daemon.jar"
+DAEMON_WORKING_DIR="/rpi-misc"
+DAEMON_USER="rpi-daemon"
+
+# **********************************************************************************************************************
+# Main
+# **********************************************************************************************************************
+
+start()
+{
+    echo "Starting ${DAEMON_NAME} ..."
+
+    start-stop-daemon --start --quiet --make-pidfile --pidfile /var/run/${DAEMON_NAME}.pid \
+                --background \
+                --chdir ${DAEMON_WORKING_DIR} \
+                --chuid "${DAEMON_USER}" \
+                --exec /usr/bin/java -- -jar ${DAEMON_JAR}
+}
+
+stop()
+{
+    echo "Stopping ${DAEMON_NAME} ..."
+
+    start-stop-daemon --stop --quiet --oknodo --pidfile /var/run/${DAEMON_NAME}.pid
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart)
+        stop
+        sleep 5
+        start
+        ;;
+    *)
+        echo "Usage: /etc/init.d/${DAEMON_NAME} {start|stop|restart}"
+        exit 1
+        ;;
+esac
+
+exit 0

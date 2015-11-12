@@ -10,6 +10,7 @@ import com.limpygnome.daemon.remote.service.VersionService;
 import com.limpygnome.daemon.remote.service.auth.AuthTokenProviderService;
 import com.limpygnome.daemon.util.JsonUtil;
 import com.limpygnome.daemon.util.RestClient;
+import org.apache.http.HttpResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
@@ -153,17 +154,27 @@ public class StatsForwarderThread extends ExtendedThread
         }
 
         // Send info request
-        LOG.debug("Sending info...");
+        String endpointUrlInfo = statsForwarderService.getEndpointUrlInfo();
+        LOG.debug("Sending info... - url: {}", endpointUrlInfo);
 
         try
         {
             // Send to endpoint
             RestClient restClient = new RestClient(STATS_FORWARDER_USER_AGENT, -1);
-            restClient.executePost(statsForwarderService.getEndpointUrlInfo(), request);
+            HttpResponse httpResponse = restClient.executePost(endpointUrlInfo, request);
 
-            LOG.debug("Successfully sent info");
+            int statusCode = httpResponse.getStatusLine().getStatusCode();
 
-            return true;
+            if (statusCode != 200)
+            {
+                LOG.warn("Failed to send info, unexpected HTTP status code - status code: {}, url: {}", statusCode, endpointUrlInfo);
+                return false;
+            }
+            else
+            {
+                LOG.debug("Successfully sent info");
+                return true;
+            }
         }
         catch (Exception e)
         {
