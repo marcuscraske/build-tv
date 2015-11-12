@@ -27,6 +27,9 @@
 - name: Setting up timezone...
   include: timezone.yml
 
+- name: Forcing time sync...
+  include: force-time.yml
+
 - name: Setting up boot splash screen...
   include: boot-splash-screen.yml
 

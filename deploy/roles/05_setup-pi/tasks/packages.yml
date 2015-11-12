@@ -31,6 +31,16 @@
         state=present
   sudo: true
 
+- name: Installing dnsutils
+  apt:  name=dnsutils
+        state=present
+  sudo: true
+
+- name: Installing ntp
+  apt:  name=ntp
+        state=present
+  sudo: true
+
 - name: Installing ntupdate
   apt:  name=ntpdate
         state=present

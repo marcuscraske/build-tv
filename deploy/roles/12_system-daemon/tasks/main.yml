@@ -9,6 +9,5 @@
 - {
     name:         Setting Up System Daemon,
     include:      ../../common/tasks/setupService.yml,
-    service_name: "system-daemon",
-    daemon_name:  "system-daemon"
+    service_name: "system-daemon"
   }

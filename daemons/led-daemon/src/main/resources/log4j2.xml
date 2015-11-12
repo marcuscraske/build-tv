@@ -4,9 +4,12 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{YYYY-MM-dd HH:mm:ss} : %-24thread : %-5level : %-65c : %msg%n" />
         </Console>
-        <File name="LocalFile" fileName="logs/led-daemon.log" append="false">
+        <RollingFile name="LocalFile" fileName="logs/led-daemon.log" filePattern="" append="false">
             <PatternLayout pattern="%d{YYYY-MM-dd HH:mm:ss} : %-24thread : %-5level : %-65c : %msg%n" />
-        </File>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="1 MB" />
+            </Policies>
+        </RollingFile>
     </Appenders>
     <Loggers>
         <Root level="error">

@@ -76,7 +76,7 @@
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
 					<appendAssemblyId>false</appendAssemblyId>
-                    <finalName>build-tv-daemon</finalName>
+                    <finalName>interval-daemon</finalName>
 				</configuration>
 			</plugin>
 			

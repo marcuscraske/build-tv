@@ -9,6 +9,5 @@
 - {
     name:         Setting Up Build TV Daemon,
     include:      ../../common/tasks/setupService.yml,
-    service_name: "build-tv-daemon",
-    daemon_name:  "build-tv-daemon"
+    service_name: "build-tv-daemon"
   }

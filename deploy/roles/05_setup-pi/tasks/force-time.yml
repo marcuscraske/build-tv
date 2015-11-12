@@ -1,0 +1,19 @@
+- name: Stopping ntp service
+  service:  name=ntp
+            state=stopped
+  sudo: true
+
+- name: Forcing ntpupdate...
+  shell:  ntpdate pool.ntp.org
+  sudo: true
+
+- name: Starting ntp service
+  service:  name=ntp
+            state=stopped
+  sudo: true
+
+- {
+    name:         Setting up automatic time sync on boot,
+    include:      ../../common/tasks/setupService.yml,
+    service_name: "pi-sync-time"
+  }

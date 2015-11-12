@@ -9,6 +9,5 @@
 - {
     name:         Setting Up Remote Daemon,
     include:      ../../common/tasks/setupService.yml,
-    service_name: "remote-daemon",
-    daemon_name:  "remote-daemon"
+    service_name: "remote-daemon"
   }
