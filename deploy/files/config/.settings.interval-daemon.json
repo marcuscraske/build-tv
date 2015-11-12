@@ -1,0 +1,10 @@
+{
+    "rest" :
+    {
+        "local-only" : true,
+        "port" : 2900
+    },
+
+    "led-daemon.rest.url"               : "http://localhost:2500/led-daemon/leds/set",
+    "system-daemon.screen.rest.url"     : "http://localhost:2600/system-daemon/screen/set",
+}

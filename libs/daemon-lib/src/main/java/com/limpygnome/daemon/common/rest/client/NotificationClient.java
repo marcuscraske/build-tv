@@ -19,7 +19,18 @@ public class NotificationClient
 
     private RestClient restClient;
     private String sourceName;
-    private String notificationEndpointUrl;
+    private String notificationSetEndpointUrl;
+    private String notificationRemoveEndpointUrl;
+
+    /**
+     * Creates a new instance.
+     *
+     * @param controller The current instance
+     */
+    public NotificationClient(Controller controller)
+    {
+        this(controller, null);
+    }
 
     /**
      * Creates a new instance.
@@ -34,11 +45,13 @@ public class NotificationClient
 
         if (controller.isDaemonEnabled("interval-daemon"))
         {
-            this.notificationEndpointUrl = controller.getSettings().getString("interval-daemon.notifications.url");
+            this.notificationSetEndpointUrl = controller.getSettings().getString("interval-daemon.notifications.set.url");
+            this.notificationRemoveEndpointUrl = controller.getSettings().getString("interval-daemon.notifications.remove.url");
         }
         else
         {
-            notificationEndpointUrl = null;
+            this.notificationSetEndpointUrl = null;
+            this.notificationRemoveEndpointUrl = null;
         }
     }
 
@@ -50,7 +63,7 @@ public class NotificationClient
     public void updateNotification(Notification notification)
     {
         // Check interval daemon is available
-        if (notificationEndpointUrl == null)
+        if (notificationSetEndpointUrl == null)
         {
             LOG.debug("Ignored request to change notification, interval daemon unavailable - notification: {}", notification);
             return;
@@ -74,20 +87,55 @@ public class NotificationClient
             jsonRoot.put("priority", notification.getPriority());
 
             // Make request
-            restClient.executePost(notificationEndpointUrl, jsonRoot);
+            restClient.executePost(notificationSetEndpointUrl, jsonRoot);
 
             LOG.debug("Notification update sent - notification: {}", notification);
         }
         catch (ConnectException e)
         {
             LOG.error("Failed to connect to interval daemon - url: {}, notification: {}",
-                    notificationEndpointUrl, notification
+                    notificationSetEndpointUrl, notification
             );
         }
         catch (Exception e)
         {
             LOG.error("Failed to connect to interval daemon - url: {}, notification: {}",
-                    notificationEndpointUrl, notification, e
+                    notificationSetEndpointUrl, notification, e
+            );
+        }
+    }
+
+    public void removeNotification()
+    {
+        // Check interval daemon is available
+        if (notificationSetEndpointUrl == null)
+        {
+            LOG.debug("Ignored request to remove notification for current source, interval daemon unavailable - source name: {}", sourceName);
+            return;
+        }
+
+        try
+        {
+            // Build JSON object
+            JSONObject jsonRoot = new JSONObject();
+
+            jsonRoot.put("source", sourceName);
+
+            // Make request
+            restClient.executePost(notificationRemoveEndpointUrl, jsonRoot);
+
+            LOG.debug("Notification removed for current source - source: {}", sourceName);
+        }
+        catch (ConnectException e)
+        {
+            LOG.error("Failed to connect to interval daemon - url: {}",
+                    notificationSetEndpointUrl
+            );
+        }
+        catch (Exception e)
+        {
+            LOG.error("Failed to connect to interval daemon - url: {}",
+                    notificationSetEndpointUrl, e
             );
         }
     }

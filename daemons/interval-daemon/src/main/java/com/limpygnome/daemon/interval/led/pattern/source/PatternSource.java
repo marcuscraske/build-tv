@@ -3,7 +3,7 @@ package com.limpygnome.daemon.interval.led.pattern.source;
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.ScreenAction;
 import com.limpygnome.daemon.api.LedPattern;
-import com.limpygnome.daemon.buildtv.service.HardwareCommsService;
+import com.limpygnome.daemon.interval.led.ClientAggregate;
 
 /**
  * Represents a source of a LED pattern, with the priority and enable status used to determine which
@@ -57,19 +57,21 @@ public class PatternSource
      * Invoked once when this pattern becomes the current pattern source.
      *
      * @param controller The current instance of the controller
+     * @param clientAggregate Available clients
      */
-    public void eventNowCurrentPatternSource(Controller controller)
+    public void eventNowCurrentPatternSource(Controller controller, ClientAggregate clientAggregate)
     {
         // Nothing by default...
     }
 
     /**
      * Invoked when this pattern is no longer the current pattern, just before the next pattern has its
-     * {@link #eventNowCurrentPatternSource(Controller)} method invoked.
+     * {@link #eventNowCurrentPatternSource(Controller, ClientAggregate)} method invoked.
      *
      * @param controller The current instance of the controller
+     * @param clientAggregate Available clients
      */
-    public void eventNoLongerCurrentPatternSource(Controller controller)
+    public void eventNoLongerCurrentPatternSource(Controller controller, ClientAggregate clientAggregate)
     {
         // Nothing by default...
     }
@@ -78,12 +80,12 @@ public class PatternSource
      * Invoked every time the current source pattern is updated and is this instance.
      *
      * @param controller The current instance of the controller
-     * @param hardwareCommsService The hardware comms service
+     * @param clientAggregate Available clients
      */
-    public void update(Controller controller, HardwareCommsService hardwareCommsService)
+    public void update(Controller controller, ClientAggregate clientAggregate)
     {
         // By default, keep the screen on...
-        hardwareCommsService.changeScreen(controller, ScreenAction.ON);
+        clientAggregate.getScreenClient().changeScreen(controller, ScreenAction.ON);
     }
 
     @Override

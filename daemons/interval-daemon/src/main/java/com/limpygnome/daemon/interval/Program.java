@@ -3,6 +3,7 @@ package com.limpygnome.daemon.interval;
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.imp.DefaultController;
 import com.limpygnome.daemon.interval.service.IntervalService;
+import com.limpygnome.daemon.interval.service.NotificationService;
 import com.limpygnome.daemon.service.RestService;
 
 /**
@@ -17,6 +18,7 @@ public class Program
 
         // Add services
         controller.add(IntervalService.SERVICE_NAME, new IntervalService());
+        controller.add(NotificationService.SERVICE_NAME, new NotificationService());
 
         // Attach REST handlers
         RestService.attachControllerRestHandlerServices(controller);

@@ -4,10 +4,8 @@ import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Notification;
 import com.limpygnome.daemon.api.ScreenAction;
 import com.limpygnome.daemon.api.LedPattern;
-import com.limpygnome.daemon.buildtv.model.Notification;
-import com.limpygnome.daemon.buildtv.service.HardwareCommsService;
-import com.limpygnome.daemon.buildtv.service.NotificationService;
-import com.limpygnome.daemon.service.ClientCommsService;
+import com.limpygnome.daemon.interval.led.ClientAggregate;
+import com.limpygnome.daemon.interval.service.NotificationService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
@@ -64,29 +62,29 @@ public class IntervalPatternSource extends PatternSource
     }
 
     @Override
-    public void eventNowCurrentPatternSource(Controller controller)
+    public void eventNowCurrentPatternSource(Controller controller, ClientAggregate clientAggregate)
     {
         // Send out notification
         sendOutNotification(controller);
     }
 
     @Override
-    public void eventNoLongerCurrentPatternSource(Controller controller)
+    public void eventNoLongerCurrentPatternSource(Controller controller, ClientAggregate clientAggregate)
     {
         removeNotification(controller);
     }
 
     @Override
-    public void update(Controller controller, ClientCommsService hardwareCommsService)
+    public void update(Controller controller, ClientAggregate clientAggregate)
     {
         // Turn screen on/off
         if (screenOff)
         {
-            hardwareCommsService.changeScreen(controller, ScreenAction.OFF);
+            clientAggregate.getScreenClient().changeScreen(controller, ScreenAction.OFF);
         }
         else
         {
-            hardwareCommsService.changeScreen(controller, ScreenAction.ON);
+            clientAggregate.getScreenClient().changeScreen(controller, ScreenAction.ON);
         }
     }
 

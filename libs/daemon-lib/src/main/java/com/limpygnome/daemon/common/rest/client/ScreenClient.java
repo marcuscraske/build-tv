@@ -20,6 +20,15 @@ public class ScreenClient
     private String screenEndpointUrl;
 
     /**
+     *
+     * @param controller
+     */
+    public ScreenClient(Controller controller)
+    {
+        this(controller, null);
+    }
+
+    /**
      * Creates a new instance.
      *
      * @param controller The current controller

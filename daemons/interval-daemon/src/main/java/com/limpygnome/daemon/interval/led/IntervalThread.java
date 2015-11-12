@@ -5,7 +5,6 @@ import com.limpygnome.daemon.api.ControllerState;
 import com.limpygnome.daemon.interval.led.pattern.source.IntervalPatternSource;
 import com.limpygnome.daemon.api.LedPattern;
 import com.limpygnome.daemon.interval.led.pattern.source.PatternSource;
-import com.limpygnome.daemon.buildtv.service.HardwareCommsService;
 import com.limpygnome.daemon.common.ExtendedThread;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,8 +20,7 @@ public class IntervalThread extends ExtendedThread
     private static final Logger LOG = LogManager.getLogger(IntervalThread.class);
 
     private Controller controller;
-    private HardwareCommsService hardwareCommsService;
-
+    private ClientAggregate clientAggregate;
     private HashMap<String, PatternSource> patterns;
 
     /**
@@ -33,8 +31,8 @@ public class IntervalThread extends ExtendedThread
     public IntervalThread(Controller controller)
     {
         this.controller = controller;
+        this.clientAggregate = new ClientAggregate(controller);
         this.patterns = new HashMap<>();
-        this.hardwareCommsService = (HardwareCommsService) controller.getServiceByName(HardwareCommsService.SERVICE_NAME);
     }
 
     /**
@@ -80,13 +78,13 @@ public class IntervalThread extends ExtendedThread
                 // Inform current pattern source they're no longer the current pattern
                 if (lastPatternSource != null)
                 {
-                    lastPatternSource.eventNoLongerCurrentPatternSource(controller);
+                    lastPatternSource.eventNoLongerCurrentPatternSource(controller, clientAggregate);
                 }
 
                 // Inform current pattern they're now the current pattern
                 if (currentPatternSource != null)
                 {
-                    currentPatternSource.eventNowCurrentPatternSource(controller);
+                    currentPatternSource.eventNowCurrentPatternSource(controller, clientAggregate);
                 }
 
                 LOG.debug("Current pattern changed - old pattern: {}, new pattern: {}", lastPatternSource, currentPatternSource);
@@ -97,14 +95,14 @@ public class IntervalThread extends ExtendedThread
             if (currentPatternSource != null)
             {
                 // Update LED pattern
-                hardwareCommsService.changeLedPattern(currentPatternSource.getCurrentLedPattern());
+                clientAggregate.getLedClient().changeLedPattern(currentPatternSource.getCurrentLedPattern());
 
                 // Run pattern logic
-                currentPatternSource.update(controller, hardwareCommsService);
+                currentPatternSource.update(controller, clientAggregate);
             }
             else
             {
-                hardwareCommsService.changeLedPattern(LedPattern.BUILD_UNKNOWN);
+                clientAggregate.getLedClient().changeLedPattern(LedPattern.BUILD_UNKNOWN);
             }
 
             // Sleep for a while

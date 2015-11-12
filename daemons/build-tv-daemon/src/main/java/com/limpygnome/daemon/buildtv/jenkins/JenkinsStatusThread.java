@@ -246,7 +246,14 @@ public class JenkinsStatusThread extends ExtendedThread
             }
 
             // Update via service
-            notificationClient.updateNotification(notification);
+            if (notification != null)
+            {
+                notificationClient.updateNotification(notification);
+            }
+            else
+            {
+                notificationClient.removeNotification();
+            }
         }
     }
 

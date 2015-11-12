@@ -54,7 +54,7 @@ public class NotificationListenerThread extends ExtendedThread
             }
             catch (Exception e)
             {
-                LOG.error("Failed to poll for notification updates", e);
+                LOG.error("Failed to poll for notification updates - url: {}", notificationsEndpoint, e);
             }
 
             // Wait a while before re-polling...

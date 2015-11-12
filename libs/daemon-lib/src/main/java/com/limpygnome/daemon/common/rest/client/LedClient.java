@@ -24,6 +24,16 @@ public class LedClient
      * Creates a new instance.
      *
      * @param controller The current controller
+     */
+    public LedClient(Controller controller)
+    {
+        this(controller, null);
+    }
+
+    /**
+     * Creates a new instance.
+     *
+     * @param controller The current controller
      * @param sourceName The source name / unique identifier for LED changes
      */
     public LedClient(Controller controller, String sourceName)
