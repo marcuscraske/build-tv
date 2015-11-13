@@ -3,17 +3,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <name>Build Indicator - Daemons - System Daemon</name>
+    <name>Build Indicator - Clients - Notification Client</name>
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.limpygnome.buildindicator</groupId>
-        <artifactId>daemons</artifactId>
+        <artifactId>clients</artifactId>
         <version>2.0</version>
     </parent>
-    <groupId>com.limpygnome.buildindicator.daemons</groupId>
-    <artifactId>system-daemon</artifactId>
+    <groupId>com.limpygnome.buildindicator.clients</groupId>
+    <artifactId>notification-client</artifactId>
     <packaging>jar</packaging>
-
 
     <dependencies>
 
@@ -30,25 +29,6 @@
 			<artifactId>httpclient</artifactId>
 			<version>4.5</version>
 		</dependency>
-
-        <!-- JSON Serialization -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>2.6.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.6.3</version>
-        </dependency>
-
-        <!-- Apache Commons -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.0</version>
-        </dependency>
 
     </dependencies>
 	
@@ -69,14 +49,14 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>com.limpygnome.daemon.system.Program</mainClass>
+							<mainClass>com.limpygnome.client.notification.Program</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
 					<appendAssemblyId>false</appendAssemblyId>
-                    <finalName>system-daemon</finalName>
+                    <finalName>notification-client</finalName>
 				</configuration>
 			</plugin>
 			

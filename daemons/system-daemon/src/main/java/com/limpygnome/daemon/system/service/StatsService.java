@@ -21,12 +21,11 @@ import java.util.Map;
  */
 public class StatsService implements Service, RestServiceHandler
 {
-    private static final Logger LOG = LogManager.getLogger(EnvironmentService.class);
+    private static final Logger LOG = LogManager.getLogger(StatsService.class);
 
     public static final String SERVICE_NAME = "stats";
 
     private Controller controller;
-    private EnvironmentService environmentService;
     private long frequency;
     private long lastPolled;
 
@@ -36,9 +35,6 @@ public class StatsService implements Service, RestServiceHandler
     public void start(Controller controller)
     {
         this.controller = controller;
-
-        // Fetch environment service
-        environmentService = (EnvironmentService) controller.getServiceByName(EnvironmentService.SERVICE_NAME);
 
         // Read frequency setting
         frequency = controller.getSettings().getOptionalLong("stats/frequency", 5000);
@@ -50,7 +46,7 @@ public class StatsService implements Service, RestServiceHandler
     @Override
     public void stop(Controller controller)
     {
-        environmentService = null;
+        cachedStatistics = null;
     }
 
     private void updateStats(Controller controller)
@@ -113,11 +109,6 @@ public class StatsService implements Service, RestServiceHandler
         // Write to response
         restResponse.writeResponseIgnoreExceptions(restResponse, json);
         return true;
-    }
-
-    public EnvironmentService getEnvironmentService()
-    {
-        return environmentService;
     }
 
     public Statistic[] getCachedStatistics()

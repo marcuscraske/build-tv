@@ -2,6 +2,7 @@ package com.limpygnome.daemon.system.service.stat;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.system.model.stat.Statistic;
+import com.limpygnome.daemon.util.EnvironmentUtil;
 import com.limpygnome.daemon.util.MathUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,25 +35,16 @@ public class TemperatureStatService extends AbstractStatService
         final String[] BASH_COMMANDS = { "/bin/sh", "-c", "expr substr \"$(cat /sys/class/thermal/thermal_zone0/temp)\" 1 2" };
 
         // Fetch value
-        Float value;
+        Float value = EnvironmentUtil.execFloat(BASH_COMMANDS, DEFAULT_PROCESS_TIMEOUT, false);
 
-        if (environmentService != null)
+        if (value == null)
         {
-            value = environmentService.execute(BASH_COMMANDS, DEFAULT_PROCESS_TIMEOUT);
-
-            if (value == null)
-            {
-                LOG.warn("Failed to retrieve temperature, possibly unsupported");
-                value = 0.0f;
-            }
-
-            // Round value
-            value = MathUtil.round(value, 2);
+            LOG.warn("Failed to retrieve temperature, possibly unsupported");
+            value = 0.0f;
         }
-        else
-        {
-            value = max;
-        }
+
+        // Round value
+        value = MathUtil.round(value, 2);
 
         // Check if value exceeds thresholds
         if (value > max)

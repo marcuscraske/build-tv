@@ -5,6 +5,7 @@ import com.limpygnome.daemon.api.Service;
 import com.limpygnome.daemon.common.rest.RestRequest;
 import com.limpygnome.daemon.common.rest.RestResponse;
 import com.limpygnome.daemon.api.RestServiceHandler;
+import com.limpygnome.daemon.util.EnvironmentUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
@@ -36,12 +37,15 @@ public class ScreenService implements Service, RestServiceHandler
     private static final long COMMAND_DELAY = 4000;
 
 
-    private EnvironmentService environmentService;
-
     private long lastAction;
     private boolean screenOn;
 
     public ScreenService()
+    {
+        initialState();
+    }
+
+    private void initialState()
     {
         this.lastAction = 0;
         this.screenOn = false;
@@ -50,9 +54,6 @@ public class ScreenService implements Service, RestServiceHandler
     @Override
     public synchronized void start(Controller controller)
     {
-        // Fetch services
-        environmentService = (EnvironmentService) controller.getServiceByName("environment");
-
         // Make sure the screen is initially on
         screenOn();
     }
@@ -60,7 +61,7 @@ public class ScreenService implements Service, RestServiceHandler
     @Override
     public synchronized void stop(Controller controller)
     {
-        environmentService = null;
+        initialState();
     }
 
     public synchronized void screenOn()
@@ -108,7 +109,7 @@ public class ScreenService implements Service, RestServiceHandler
     private void exec(String command)
     {
         // Execute the command
-        environmentService.exec(command, PROCESS_TIMEOUT);
+        EnvironmentUtil.exec(command, PROCESS_TIMEOUT);
 
         // Give enough wait for the command to take affect
         // -- Hacky, but a new attempt at getting this to work through a daemon

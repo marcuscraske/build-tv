@@ -5,6 +5,7 @@ import com.limpygnome.daemon.api.Service;
 import com.limpygnome.daemon.common.rest.RestRequest;
 import com.limpygnome.daemon.common.rest.RestResponse;
 import com.limpygnome.daemon.api.RestServiceHandler;
+import com.limpygnome.daemon.util.EnvironmentUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,20 +18,16 @@ public class PowerManagementService implements Service, RestServiceHandler
 
     public static final String SERVICE_NAME = "power-management";
 
-    private EnvironmentService environmentService;
-
     private static final long PROCESS_TIMEOUT = 2000;
 
     @Override
     public void start(Controller controller)
     {
-        environmentService = (EnvironmentService) controller.getServiceByName("environment");
     }
 
     @Override
     public void stop(Controller controller)
     {
-        environmentService = null;
     }
 
     @Override
@@ -66,13 +63,13 @@ public class PowerManagementService implements Service, RestServiceHandler
     public void reboot()
     {
         LOG.info("Rebooting...");
-        environmentService.exec("reboot", PROCESS_TIMEOUT);
+        EnvironmentUtil.exec("reboot", PROCESS_TIMEOUT);
     }
 
     public void shutdown()
     {
         LOG.info("Shutting down...");
-        environmentService.exec("halt", PROCESS_TIMEOUT);
+        EnvironmentUtil.exec("halt", PROCESS_TIMEOUT);
     }
 
 }

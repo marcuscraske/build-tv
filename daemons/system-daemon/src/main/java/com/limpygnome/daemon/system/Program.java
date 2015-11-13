@@ -19,7 +19,6 @@ public class Program
         Controller controller = new DefaultController("system-daemon");
 
         // Add services
-        controller.add(EnvironmentService.SERVICE_NAME, new EnvironmentService());
         controller.add(ScreenService.SERVICE_NAME, new ScreenService());
         controller.add(PowerManagementService.SERVICE_NAME, new PowerManagementService());
         controller.add(StatsService.SERVICE_NAME, new StatsService());

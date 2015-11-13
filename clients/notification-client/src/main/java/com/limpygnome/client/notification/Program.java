@@ -1,6 +1,6 @@
-package com.limpygnome.client.notifications;
+package com.limpygnome.client.notification;
 
-import com.limpygnome.client.notifications.service.NotificationListenerService;
+import com.limpygnome.client.notification.service.NotificationListenerService;
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.imp.DefaultController;
 

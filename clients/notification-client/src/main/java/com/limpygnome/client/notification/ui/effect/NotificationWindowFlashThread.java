@@ -1,6 +1,6 @@
-package com.limpygnome.client.notifications.ui.effect;
+package com.limpygnome.client.notification.ui.effect;
 
-import com.limpygnome.client.notifications.ui.NotificationWindow;
+import com.limpygnome.client.notification.ui.NotificationWindow;
 import com.limpygnome.daemon.common.ExtendedThread;
 
 /**

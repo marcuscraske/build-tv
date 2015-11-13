@@ -1,16 +1,17 @@
 package com.limpygnome.daemon.util;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.awt.*;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Created by limpygnome on 20/07/15.
+ * Commonly used functionality for interacting with the host environment.
  */
 public class EnvironmentUtil
 {
@@ -20,6 +21,7 @@ public class EnvironmentUtil
 
     static
     {
+        // Determine if this is a dev environment and cache the result
         DEV_ENVIRONMENT = new File("pom.xml").exists();
 
         if (DEV_ENVIRONMENT)
@@ -126,6 +128,164 @@ public class EnvironmentUtil
         {
             return null;
         }
+    }
+
+    /**
+     * Executes a command.
+     *
+     * @param commands The commands to execute
+     */
+    public static Process exec(String[] commands, long processTimeout, boolean mockingEnabled)
+    {
+        String commandsStr = StringUtils.join(commands, ",");
+
+        if (mockingEnabled && isDevEnvironment())
+        {
+            LOG.debug("Mock executed command - commands: {}", commandsStr);
+        }
+        else
+        {
+            try
+            {
+                LOG.debug("Executing command - command: {}", commandsStr);
+
+                // Run the command
+                Process process = Runtime.getRuntime().exec(commands);
+
+                // Wait for process to finish, or kill it
+                long start = System.currentTimeMillis();
+
+                if (processTimeout > 0)
+                {
+                    while (process.isAlive() && ((System.currentTimeMillis() - start) < processTimeout))
+                    {
+                        Thread.sleep(1);
+                    }
+
+                    // Check if to kill the process...
+                    if (process.isAlive())
+                    {
+                        process.destroy();
+
+                        LOG.warn("Killed process executing command, timeout exceeded - timeout: {}, cmd: {}",
+                                processTimeout, commandsStr
+                        );
+                    }
+                }
+
+                return process;
+            }
+            catch (Exception e)
+            {
+                LOG.error("Failed to execute commands - command: {}", commandsStr, e);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Attempts to execute the command and return a float.
+     *
+     * If the output is not valid, or an exception occurs, null is returned.
+     *
+     * @param commands The command to execute
+     * @param processTimeout
+     * @param mockingEnabled Indicates if commands should be mocked on a dev machine
+     * @return The value of the command, or null if mocked/invalid
+     */
+    public static Float execFloat(String[] commands, long processTimeout, boolean mockingEnabled)
+    {
+        String commandsStr = StringUtils.join(commands);
+
+        if (mockingEnabled && isDevEnvironment())
+        {
+            LOG.debug("Mock executed command - commands: {}", commandsStr);
+        }
+        else
+        {
+            final long BUFFER_LIMIT = 512;
+
+            Process process = null;
+
+            try
+            {
+                // Run the process
+                process = Runtime.getRuntime().exec(commands);
+
+                // Hook into stdout
+                InputStream inputStream = process.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+                // Read first available line
+                StringBuilder buffer = new StringBuilder();
+                long start = System.currentTimeMillis();
+                String line;
+
+                do
+                {
+                    line = bufferedReader.readLine();
+
+                    if (line != null)
+                    {
+                        buffer.append(line);
+                    }
+                }
+                while ((process.isAlive() || line != null) && System.currentTimeMillis() - start < processTimeout && buffer.length() < BUFFER_LIMIT);
+
+                // Attempt to parse output
+                if (buffer.length() > 0)
+                {
+                    try
+                    {
+                        return Float.parseFloat(buffer.toString());
+                    }
+                    catch (NumberFormatException e)
+                    {
+                        LOG.warn("Failed to parse command output - commands: {}", commands, e);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                LOG.error("Failed to run process for stats", e);
+            }
+            finally
+            {
+                if (process != null)
+                {
+                    try
+                    {
+                        if (process.isAlive())
+                        {
+                            process.destroy();
+                        }
+                    }
+                    catch (Exception e2)
+                    {
+                        LOG.error("Failed to destroy stats process", e2);
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public static Dimension getScreenSize()
+    {
+        GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice[] graphicsDevices = graphicsEnvironment.getScreenDevices();
+
+        DisplayMode displayMode;
+        for (GraphicsDevice graphicsDevice : graphicsDevices)
+        {
+            displayMode = graphicsDevice.getDisplayMode();
+            return new Dimension(displayMode.getWidth(), displayMode.getHeight());
+        }
+
+        // Fallback...
+        return Toolkit.getDefaultToolkit().getScreenSize();
     }
 
 }

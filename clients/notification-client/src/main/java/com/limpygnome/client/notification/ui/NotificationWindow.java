@@ -1,7 +1,7 @@
-package com.limpygnome.client.notifications.ui;
+package com.limpygnome.client.notification.ui;
 
-import com.limpygnome.client.notifications.ui.effect.NotificationWindowExpanderThread;
-import com.limpygnome.client.notifications.ui.effect.NotificationWindowFlashThread;
+import com.limpygnome.client.notification.ui.effect.NotificationWindowExpanderThread;
+import com.limpygnome.client.notification.ui.effect.NotificationWindowFlashThread;
 import com.limpygnome.daemon.util.EnvironmentUtil;
 
 import javax.swing.*;
@@ -25,7 +25,7 @@ public class NotificationWindow extends JFrame
 
     public NotificationWindow(String header, String text, long lifespanMs, int backgroundR, int backgroundG, int backgroundB)
     {
-        Dimension screenSize = getScreenSize();
+        Dimension screenSize = EnvironmentUtil.getScreenSize();
         double screenWidth = screenSize.getWidth();
         double screenHeight = screenSize.getHeight();
         boolean hasText = (text != null);
@@ -145,28 +145,12 @@ public class NotificationWindow extends JFrame
 
     public void centerOnScreen()
     {
-        Dimension screenSize = getScreenSize();
+        Dimension screenSize = EnvironmentUtil.getScreenSize();
 
         double x = (screenSize.getWidth() / 2.0) - ((double) getWidth() / 2.0);
         double y = (screenSize.getHeight() / 2.0) - ((double) getHeight() / 2.0);
 
         setLocation((int) x, (int) y);
-    }
-
-    public Dimension getScreenSize()
-    {
-        GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice[] graphicsDevices = graphicsEnvironment.getScreenDevices();
-
-        DisplayMode displayMode;
-        for (GraphicsDevice graphicsDevice : graphicsDevices)
-        {
-            displayMode = graphicsDevice.getDisplayMode();
-            return new Dimension(displayMode.getWidth(), displayMode.getHeight());
-        }
-
-        // Fallback...
-        return Toolkit.getDefaultToolkit().getScreenSize();
     }
 
     public void showMessage()

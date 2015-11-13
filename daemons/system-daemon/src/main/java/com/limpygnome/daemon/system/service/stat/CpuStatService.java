@@ -1,6 +1,7 @@
 package com.limpygnome.daemon.system.service.stat;
 
 import com.limpygnome.daemon.system.model.stat.Statistic;
+import com.limpygnome.daemon.util.EnvironmentUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,31 +21,19 @@ public class CpuStatService extends AbstractStatService
     {
         final String[] BASH_COMMANDS = { "/bin/sh", "-c", "grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$4+$5)} END {print usage}'" };
 
-        Float value;
-        float min = 0.0f;
-        float max = 100.0f;
+        Float value = EnvironmentUtil.execFloat(BASH_COMMANDS, DEFAULT_PROCESS_TIMEOUT, false);
 
-        if (environmentService != null)
+        if (value == null)
         {
-            value = environmentService.execute(BASH_COMMANDS, DEFAULT_PROCESS_TIMEOUT);
-
-            if (value == null)
-            {
-                LOG.warn("Failed to retrieve CPU usage, possibly unsupported");
-                value = 0.0f;
-            }
-
-            // Round value
-            value = (float) Math.round(value);
-
-            min = 0.0f;
-            max = 100.0f;
-        }
-        else
-        {
+            LOG.warn("Failed to retrieve CPU usage, possibly unsupported");
             value = 0.0f;
         }
 
+        // Round value
+        value = (float) Math.round(value);
+
+        final float min = 0.0f;
+        final float max = 100.0f;
 
         return new Statistic(LABEL, min, max, value, "PERCENTAGE");
     }

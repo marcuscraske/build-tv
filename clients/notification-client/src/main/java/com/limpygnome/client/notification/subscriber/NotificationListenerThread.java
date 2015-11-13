@@ -1,6 +1,6 @@
-package com.limpygnome.client.notifications.subscriber;
+package com.limpygnome.client.notification.subscriber;
 
-import com.limpygnome.client.notifications.ui.NotificationWindow;
+import com.limpygnome.client.notification.ui.NotificationWindow;
 import com.limpygnome.daemon.common.ExtendedThread;
 import com.limpygnome.daemon.util.RestClient;
 import org.apache.logging.log4j.LogManager;

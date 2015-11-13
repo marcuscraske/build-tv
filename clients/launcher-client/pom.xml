@@ -3,15 +3,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <name>Build Indicator - Notification Client</name>
+    <name>Build Indicator - Clients - Launcher Client</name>
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.limpygnome</groupId>
-        <artifactId>buildindicator</artifactId>
+        <groupId>com.limpygnome.buildindicator</groupId>
+        <artifactId>clients</artifactId>
         <version>2.0</version>
     </parent>
-    <groupId>com.limpygnome.buildindicator</groupId>
-    <artifactId>notification-client</artifactId>
+    <groupId>com.limpygnome.buildindicator.clients</groupId>
+    <artifactId>launcher-client</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -49,14 +49,14 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>com.limpygnome.client.notifications.Program</mainClass>
+							<mainClass>com.limpygnome.client.launcher.Program</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
 					<appendAssemblyId>false</appendAssemblyId>
-                    <finalName>notification-client</finalName>
+                    <finalName>launcher-client</finalName>
 				</configuration>
 			</plugin>
 			

@@ -2,6 +2,7 @@ package com.limpygnome.daemon.system.service.stat;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.system.model.stat.Statistic;
+import com.limpygnome.daemon.util.EnvironmentUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,7 +29,7 @@ public class RamStatService extends AbstractStatService
         // Fetch max memory available
         try
         {
-            maxMemory = environmentService.execute(BASH_COMMANDS_MAX_MEMORY, DEFAULT_PROCESS_TIMEOUT);
+            maxMemory = EnvironmentUtil.execFloat(BASH_COMMANDS_MAX_MEMORY, DEFAULT_PROCESS_TIMEOUT, false);
         }
         catch (Exception e)
         {
@@ -39,21 +40,13 @@ public class RamStatService extends AbstractStatService
     @Override
     public Statistic update()
     {
-        Float value;
         float min = 0.0f;
 
-        if (environmentService != null)
-        {
-            value = environmentService.execute(BASH_COMMANDS_MEMORY_USED, DEFAULT_PROCESS_TIMEOUT);
+        Float value = EnvironmentUtil.execFloat(BASH_COMMANDS_MEMORY_USED, DEFAULT_PROCESS_TIMEOUT, false);
 
-            if (value == null)
-            {
-                LOG.warn("Failed to retrieve RAM usage, possibly unsupported");
-                value = 0.0f;
-            }
-        }
-        else
+        if (value == null)
         {
+            LOG.warn("Failed to retrieve RAM usage, possibly unsupported");
             value = 0.0f;
         }
 
