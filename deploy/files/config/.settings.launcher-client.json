@@ -1,0 +1,12 @@
+{
+
+    "dashboard" : {
+        "provider" : "jira",
+        "params" : {
+            "url"   : "",
+            "user"  : "",
+            "pass"  : ""
+        }
+    }
+
+}
