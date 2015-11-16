@@ -32,7 +32,7 @@ public class DefaultController implements Controller
     /*
         The global settings file used to check if a daemon is available on the system.
      */
-    private static final String GLOBAL_SETTINGS_DAEMONS_ENABLED = "daemons-enabled.json";
+    private static final String GLOBAL_SETTINGS_COMPONENTS_ENABLED = "components-enabled.json";
 
 
     private String controllerName;
@@ -84,10 +84,10 @@ public class DefaultController implements Controller
 
         // Reload daemons available
         daemonsAvailable = new Settings();
-        daemonsAvailable.reload(findConfigFile(GLOBAL_SETTINGS_DAEMONS_ENABLED));
+        daemonsAvailable.reload(findConfigFile(GLOBAL_SETTINGS_COMPONENTS_ENABLED));
 
         // Check daemon is enabled...
-        if (!isDaemonEnabled(controllerName))
+        if (!isComponentEnabled(controllerName))
         {
             LOG.error("Daemon is not enabled, stopped...");
             setState(ControllerState.STOPPED);
@@ -249,15 +249,15 @@ public class DefaultController implements Controller
         return settings;
     }
 
-    public boolean isDaemonEnabled(String daemonName)
+    public boolean isComponentEnabled(String componentName)
     {
         try
         {
-            return daemonsAvailable.getBoolean(daemonName);
+            return daemonsAvailable.getBoolean(componentName);
         }
         catch (RuntimeException e)
         {
-            throw new RuntimeException("Daemon '" + daemonName + "' is not present in daemons available file", e);
+            throw new RuntimeException("Component (daemon/client) '" + componentName + "' is not present in components-enabled file", e);
         }
     }
 

@@ -30,7 +30,7 @@ public class ScreenClient
     {
         this.restClient = new RestClient(sourceName);
 
-        if (controller.isDaemonEnabled("system-daemon"))
+        if (controller.isComponentEnabled("system-daemon"))
         {
             // Fetch system-daemon screen endpoint
             screenEndpointUrl = controller.getSettings().getString("system-daemon.screen.rest.url");

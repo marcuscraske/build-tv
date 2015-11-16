@@ -1,5 +1,6 @@
 package com.limpygnome.client.launcher.browser;
 
+import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.util.EnvironmentUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,14 +18,15 @@ public class ChromiumBrowser implements Browser
     private String currentUrl;
 
     @Override
-    public void setup()
+    public synchronized void setup(Controller controller)
     {
         // Kill any process with a similar name
+        LOG.debug("Killing any processes with a similar process name...");
         EnvironmentUtil.exec(new String[]{ "pkill", "-9", "chromium-browser" }, 2000, false);
     }
 
     @Override
-    public void openUrl(String url)
+    public synchronized void openUrl(String url)
     {
         // Kill current window, if any
         kill();
@@ -53,7 +55,7 @@ public class ChromiumBrowser implements Browser
     }
 
     @Override
-    public void refresh()
+    public synchronized void refresh()
     {
         if (currentUrl != null)
         {
@@ -65,7 +67,13 @@ public class ChromiumBrowser implements Browser
     }
 
     @Override
-    public void kill()
+    public boolean isAlive()
+    {
+        return currentWindow != null && currentWindow.isAlive();
+    }
+
+    @Override
+    public synchronized void kill()
     {
         if (currentWindow != null && currentWindow.isAlive())
         {

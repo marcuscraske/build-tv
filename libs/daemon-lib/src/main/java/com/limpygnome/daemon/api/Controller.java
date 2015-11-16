@@ -102,7 +102,7 @@ public interface Controller
      * @param daemonName The name of the daemon
      * @return True = available, false = not present/not available
      */
-    boolean isDaemonEnabled(String daemonName);
+    boolean isComponentEnabled(String daemonName);
 
     /**
      * Retrieves a cloned map of available services.

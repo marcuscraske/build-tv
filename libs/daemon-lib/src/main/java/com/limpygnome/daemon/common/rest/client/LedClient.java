@@ -37,7 +37,7 @@ public class LedClient
         this.sourceName = sourceName;
 
         // Check LED daemon is available
-        if (controller.isDaemonEnabled("led-daemon"))
+        if (controller.isComponentEnabled("led-daemon"))
         {
             this.ledEndpointUrl = controller.getSettings().getString("led-daemon.rest.url");
 

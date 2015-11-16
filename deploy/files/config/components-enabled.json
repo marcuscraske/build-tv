@@ -4,5 +4,6 @@
     "led-daemon"            : true,
     "remote-daemon"         : true,
     "system-daemon"         : true,
-    "notifications-client"  : true
+    "notifications-client"  : true,
+    "launcher-client"       : true
 }

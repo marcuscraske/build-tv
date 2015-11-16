@@ -49,7 +49,7 @@ public class StatsForwarderThread extends ExtendedThread
 
         // Build endpoint URLs for available daemons
         // -- build-tv-daemon
-        if (controller.isDaemonEnabled("build-tv-daemon"))
+        if (controller.isComponentEnabled("build-tv-daemon"))
         {
             long buildTvDaemonPort = controller.getSettings().getLong("local-ports/build-tv-daemon");
             buildTvDaemonDashboardEndpointUrl = "http://localhost:" + buildTvDaemonPort + "/build-tv-daemon/dashboard/get";
@@ -60,7 +60,7 @@ public class StatsForwarderThread extends ExtendedThread
         }
 
         // -- led-daemon
-        if (controller.isDaemonEnabled("led-daemon"))
+        if (controller.isComponentEnabled("led-daemon"))
         {
             long ledDaemonPort = controller.getSettings().getLong("local-ports/led-daemon");
             ledDaemonPatternEndpointUrl = "http://localhost:" + ledDaemonPort + "/led-daemon/leds/get";
@@ -71,7 +71,7 @@ public class StatsForwarderThread extends ExtendedThread
         }
 
         // -- system-daemon
-        if (controller.isDaemonEnabled("system-daemon"))
+        if (controller.isComponentEnabled("system-daemon"))
         {
             long systemDaemonPort = controller.getSettings().getLong("local-ports/system-daemon");
             systemDaemonStatsEndpointUrl = "http://localhost:" + systemDaemonPort + "/system-daemon/stats";

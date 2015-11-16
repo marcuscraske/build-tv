@@ -1,5 +1,7 @@
 package com.limpygnome.client.launcher.browser;
 
+import com.limpygnome.daemon.api.Controller;
+
 /**
  * Used to create and control a browser for displaying URLs.
  *
@@ -12,7 +14,7 @@ public interface Browser
     /**
      * Initially sets up the browser.
      */
-    void setup();
+    void setup(Controller controller);
 
     /**
      * Opens a URL in the browser.
@@ -25,6 +27,13 @@ public interface Browser
      * Refreshes the current URL.
      */
     void refresh();
+
+    /**
+     * Checks the browser is still alive.
+     *
+     * @return True = alive, false = process no longer active
+     */
+    boolean isAlive();
 
     /**
      * KIlls the current window.
