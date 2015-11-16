@@ -6,9 +6,12 @@ import com.limpygnome.client.launcher.service.LauncherService;
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.ControllerState;
 import com.limpygnome.daemon.common.ExtendedThread;
+import com.limpygnome.daemon.common.Settings;
+import com.limpygnome.daemon.util.JsonUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
+import org.json.simple.JSONObject;
 
 /**
  * Used to monitor the dashboard and periodically restart it.
@@ -29,16 +32,24 @@ public class LauncherThread extends ExtendedThread
      */
     private long THREAD_SLEEP = 1000;
 
-
     private Controller controller;
     private LauncherService launcherService;
     private long lastRefreshed;
+    private long refreshHour;
+    private long refreshMinute;
 
-    public LauncherThread(Controller controller, LauncherService launcherService)
+    public LauncherThread(Controller controller, LauncherService launcherService, JSONObject dashboardSettings)
     {
         this.controller = controller;
         this.launcherService = launcherService;
         this.lastRefreshed = System.currentTimeMillis();
+
+        Settings settings = controller.getSettings();
+
+        // Read refresh hour/minute
+
+        refreshHour = settings.getOptionalLong("dashboard/refresh/hour", 0);
+        refreshMinute = settings.getOptionalLong("dashboard/refresh/minute", 0);
     }
 
     @Override

@@ -12,6 +12,10 @@ import com.limpygnome.daemon.common.rest.RestResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+import java.io.File;
+import java.io.FileReader;
 
 /**
  * A service used to control the dashboard.
@@ -20,15 +24,30 @@ public class LauncherService implements Service, RestServiceHandler
 {
     private static final Logger LOG = LogManager.getLogger(LauncherService.class);
 
+    private static final String DASHBOARD_CONFIG_FILE = "dashboard.json";
+
     public static final String SERVICE_NAME = "launcher";
 
     private LauncherThread launcherThread;
     private Browser browser;
     private DashboardProvider dashboardProvider;
+    private JSONObject dashboardConfig;
 
     @Override
     public void start(Controller controller)
     {
+        // Load dashboard config
+        try
+        {
+            File dashboardConfigFile = controller.getFilePathConfig(DASHBOARD_CONFIG_FILE);
+            JSONParser jsonParser = new JSONParser();
+            dashboardConfig = (JSONObject) jsonParser.parse(new FileReader(dashboardConfigFile));
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException("Failed to read dashboard configuration - file: " + DASHBOARD_CONFIG_FILE, e);
+        }
+
         // Setup dashboard provider
         dashboardProvider = DashboardProvider.load(controller);
 

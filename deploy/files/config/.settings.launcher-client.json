@@ -3,18 +3,5 @@
     {
         "local-only" : true,
         "port" : 2900
-    },
-
-    "dashboard" :
-    {
-        "provider"  : "jira",
-        "params"    :
-        {
-            "url"       : "http://www.mock.jira.dashboard",
-            "user"      : "user",
-            "pass"      : "pass",
-            "dashboard" : "test"
-        }
     }
-
 }

@@ -3,10 +3,33 @@ package com.limpygnome.daemon.util;
 import org.json.simple.JSONObject;
 
 /**
- * Created by limpygnome on 13/10/15.
+ * A utility/helper class for dealing with JSON.
  */
-public class JsonUtil
+public final class JsonUtil
 {
+
+    private JsonUtil() { }
+
+    /**
+     * Retrieves a nested node, but returns the default value if missing.
+     *
+     * @param root The root element
+     * @param path The path of the node
+     * @param defaultValue The default value returned if the target value is missing
+     * @param <T> The type expected
+     * @return Either the value at the specified path or default value if missing
+     */
+    public static <T> T getOptionalNestedNode(JSONObject root, String[] path, T defaultValue)
+    {
+        T object = (T) getNestedNode(root, path);
+
+        if (object == null)
+        {
+            object = defaultValue;
+        }
+
+        return object;
+    }
 
     /**
      * Retrieves a nested JSON object.

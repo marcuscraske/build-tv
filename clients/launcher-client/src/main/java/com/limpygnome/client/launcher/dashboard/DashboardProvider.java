@@ -1,7 +1,6 @@
 package com.limpygnome.client.launcher.dashboard;
 
 import com.limpygnome.daemon.api.Controller;
-import com.limpygnome.daemon.common.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
@@ -44,14 +43,12 @@ public abstract class DashboardProvider
      * @param controller The current controller
      * @return An instance of a provider
      */
-    public static DashboardProvider load(Controller controller)
+    public static DashboardProvider load(Controller controller, JSONObject dashboardSettings)
     {
         DashboardProvider dashboardProvider;
 
         // Switch on provider setting
-        Settings settings = controller.getSettings();
-        JSONObject dashboard = settings.getJsonObject("dashboard");
-        String provider = (String) dashboard.get("provider");
+        String provider = (String) dashboardSettings.get("provider");
 
         // If no provider specified, just use default...
         if (provider == null || provider.length() == 0)
@@ -73,7 +70,7 @@ public abstract class DashboardProvider
         }
 
         // Load params into provider
-        JSONObject dashboardParams = (JSONObject) dashboard.get("params");
+        JSONObject dashboardParams = (JSONObject) dashboardSettings.get("params");
         dashboardProvider.loadParams(dashboardParams);
 
         return dashboardProvider;
