@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import java.awt.*;
 
 /**
- * Chomium implementation of a browser.
+ * Chromium implementation of a browser.
  */
 public class ChromiumBrowser implements Browser
 {
@@ -43,6 +43,8 @@ public class ChromiumBrowser implements Browser
         currentWindow = EnvironmentUtil.exec(
             new String[]{
                     "chromium-browser",
+                    "--no-default-browser-check",
+                    "--disable-save-password-bubble",
                     "--kiosk",
                     "--disable-translate",
                     "--disable-session-crashed-bubble",

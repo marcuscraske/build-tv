@@ -7,7 +7,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by limpygnome on 16/11/15.
+ * The JIRA implementation of a dashboard provider, which can build public and private URLs for a Jira dashboard.
+ *
+ * This will use the Atlassian Wallboard plugin to display a dashboard.
+ *
+ * JSON parameter configuration:
+ * - user: the Jira user able to access the dashboard
+ * - pass: the pass for the Jira user
+ * - url: the base URL of the Jira instance
+ * - dashboard: the ID of the dashboard
  */
 public class JiraDashboardProvider extends DashboardProvider
 {

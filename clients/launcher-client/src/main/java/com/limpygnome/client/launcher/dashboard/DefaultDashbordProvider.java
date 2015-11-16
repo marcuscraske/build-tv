@@ -3,7 +3,11 @@ package com.limpygnome.client.launcher.dashboard;
 import org.json.simple.JSONObject;
 
 /**
- * Created by limpygnome on 16/11/15.
+ * THe default implementation of a dashboard provider, which supports opening a URL.
+ *
+ * JSON parameter configuration:
+ * - url: mandatory URL to be opened
+ * - public.url: optional URL, which can be externally sent and shared. If not specified, url is inherited.
  */
 public class DefaultDashbordProvider extends DashboardProvider
 {
@@ -22,7 +26,7 @@ public class DefaultDashbordProvider extends DashboardProvider
         }
         else if (publicUrl == null || publicUrl.length() == 0)
         {
-            throw new RuntimeException("Public dashboard URL not setup");
+            publicUrl = url;
         }
     }
 

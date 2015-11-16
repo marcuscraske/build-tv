@@ -68,9 +68,21 @@ public class LauncherService implements Service, RestServiceHandler
         {
             return handleRequestRefresh(restRequest, restResponse);
         }
-        else if (restRequest.isPathMatch(new String[]{ "launcher-client", "url" }))
+        else if (restRequest.isPathMatch(new String[]{ "launcher-client", "url", "get" }))
         {
             return handleRequestGetUrl(restRequest, restResponse);
+        }
+        else if (restRequest.isPathMatch(new String[]{ "launcher-client", "kill" }))
+        {
+            return handleRequestKill(restRequest, restResponse);
+        }
+        else if (restRequest.isPathMatch(new String[]{ "launcher-client", "url", "set" }))
+        {
+            return handleRequestOpenUrl(restRequest, restResponse);
+        }
+        else if (restRequest.isPathMatch(new String[]{ "launcher-client", "url", "reset" }))
+        {
+            return handleRequestResetToDashboard(restRequest, restResponse);
         }
 
         return false;
@@ -84,11 +96,38 @@ public class LauncherService implements Service, RestServiceHandler
         return true;
     }
 
+    private boolean handleRequestKill(RestRequest restRequest, RestResponse restResponse)
+    {
+        LOG.info("Killing browser from REST request...");
+
+        browser.kill();
+        return true;
+    }
+
+    private boolean handleRequestOpenUrl(RestRequest restRequest, RestResponse restResponse)
+    {
+        String url = (String) restRequest.getJsonElement(new String[]{ "url" });
+        LOG.info("Opening URL in browser from REST request... - url: {}", url);
+
+        browser.openUrl(url);
+        return true;
+    }
+
     private boolean handleRequestGetUrl(RestRequest restRequest, RestResponse restResponse)
     {
         JSONObject response = new JSONObject();
         response.put("url", dashboardProvider.fetchPublicUrl());
         restResponse.writeJsonResponseIgnoreExceptions(restResponse, response);
+
+        return true;
+    }
+
+    private boolean handleRequestResetToDashboard(RestRequest restRequest, RestResponse restResponse)
+    {
+        LOG.info("Resetting browser to dashboard from REST request...");
+
+        String dashboardUrl = dashboardProvider.fetchUrl();
+        browser.openUrl(dashboardUrl);
 
         return true;
     }
