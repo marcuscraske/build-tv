@@ -1,4 +1,4 @@
-- name: Copying Remote Daemon JAR
+- name: Copying remote daemon JAR
   copy: src={{ remote_daemon }}/target/remote-daemon.jar
         dest={{ deploy_path }}
         mode=0770

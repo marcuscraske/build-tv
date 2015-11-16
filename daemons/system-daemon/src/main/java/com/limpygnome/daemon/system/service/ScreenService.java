@@ -70,11 +70,11 @@ public class ScreenService implements Service, RestServiceHandler
         {
             LOG.info("Turning screen on...");
 
-            exec("/opt/vc/bin/tvservice -p");
-            exec("fbset -depth 16");
-            exec("fbset -depth 0");
-            exec("fbset -depth 16");
-            exec("fbset -accel true");
+            exec(new String[]{"/opt/vc/bin/tvservice", "-p"});
+            exec(new String[]{ "fbset", "-depth", "16" });
+            exec(new String[]{ "fbset", "-depth", "0" });
+            exec(new String[]{ "fbset", "-depth", "16" });
+            exec(new String[]{ "fbset", "-accel", "true" });
 
             this.screenOn = true;
         }
@@ -86,7 +86,7 @@ public class ScreenService implements Service, RestServiceHandler
         {
             LOG.info("Turning screen off...");
 
-            exec("/opt/vc/bin/tvservice -o");
+            exec(new String[]{ "/opt/vc/bin/tvservice", "-o" });
 
             this.screenOn = false;
         }
@@ -106,10 +106,10 @@ public class ScreenService implements Service, RestServiceHandler
         return true;
     }
 
-    private void exec(String command)
+    private void exec(String[] command)
     {
         // Execute the command
-        EnvironmentUtil.exec(command, PROCESS_TIMEOUT);
+        EnvironmentUtil.exec(command, PROCESS_TIMEOUT, true);
 
         // Give enough wait for the command to take affect
         // -- Hacky, but a new attempt at getting this to work through a daemon

@@ -3,6 +3,7 @@ package com.limpygnome.client.notification.ui.effect;
 import com.limpygnome.client.notification.ui.NotificationWindow;
 import com.limpygnome.daemon.common.ExtendedThread;
 
+import com.limpygnome.daemon.util.EnvironmentUtil;
 import java.awt.*;
 
 /**
@@ -21,7 +22,7 @@ public class NotificationWindowExpanderThread extends ExtendedThread
         this.delay = delay;
 
         // Compute target size
-        Dimension screenSize = notificationWindow.getScreenSize();
+        Dimension screenSize = EnvironmentUtil.getScreenSize();
         this.targetWidth = (int) (screenSize.getWidth() * 0.8);
         this.targetHeight = (int) (screenSize.getHeight() * 0.8);
     }

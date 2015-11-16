@@ -31,7 +31,7 @@ public class LauncherService implements Service, RestServiceHandler
     private LauncherThread launcherThread;
     private Browser browser;
     private DashboardProvider dashboardProvider;
-    private JSONObject dashboardConfig;
+    private JSONObject dashboardSettings;
 
     @Override
     public void start(Controller controller)
@@ -41,7 +41,7 @@ public class LauncherService implements Service, RestServiceHandler
         {
             File dashboardConfigFile = controller.getFilePathConfig(DASHBOARD_CONFIG_FILE);
             JSONParser jsonParser = new JSONParser();
-            dashboardConfig = (JSONObject) jsonParser.parse(new FileReader(dashboardConfigFile));
+            dashboardSettings = (JSONObject) jsonParser.parse(new FileReader(dashboardConfigFile));
         }
         catch (Exception e)
         {
@@ -49,14 +49,14 @@ public class LauncherService implements Service, RestServiceHandler
         }
 
         // Setup dashboard provider
-        dashboardProvider = DashboardProvider.load(controller);
+        dashboardProvider = DashboardProvider.load(controller, dashboardSettings);
 
         // Setup browser
         browser = new ChromiumBrowser();
         browser.setup(controller);
 
         // Start launcher thread to monitor and refresh dashboard
-        launcherThread = new LauncherThread(controller, this);
+        launcherThread = new LauncherThread(controller, this, dashboardSettings);
         launcherThread.start();
     }
 

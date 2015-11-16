@@ -32,6 +32,7 @@ PATH_INTERVAL_DAEMON="${PATH_BASE}/daemons/interval-daemon"
 PATH_SYSTEM_DAEMON="${PATH_BASE}/daemons/system-daemon"
 PATH_REMOTE_DAEMON="${PATH_BASE}/daemons/remote-daemon"
 PATH_NOTIFICATION_CLIENT="${PATH_BASE}/notification-client"
+PATH_LAUNCHER_CLIENT="${PATH_BASE}/launcher-client"
 
 
 # Determine inventory file to use
@@ -59,6 +60,7 @@ echo "Path - interval daemon:       ${PATH_INTERVAL_DAEMON}"
 echo "Path - system daemon:         ${PATH_SYSTEM_DAEMON}"
 echo "Path - remote daemon:         ${PATH_REMOTE_DAEMON}"
 echo "Path - notification client:   ${PATH_NOTIFICATION_CLIENT}"
+echo "Path - launcher client:       ${PATH_LAUNCHER_CLIENT}"
 
 
 # Build extra vars
@@ -78,6 +80,7 @@ EXTRA_VARS+="interval_daemon=\"${PATH_INTERVAL_DAEMON}\" "
 EXTRA_VARS+="system_daemon=\"${PATH_SYSTEM_DAEMON}\" "
 EXTRA_VARS+="remote_daemon=\"${PATH_REMOTE_DAEMON}\" "
 EXTRA_VARS+="notification_client=\"${PATH_NOTIFICATION_CLIENT}\" "
+EXTRA_VARS+="launcher_client=\"${PATH_LAUNCHER_CLIENT}\" "
 
 # Attach any args after first as variables
 EXTRA_VARS+="${@:2} "
@@ -96,6 +99,7 @@ if [[ -z "${1}" || "${1}" == "*" ]]; then
     DEPLOY_TAGS+="system-daemon,"
     DEPLOY_TAGS+="remote-daemon,"
     DEPLOY_TAGS+="notification-client,"
+    DEPLOY_TAGS+="launcher-client,"
     DEPLOY_TAGS+="reboot"
 else
     DEPLOY_TAGS="${1}"

@@ -63,13 +63,13 @@ public class PowerManagementService implements Service, RestServiceHandler
     public void reboot()
     {
         LOG.info("Rebooting...");
-        EnvironmentUtil.exec("reboot", PROCESS_TIMEOUT);
+        EnvironmentUtil.exec(new String[]{ "reboot" }, PROCESS_TIMEOUT, true);
     }
 
     public void shutdown()
     {
         LOG.info("Shutting down...");
-        EnvironmentUtil.exec("halt", PROCESS_TIMEOUT);
+        EnvironmentUtil.exec(new String[]{ "halt" }, PROCESS_TIMEOUT, true);
     }
 
 }

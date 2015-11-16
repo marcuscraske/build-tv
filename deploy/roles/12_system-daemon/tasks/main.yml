@@ -1,4 +1,4 @@
-- name: Copying System Daemon JAR
+- name: Copying system daemon JAR
   copy: src={{ system_daemon }}/target/system-daemon.jar
         dest={{ deploy_path }}
         mode=0770
