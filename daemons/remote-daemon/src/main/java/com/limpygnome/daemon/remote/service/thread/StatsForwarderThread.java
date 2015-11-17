@@ -17,6 +17,8 @@ import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.io.IOException;
+
 /**
  * A thread responsible for initially sending information about the system to an endpoint. Periodic updates regarding
  * the system are sent to the same endpoint too.
@@ -38,6 +40,8 @@ public class StatsForwarderThread extends ExtendedThread
     private String systemDaemonStatsEndpointUrl;
     private String systemDaemonScreenGetEndpointUrl;
     private String launcherClientDashboardEndpointUrl;
+
+    private String cacheDashboardUrl;
 
     public StatsForwarderThread(Controller controller, StatsForwarderService statsForwarderService)
     {
@@ -94,19 +98,19 @@ public class StatsForwarderThread extends ExtendedThread
         LOG.debug("Started...");
 
         long frequency = statsForwarderService.getFrequency();
-        boolean infoSent = false;
+        boolean shouldSendInfo = true;
 
         while (!isExit())
         {
-            // Initially we will send our info to the endpoint, as a way to register with them...
-            if (!infoSent)
+            // Initially we will send our info to the endpoint, as a way to register with them, unless dashboard changes
+            if (shouldSendInfo)
             {
-                infoSent = sendInfo();
+                shouldSendInfo = !sendInfo();
             }
             else
             {
                 // Send update to endpoint
-                sendUpdate("online", true);
+                shouldSendInfo = !sendUpdate("online", true);
             }
 
             // Sleep...
@@ -127,7 +131,7 @@ public class StatsForwarderThread extends ExtendedThread
 
     private boolean sendInfo()
     {
-        LOG.debug("Building message...");
+        LOG.debug("Building info message...");
 
         JSONObject request;
 
@@ -136,6 +140,8 @@ public class StatsForwarderThread extends ExtendedThread
         {
             // Fetch Jira dashboard
             String dashboardUrl = fetchDashboardUrl(true);
+            // -- Update cached value
+            cacheDashboardUrl = dashboardUrl;
 
             // Build info object
             request = new JSONObject();
@@ -177,6 +183,11 @@ public class StatsForwarderThread extends ExtendedThread
                 return true;
             }
         }
+        catch (IOException e)
+        {
+            LOG.error("Failed to connect to REST endpoint (sending info) - url: {}", endpointUrlInfo);
+            return false;
+        }
         catch (Exception e)
         {
             LOG.error("Failed to send info to REST endpoint", e);
@@ -184,12 +195,25 @@ public class StatsForwarderThread extends ExtendedThread
         }
     }
 
-    private void sendUpdate(String status, boolean fetchExternalData)
+    private boolean sendUpdate(String status, boolean fetchExternalData)
     {
-        LOG.debug("Sending update...");
+        String endpointUrlUpdate = statsForwarderService.getEndpointUrlUpdate();
+
+        LOG.debug("Sending update... - url: {}", endpointUrlUpdate);
 
         try
         {
+            // Fetch latest dashboard; we'll abort if it has changed, so that we can resend dashboard
+            String dashboardUrl = fetchDashboardUrl(fetchExternalData);
+
+            if  (   ((dashboardUrl != null || cacheDashboardUrl != null) && (dashboardUrl == null || cacheDashboardUrl == null)) ||
+                    (dashboardUrl != null && !dashboardUrl.equals(cacheDashboardUrl))
+                )
+            {
+                LOG.info("Dashboard has changed, aborting update");
+                return false;
+            }
+
             // Fetch latest stats
             JSONArray jsonArrayStats = fetchStatistics(fetchExternalData);
 
@@ -222,13 +246,21 @@ public class StatsForwarderThread extends ExtendedThread
 
             // Send to endpoint
             RestClient restClient = new RestClient(STATS_FORWARDER_USER_AGENT, -1);
-            restClient.executePost(statsForwarderService.getEndpointUrlUpdate(), response);
+            restClient.executePost(endpointUrlUpdate, response);
 
             LOG.debug("Successfully sent update");
+
+            return true;
+        }
+        catch (IOException e)
+        {
+            LOG.error("Failed to connect to REST endpoint (sending update) - url: {}", endpointUrlUpdate);
+            return false;
         }
         catch (Exception e)
         {
             LOG.error("Failed to send system REST update", e);
+            return false;
         }
     }
 
@@ -313,7 +345,7 @@ public class StatsForwarderThread extends ExtendedThread
         // Check daemon is available
         else if (url == null)
         {
-            LOG.debug("Ignored request to fetch data, daemon unavailable");
+            LOG.debug("Ignored request to fetch data, component unavailable");
             return null;
         }
 
@@ -324,6 +356,11 @@ public class StatsForwarderThread extends ExtendedThread
 
             RestClient restClient = new RestClient(STATS_FORWARDER_USER_AGENT, -1);
             return restClient.executeGet(url);
+        }
+        catch (IOException e)
+        {
+            LOG.error("Failed to connect to component - url: {}", url);
+            return null;
         }
         catch (Exception e)
         {
