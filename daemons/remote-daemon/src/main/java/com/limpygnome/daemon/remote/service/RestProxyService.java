@@ -5,7 +5,7 @@ import com.limpygnome.daemon.api.Service;
 import com.limpygnome.daemon.common.rest.RestRequest;
 import com.limpygnome.daemon.common.rest.RestResponse;
 import com.limpygnome.daemon.api.RestServiceHandler;
-import com.limpygnome.daemon.remote.model.DaemonType;
+import com.limpygnome.daemon.remote.model.ComponentType;
 import com.limpygnome.daemon.remote.service.auth.AuthTokenProviderService;
 import com.limpygnome.daemon.util.RestClient;
 import com.limpygnome.daemon.util.StreamUtil;
@@ -39,7 +39,7 @@ public class RestProxyService implements Service, RestServiceHandler
     private static final int BUFFER_SIZE = 4096;
 
     private AuthTokenProviderService authProviderService;
-    private Map<DaemonType, String> daemonUrls;
+    private Map<ComponentType, String> daemonUrls;
 
     @Override
     public void start(Controller controller)
@@ -50,10 +50,10 @@ public class RestProxyService implements Service, RestServiceHandler
         daemonUrls = new HashMap<>();
 
         String url;
-        for (DaemonType daemonType : DaemonType.values())
+        for (ComponentType componentType : ComponentType.values())
         {
-            url = "http://localhost:" + controller.getSettings().getLong(daemonType.SETTING_KEY_PORT);
-            daemonUrls.put(daemonType, url);
+            url = "http://localhost:" + controller.getSettings().getLong(componentType.SETTING_KEY_PORT);
+            daemonUrls.put(componentType, url);
         }
     }
 
@@ -91,11 +91,11 @@ public class RestProxyService implements Service, RestServiceHandler
         if (daemonPath != null)
         {
             // Match path to daemon type for forwarding
-            for (DaemonType daemonType : DaemonType.values())
+            for (ComponentType componentType : ComponentType.values())
             {
-                if (daemonType.TOP_LEVEL_PATH.equals(daemonPath))
+                if (componentType.TOP_LEVEL_PATH.equals(daemonPath))
                 {
-                    forward(daemonType, restRequest, restResponse);
+                    forward(componentType, restRequest, restResponse);
                     return true;
                 }
             }
@@ -104,12 +104,12 @@ public class RestProxyService implements Service, RestServiceHandler
         return false;
     }
 
-    public void forward(DaemonType daemonType, RestRequest restRequest, RestResponse restResponse)
+    public void forward(ComponentType componentType, RestRequest restRequest, RestResponse restResponse)
     {
         try
         {
             // Build URL
-            String url = daemonUrls.get(daemonType) + restRequest.getPath();
+            String url = daemonUrls.get(componentType) + restRequest.getPath();
 
             // Execute request
             RestClient restClient = new RestClient(USER_AGENT, BUFFER_SIZE);
@@ -134,7 +134,7 @@ public class RestProxyService implements Service, RestServiceHandler
                 LOG.error("Failed to construct daemon response - ip: {}, path: {}; daemon: {}",
                         restRequest.getHttpExchange().getRemoteAddress(),
                         restRequest.getPath(),
-                        daemonType.name(),
+                        componentType.name(),
                         e
                 );
             }
@@ -144,7 +144,7 @@ public class RestProxyService implements Service, RestServiceHandler
             LOG.error("Failed to forward request - ip: {}, path: {}, daemon: {}",
                     restRequest.getHttpExchange().getRemoteAddress(),
                     restRequest.getPath(),
-                    daemonType.name(),
+                    componentType.name(),
                     e
             );
 

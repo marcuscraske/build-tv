@@ -3,6 +3,7 @@ package com.limpygnome.daemon.remote.service.thread;
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.ControllerState;
 import com.limpygnome.daemon.common.ExtendedThread;
+import com.limpygnome.daemon.remote.model.ComponentType;
 import com.limpygnome.daemon.remote.service.HostInformationService;
 import com.limpygnome.daemon.remote.service.StatsForwarderService;
 import com.limpygnome.daemon.remote.service.InstanceIdentityService;
@@ -36,7 +37,7 @@ public class StatsForwarderThread extends ExtendedThread
     private String ledDaemonPatternEndpointUrl;
     private String systemDaemonStatsEndpointUrl;
     private String systemDaemonScreenGetEndpointUrl;
-    private String buildTvDaemonDashboardEndpointUrl;
+    private String launcherClientDashboardEndpointUrl;
 
     public StatsForwarderThread(Controller controller, StatsForwarderService statsForwarderService)
     {
@@ -49,21 +50,21 @@ public class StatsForwarderThread extends ExtendedThread
 
         // Build endpoint URLs for available daemons
         // -- build-tv-daemon
-        if (controller.isComponentEnabled("build-tv-daemon"))
+        if (controller.isComponentEnabled(ComponentType.LAUNCHER_CLIENT.COMPONENT_NAME))
         {
-            long buildTvDaemonPort = controller.getSettings().getLong("local-ports/build-tv-daemon");
-            buildTvDaemonDashboardEndpointUrl = "http://localhost:" + buildTvDaemonPort + "/build-tv-daemon/dashboard/get";
+            long launcherClientPort = controller.getSettings().getLong(ComponentType.LAUNCHER_CLIENT.SETTING_KEY_PORT);
+            launcherClientDashboardEndpointUrl = "http://localhost:" + launcherClientPort + "/" + ComponentType.LAUNCHER_CLIENT.TOP_LEVEL_PATH + "/url/get";
         }
         else
         {
-            buildTvDaemonDashboardEndpointUrl = null;
+            launcherClientDashboardEndpointUrl = null;
         }
 
         // -- led-daemon
-        if (controller.isComponentEnabled("led-daemon"))
+        if (controller.isComponentEnabled(ComponentType.LED_DAEMON.COMPONENT_NAME))
         {
-            long ledDaemonPort = controller.getSettings().getLong("local-ports/led-daemon");
-            ledDaemonPatternEndpointUrl = "http://localhost:" + ledDaemonPort + "/led-daemon/leds/get";
+            long ledDaemonPort = controller.getSettings().getLong(ComponentType.LED_DAEMON.SETTING_KEY_PORT);
+            ledDaemonPatternEndpointUrl = "http://localhost:" + ledDaemonPort + "/" + ComponentType.LED_DAEMON.TOP_LEVEL_PATH +"/leds/get";
         }
         else
         {
@@ -71,11 +72,11 @@ public class StatsForwarderThread extends ExtendedThread
         }
 
         // -- system-daemon
-        if (controller.isComponentEnabled("system-daemon"))
+        if (controller.isComponentEnabled(ComponentType.SYSTEM_DAEMON.COMPONENT_NAME))
         {
-            long systemDaemonPort = controller.getSettings().getLong("local-ports/system-daemon");
-            systemDaemonStatsEndpointUrl = "http://localhost:" + systemDaemonPort + "/system-daemon/stats";
-            systemDaemonScreenGetEndpointUrl = "http://localhost:" + systemDaemonPort + "/system-daemon/screen/get";
+            long systemDaemonPort = controller.getSettings().getLong(ComponentType.SYSTEM_DAEMON.SETTING_KEY_PORT);
+            systemDaemonStatsEndpointUrl = "http://localhost:" + systemDaemonPort + "/" + ComponentType.SYSTEM_DAEMON.TOP_LEVEL_PATH + "/stats";
+            systemDaemonScreenGetEndpointUrl = "http://localhost:" + systemDaemonPort + "/" + ComponentType.SYSTEM_DAEMON.TOP_LEVEL_PATH + "/screen/get";
         }
         else
         {
@@ -134,7 +135,7 @@ public class StatsForwarderThread extends ExtendedThread
         try
         {
             // Fetch Jira dashboard
-            Long jiraDashboard = fetchJiraDashboard(true);
+            String dashboardUrl = fetchDashboardUrl(true);
 
             // Build info object
             request = new JSONObject();
@@ -145,7 +146,7 @@ public class StatsForwarderThread extends ExtendedThread
             request.put("port", hostInformationService.getRestPort());
             request.put("auth", authProviderService.getAuthToken());
             request.put("version", versionService.getVersion());
-            request.put("dashboard", jiraDashboard);
+            request.put("dashboard", dashboardUrl);
         }
         catch (Exception e)
         {
@@ -248,10 +249,10 @@ public class StatsForwarderThread extends ExtendedThread
         return response;
     }
 
-    private Long fetchJiraDashboard(boolean fetchExternalData)
+    private String fetchDashboardUrl(boolean fetchExternalData)
     {
-        Long response = (Long) fetchJsonObjectFromUrl(buildTvDaemonDashboardEndpointUrl, new String[]{"id"}, fetchExternalData);
-        LOG.debug("Retrieved Jira dashboard - dashboard ID: {}", response);
+        String response = (String) fetchJsonObjectFromUrl(launcherClientDashboardEndpointUrl, new String[]{"url"}, fetchExternalData);
+        LOG.debug("Retrieved dashboard url -: {}", response);
 
         return response;
     }
