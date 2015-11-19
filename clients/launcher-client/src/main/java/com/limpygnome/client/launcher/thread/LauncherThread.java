@@ -76,6 +76,7 @@ public class LauncherThread extends ExtendedThread
                 if (shouldRefreshBrowser(browser))
                 {
                     browser.refresh();
+                    lastRefreshed = System.currentTimeMillis();
                 }
 
                 Thread.sleep(THREAD_SLEEP);

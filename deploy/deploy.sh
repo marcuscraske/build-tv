@@ -31,8 +31,8 @@ PATH_BUILDTV_DAEMON="${PATH_BASE}/daemons/build-tv-daemon"
 PATH_INTERVAL_DAEMON="${PATH_BASE}/daemons/interval-daemon"
 PATH_SYSTEM_DAEMON="${PATH_BASE}/daemons/system-daemon"
 PATH_REMOTE_DAEMON="${PATH_BASE}/daemons/remote-daemon"
-PATH_NOTIFICATION_CLIENT="${PATH_BASE}/notification-client"
-PATH_LAUNCHER_CLIENT="${PATH_BASE}/launcher-client"
+PATH_NOTIFICATION_CLIENT="${PATH_BASE}/clients/notification-client"
+PATH_LAUNCHER_CLIENT="${PATH_BASE}/clients/launcher-client"
 
 
 # Determine inventory file to use

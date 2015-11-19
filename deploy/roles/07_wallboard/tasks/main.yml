@@ -5,6 +5,7 @@
         comment="Account for displaying wallboard"
         createhome=yes
         append=no
+        groups=rpi-group
   sudo: true
 
 - name: Installing X11 utils for xset
