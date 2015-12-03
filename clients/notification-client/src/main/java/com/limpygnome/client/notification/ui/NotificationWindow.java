@@ -35,9 +35,10 @@ public class NotificationWindow extends JFrame
             setAlwaysOnTop(true);
         }
 
-        // Disable window frame
-        setUndecorated(true);
-        setBackground(new Color(0, 0, 0, 0));
+        // Fetch size of monitor, make size 80% of screen
+        int targetWidth = (int) (screenWidth * 0.8f);
+        int targetHeight = (int) (screenHeight * 0.8f);
+        setSize(targetWidth, targetHeight);
 
         // Create panel for controls
         jPanel = new JPanel();
@@ -73,26 +74,9 @@ public class NotificationWindow extends JFrame
             jLabelText = null;
         }
 
-        // Fetch size of monitor, make size 80% of screen
-        int targetWidth = (int) (screenWidth * 0.8f);
-        int targetHeight = (int) (screenHeight * 0.8f);
-        setSize(targetWidth, targetHeight);
-
-        // Set initial size of form
-        //setSize(200, (int) (screenWidth * 0.1));
-
         // Show window
         centerOnScreen();
         setVisible(true);
-
-        // Gradually expand window
-        // TODO: graphics are not powerful/optimised enough, consider removal
-//        expander = new NotificationWindowExpanderThread(this, 60);
-//        expander.start();
-
-        // TODO: opacity not supported on Pi, consider removal
-//        flasher = new NotificationWindowFlashThread(this, 100);
-//        flasher.start();
 
         showMessage();
 
