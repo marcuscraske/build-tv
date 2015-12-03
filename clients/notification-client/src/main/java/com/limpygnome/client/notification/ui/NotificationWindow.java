@@ -1,7 +1,5 @@
 package com.limpygnome.client.notification.ui;
 
-import com.limpygnome.client.notification.ui.effect.NotificationWindowExpanderThread;
-import com.limpygnome.client.notification.ui.effect.NotificationWindowFlashThread;
 import com.limpygnome.daemon.util.EnvironmentUtil;
 
 import javax.swing.*;
@@ -19,9 +17,6 @@ public class NotificationWindow extends JFrame
     private JPanel jPanel;
     private JLabel jLabelHeader;
     private JLabel jLabelText;
-
-    private NotificationWindowExpanderThread expander;
-    private NotificationWindowFlashThread flasher;
 
     public NotificationWindow(String header, String text, long lifespanMs, int backgroundR, int backgroundG, int backgroundB)
     {
@@ -113,22 +108,6 @@ public class NotificationWindow extends JFrame
                 }
             }).start();
         }
-    }
-
-    @Override
-    public void dispose()
-    {
-        // Kill effect threads
-        if (expander != null)
-        {
-            expander.kill();
-        }
-        if (flasher != null)
-        {
-            flasher.kill();
-        }
-
-        super.dispose();
     }
 
     private String prepareLabelText(String text)
