@@ -71,13 +71,13 @@ public class ChromiumBrowser implements Browser
     @Override
     public boolean isAlive()
     {
-        return currentWindow != null && currentWindow.isAlive();
+        return currentWindow != null && EnvironmentUtil.isAlive(currentWindow);
     }
 
     @Override
     public synchronized void kill()
     {
-        if (currentWindow != null && currentWindow.isAlive())
+        if (currentWindow != null && EnvironmentUtil.isAlive(currentWindow))
         {
             try
             {

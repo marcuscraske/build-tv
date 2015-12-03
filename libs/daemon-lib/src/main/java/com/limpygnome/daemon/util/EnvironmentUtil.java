@@ -157,13 +157,13 @@ public class EnvironmentUtil
 
                 if (processTimeout > 0)
                 {
-                    while (process.isAlive() && ((System.currentTimeMillis() - start) < processTimeout))
+                    while (isAlive(process) && ((System.currentTimeMillis() - start) < processTimeout))
                     {
                         Thread.sleep(1);
                     }
 
                     // Check if to kill the process...
-                    if (process.isAlive())
+                    if (isAlive(process))
                     {
                         process.destroy();
 
@@ -182,6 +182,29 @@ public class EnvironmentUtil
         }
 
         return null;
+    }
+
+    /* Same as Java 1.8 implementation. */
+
+    /**
+     * Checks if a process is alive.
+     *
+     * Same implementation as Java 1.8.
+     *
+     * @param process The process to check
+     * @return True = alive, false = terminated
+     */
+    public static boolean isAlive(Process process)
+    {
+        try
+        {
+            process.exitValue();
+            return true;
+        }
+        catch (IllegalThreadStateException e)
+        {
+            return true;
+        }
     }
 
     /**
@@ -231,7 +254,7 @@ public class EnvironmentUtil
                         buffer.append(line);
                     }
                 }
-                while ((process.isAlive() || line != null) && System.currentTimeMillis() - start < processTimeout && buffer.length() < BUFFER_LIMIT);
+                while ((EnvironmentUtil.isAlive(process) || line != null) && System.currentTimeMillis() - start < processTimeout && buffer.length() < BUFFER_LIMIT);
 
                 // Attempt to parse output
                 if (buffer.length() > 0)
@@ -256,7 +279,7 @@ public class EnvironmentUtil
                 {
                     try
                     {
-                        if (process.isAlive())
+                        if (EnvironmentUtil.isAlive(process))
                         {
                             process.destroy();
                         }
