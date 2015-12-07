@@ -12,8 +12,9 @@
             state=stopped
   sudo: true
 
-- {
-    name:         Setting up automatic time sync on boot,
-    include:      ../../common/tasks/setupService.yml,
-    service_name: "pi-sync-time"
-  }
+# Disabled since this may not work behind a corporate network, and thus just slow down the Pi
+#- {
+#    name:         Setting up automatic time sync on boot,
+#    include:      ../../common/tasks/setupService.yml,
+#    service_name: "pi-sync-time"
+#  }

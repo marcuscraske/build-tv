@@ -199,7 +199,8 @@ public class EnvironmentUtil
         try
         {
             process.exitValue();
-            return true;
+            return false;
+
         }
         catch (IllegalThreadStateException e)
         {

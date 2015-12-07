@@ -24,7 +24,7 @@ public class ScreenService implements Service, RestServiceHandler
      * external services will periodically call this daemon, irregardless of the screen state changing. THis is to
      * allow the daemon to restart or for the external screen to get out of sync.
      */
-    private static final long ACTION_TIMEOUT_MS = 10000;
+    private static final long ACTION_TIMEOUT_MS = 60000;
 
     /**
      * Timeout in executing a process before forcibly killing it.
@@ -42,20 +42,22 @@ public class ScreenService implements Service, RestServiceHandler
 
     public ScreenService()
     {
-        initialState();
     }
 
     private void initialState()
     {
         this.lastAction = 0;
-        this.screenOn = false;
+        this.screenOn = true;
     }
 
     @Override
     public synchronized void start(Controller controller)
     {
         // Make sure the screen is initially on
-        screenOn();
+        screenOn(true);
+
+        // Set initial state
+        initialState();
     }
 
     @Override
@@ -64,11 +66,11 @@ public class ScreenService implements Service, RestServiceHandler
         initialState();
     }
 
-    public synchronized void screenOn()
+    public synchronized void screenOn(boolean force)
     {
-        if (!isTooSoon() && !this.screenOn)
+        if (force || (!isTooSoon() && isScreenExpectedState(false)))
         {
-            LOG.info("Turning screen on...");
+            LOG.info("Executing commands for screen on...");
 
             exec(new String[]{"/opt/vc/bin/tvservice", "-p"});
             exec(new String[]{ "fbset", "-depth", "16" });
@@ -80,11 +82,11 @@ public class ScreenService implements Service, RestServiceHandler
         }
     }
 
-    public synchronized void screenOff()
+    public synchronized void screenOff(boolean force)
     {
-        if (!isTooSoon() && this.screenOn)
+        if (force || (!isTooSoon() && isScreenExpectedState(true)))
         {
-            LOG.info("Turning screen off...");
+            LOG.info("Executing commands for screen off...");
 
             exec(new String[]{ "/opt/vc/bin/tvservice", "-o" });
 
@@ -103,6 +105,25 @@ public class ScreenService implements Service, RestServiceHandler
         }
 
         LOG.debug("Cannot perform screen operation, timeout in effect...");
+        return true;
+    }
+
+    private boolean isScreenExpectedState(boolean screenOnExpected)
+    {
+        if (screenOn != screenOnExpected)
+        {
+            if (screenOn)
+            {
+                LOG.debug("Screen already on, command ignored...");
+            }
+            else
+            {
+                LOG.debug("Screen already off, command ignored...");
+            }
+
+            return false;
+        }
+
         return true;
     }
 
@@ -136,7 +157,7 @@ public class ScreenService implements Service, RestServiceHandler
         return false;
     }
 
-    public boolean handleScreenSet(RestRequest restRequest, RestResponse restResponse)
+    private boolean handleScreenSet(RestRequest restRequest, RestResponse restResponse)
     {
         // Check request has JSON body
         String action = (String) restRequest.getJsonElement(new String[]{ "action" });
@@ -146,10 +167,10 @@ public class ScreenService implements Service, RestServiceHandler
             switch (action)
             {
                 case "on":
-                    screenOn();
+                    screenOn(false);
                     return true;
                 case "off":
-                    screenOff();
+                    screenOff(false);
                     return true;
             }
         }
@@ -157,7 +178,7 @@ public class ScreenService implements Service, RestServiceHandler
         return false;
     }
 
-    public boolean handleScreenGet(RestRequest restRequest, RestResponse restResponse)
+    private boolean handleScreenGet(RestRequest restRequest, RestResponse restResponse)
     {
         // Build response
         JSONObject response = new JSONObject();
