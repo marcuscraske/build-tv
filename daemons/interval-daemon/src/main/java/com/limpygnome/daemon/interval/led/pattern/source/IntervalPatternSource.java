@@ -71,7 +71,11 @@ public class IntervalPatternSource extends PatternSource
     @Override
     public void eventNoLongerCurrentPatternSource(Controller controller, ClientAggregate clientAggregate)
     {
+        // Remove notification
         removeNotification(controller);
+
+        // Turn screen back on
+        clientAggregate.getScreenClient().changeScreen(controller, ScreenAction.ON);
     }
 
     @Override
@@ -102,6 +106,10 @@ public class IntervalPatternSource extends PatternSource
             // Set current notification to our notification
             notificationService.updateCurrentNotification(NOTIFICATION_SOURCE, notification);
         }
+        else
+        {
+            LOG.debug("No notification to send out - name: {}", getName());
+        }
     }
 
     private void removeNotification(Controller controller)
@@ -117,6 +125,10 @@ public class IntervalPatternSource extends PatternSource
 
             // Remove source
             notificationService.removeNotificationSource(NOTIFICATION_SOURCE);
+        }
+        else
+        {
+            LOG.debug("No notification to remove - name: {}", getName());
         }
     }
 

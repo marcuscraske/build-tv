@@ -11,11 +11,13 @@ public class NotificationSource implements Comparable<NotificationSource>
 {
     private String source;
     private Notification notification;
+    private long lastUpdated;
 
     public NotificationSource(String source, Notification notification)
     {
         this.source = source;
         this.notification = notification;
+        this.lastUpdated = System.currentTimeMillis();
     }
 
     /**
@@ -36,7 +38,7 @@ public class NotificationSource implements Comparable<NotificationSource>
         if (lifeSpan > 0)
         {
             long currentTime = System.currentTimeMillis();
-            long expireTime = notification.getTimeStamp() + lifeSpan;
+            long expireTime = lastUpdated + lifeSpan;
 
             return currentTime > expireTime;
         }
@@ -54,6 +56,7 @@ public class NotificationSource implements Comparable<NotificationSource>
     public void setNotification(Notification notification)
     {
         this.notification = notification;
+        this.lastUpdated = System.currentTimeMillis();
     }
 
     public Notification getNotification()
@@ -61,10 +64,27 @@ public class NotificationSource implements Comparable<NotificationSource>
         return notification;
     }
 
+    public long getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(long lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
     @Override
     public int compareTo(NotificationSource notificationSource)
     {
         return notification.getPriority() - notificationSource.getNotification().getPriority();
+    }
+
+    @Override
+    public String toString() {
+        return "NotificationSource{" +
+                "source='" + source + '\'' +
+                ", notification=" + notification +
+                ", lastUpdated=" + lastUpdated +
+                '}';
     }
 
 }

@@ -13,8 +13,6 @@ public class Notification
     private Color background;
     private int priority;
 
-    private long timeStamp;
-
     public Notification(String header, String text, long lifespanMs, Color background, int priority)
     {
         this.header = header;
@@ -22,8 +20,6 @@ public class Notification
         this.lifespan = lifespanMs;
         this.background = background;
         this.priority = priority;
-
-        this.timeStamp = System.currentTimeMillis();
     }
 
     public String getHeader()
@@ -49,11 +45,6 @@ public class Notification
     public int getPriority()
     {
         return priority;
-    }
-
-    public long getTimeStamp()
-    {
-        return timeStamp;
     }
 
     @Override
