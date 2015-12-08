@@ -89,7 +89,11 @@ public class IntervalThread extends ExtendedThread
                     currentPatternSource.eventNowCurrentPatternSource(controller, clientAggregate);
                 }
 
-                LOG.debug("Current pattern changed - old pattern: {}, new pattern: {}", lastPatternSource, currentPatternSource);
+                if (currentPatternSource != null || lastPatternSource != null)
+                {
+                    LOG.debug("Current pattern changed - old pattern: {}, new pattern: {}", lastPatternSource, currentPatternSource);
+                }
+
                 lastPatternSource = currentPatternSource;
             }
 

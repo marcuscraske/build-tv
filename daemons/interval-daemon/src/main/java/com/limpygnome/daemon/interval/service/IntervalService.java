@@ -91,6 +91,7 @@ public class IntervalService implements Service
 
     private IntervalPatternSource parseIntervalPatternSource(JSONObject root)
     {
+        // Parse notification
         Notification notification;
 
         if (root.containsKey("notification"))
@@ -102,6 +103,7 @@ public class IntervalService implements Service
             notification = null;
         }
 
+        // Create new instance and parse remaining data
         try
         {
             return new IntervalPatternSource(

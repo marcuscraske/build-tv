@@ -89,6 +89,9 @@ public class NotificationListenerThread extends ExtendedThread
             {
                 closeCurrentWindow();
             }
+
+            LOG.debug("No notification available, empty response...");
+
             return;
         }
 
@@ -125,6 +128,14 @@ public class NotificationListenerThread extends ExtendedThread
 
                 LOG.info("Created new window - header: {}, text: {}", header, text);
             }
+            else
+            {
+                LOG.error("Invalid new notification - does not contain header and text parameters");
+            }
+        }
+        else
+        {
+            LOG.debug("No new notification available...");
         }
     }
 

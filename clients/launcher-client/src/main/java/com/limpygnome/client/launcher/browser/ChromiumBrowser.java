@@ -46,6 +46,7 @@ public class ChromiumBrowser implements Browser
                     "--no-default-browser-check",
                     "--disable-save-password-bubble",
                     "--kiosk",
+                    "--incognito",
                     "--disable-translate",
                     "--disable-session-crashed-bubble",
                     "--window-position=0,0",

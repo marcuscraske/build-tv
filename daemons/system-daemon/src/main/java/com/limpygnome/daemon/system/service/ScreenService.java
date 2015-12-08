@@ -24,7 +24,7 @@ public class ScreenService implements Service, RestServiceHandler
      * external services will periodically call this daemon, irregardless of the screen state changing. THis is to
      * allow the daemon to restart or for the external screen to get out of sync.
      */
-    private static final long ACTION_TIMEOUT_MS = 60000;
+    private static final long ACTION_TIMEOUT_MS = 30000;
 
     /**
      * Timeout in executing a process before forcibly killing it.
@@ -100,11 +100,15 @@ public class ScreenService implements Service, RestServiceHandler
 
         if (currTime - lastAction > ACTION_TIMEOUT_MS)
         {
+            // Update last action to current time
             lastAction = currTime;
             return false;
         }
 
-        LOG.debug("Cannot perform screen operation, timeout in effect...");
+        LOG.debug("Cannot perform screen operation, timeout in effect - last action: {}, current time: {}",
+                lastAction, currTime
+        );
+
         return true;
     }
 

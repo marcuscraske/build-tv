@@ -110,6 +110,8 @@ public class NotificationService implements Service, RestServiceHandler
             // Check if notification has expired
             if (notificationSource.isExpired())
             {
+                LOG.debug("Notification source has expired, removing... - {}", notificationSource);
+
                 // Remove the key-value pair, no longer needed...
                 iterator.remove();
             }
@@ -118,6 +120,8 @@ public class NotificationService implements Service, RestServiceHandler
                 highest = notificationSource;
             }
         }
+
+        LOG.debug("Highest notification source - : {}", highest);
 
         return highest;
     }
@@ -157,7 +161,7 @@ public class NotificationService implements Service, RestServiceHandler
             // Build into response message
             JSONObject response = new JSONObject();
 
-            response.put("timestamp", notification.getTimeStamp());
+            response.put("timestamp", notificationSource.getLastUpdated());
             response.put("header", notification.getHeader());
             response.put("text", notification.getText());
             response.put("lifespan", notification.getLifespan());
@@ -176,6 +180,8 @@ public class NotificationService implements Service, RestServiceHandler
         {
             // No object available, just provide empty json object...
             restResponse.writeResponseIgnoreExceptions(restResponse, "{}");
+
+            LOG.debug("REST response - no new notification available");
         }
 
         return true;
