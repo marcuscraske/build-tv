@@ -2,6 +2,7 @@ package com.limpygnome.daemon.interval.led;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.ControllerState;
+import com.limpygnome.daemon.api.ScreenAction;
 import com.limpygnome.daemon.interval.led.pattern.source.IntervalPatternSource;
 import com.limpygnome.daemon.api.LedPattern;
 import com.limpygnome.daemon.interval.led.pattern.source.PatternSource;
@@ -92,6 +93,11 @@ public class IntervalThread extends ExtendedThread
                 if (currentPatternSource != null || lastPatternSource != null)
                 {
                     LOG.debug("Current pattern changed - old pattern: {}, new pattern: {}", lastPatternSource, currentPatternSource);
+                }
+                else
+                {
+                    // Keep the screen on...
+                    clientAggregate.getScreenClient().changeScreen(controller, ScreenAction.ON);
                 }
 
                 lastPatternSource = currentPatternSource;
