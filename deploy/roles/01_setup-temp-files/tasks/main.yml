@@ -6,8 +6,8 @@
 - name: Creating setup files directory
   file: path="{{ temp_path }}"
         state=directory
-        owner=monitor
-        group=rpi-group
+        owner="{{ ansible_ssh_user }}"
+        group="{{ ansible_ssh_user }}"
         mode=0777
         recurse=yes
   sudo: true

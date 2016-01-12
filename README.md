@@ -1,5 +1,5 @@
 # Raspberry Pi Build TV
-This repository hosts various service daemons, applications and utilities for a build TV, powered by a Raspberry Pi.
+This repository hosts various service daemons, applications and utilities for a build TV, powered by a Raspberry Pi 2.
 
 
 ## Modules
@@ -27,7 +27,17 @@ The notification client is intended to be executed within a windowed/UI/non-head
 Systems other than the Raspberry Pi 2 can be supported, refer to each daemon individually for any notes regarding compatibility. If not stated, it should be assumed cross-platform support is available for that specific application or/and library.
 
 
+## Setup a New Raspberry Pi
+1.  Install Debian Wheezy onto SD card.
+2.  Boot-up Pi, expand file-system, enable SSH, set hostname.
+3.  Edit the ``hosts_inventory`` file located in the ``deploy`` directory. Change ``pi2-team-example`` to the hostname, where referenced, and change ``ansible_ssh_user`` to ``pi`` (or default sudo user available with SSH for Pi).
+4.  Run `deploy_full_noproxy.sh` or ``deploy.sh`` for a full installation.
+5.  The Pi should reboot as apart of the deploy process, setup complete!
+
+Although the above process should be that simple, don't hesitate to contact me or raise an issue if you encounter any problems. This process should work for any version of the Raspberry Pi, however the LED strip drivers are only compatible with the Raspberry Pi 2. However these drivers can be downgraded for backwards support.
+
+
 ## To-do...
-Possible features to explore:
-- More efficient polling for a cluster of build TVs, perhaps through either multicasting or master/slave architecture.
-- Voice recognition and control using Google Speech API (if even possible / security risks); refer to JARVIS project.
+- Improve documentation
+- Explore more efficient polling for a cluster of build TVs, perhaps through either multicasting or master/slave architecture.
+- Explore voice recognition and control using Google Speech API (if even possible / security risks); refer to JARVIS project.
