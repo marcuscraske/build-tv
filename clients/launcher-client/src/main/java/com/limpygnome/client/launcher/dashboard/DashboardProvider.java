@@ -13,6 +13,22 @@ public abstract class DashboardProvider
     private static final Logger LOG = LogManager.getLogger(DashboardProvider.class);
 
     /**
+     * The time, or rather the lifespan, for which the page can live / be open until the next item
+     * is used.
+     */
+    protected long time;
+
+    /**
+     * Creates a new instance.
+     *
+     * @param time The lifespan of this provider when used as current dashboard
+     */
+    protected DashboardProvider(long time)
+    {
+        this.time = time;
+    }
+
+    /**
      * Loads parameters for the provider from the provided JSON object.
      *
      * @param root Root element with parameters
@@ -43,15 +59,15 @@ public abstract class DashboardProvider
      * @param controller The current controller
      * @return An instance of a provider
      */
-    public static DashboardProvider load(Controller controller, JSONObject dashboardSettings)
+    public static DashboardProvider parse(Controller controller, JSONObject dashboardProviderConfig)
     {
         DashboardProvider dashboardProvider;
 
         // Switch on provider setting
-        String provider = (String) dashboardSettings.get("provider");
+        String provider = (String) dashboardProviderConfig.get("provider");
 
         // If no provider specified, just use default...
-        if (provider == null || provider.length() == 0)
+        if (provider == null || provider.length() == 0 || provider.equals("default") || provider.equals("url"))
         {
             dashboardProvider = new DefaultDashbordProvider();
             LOG.debug("No dashboard provider specified, using default");
@@ -70,7 +86,7 @@ public abstract class DashboardProvider
         }
 
         // Load params into provider
-        JSONObject dashboardParams = (JSONObject) dashboardSettings.get("params");
+        JSONObject dashboardParams = (JSONObject) dashboardProviderConfig.get("params");
         dashboardProvider.loadParams(dashboardParams);
 
         return dashboardProvider;

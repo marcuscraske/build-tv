@@ -47,7 +47,6 @@ public class LauncherThread extends ExtendedThread
         Settings settings = controller.getSettings();
 
         // Read refresh hour/minute
-
         refreshHour = settings.getOptionalLong("dashboard/refresh/hour", 0);
         refreshMinute = settings.getOptionalLong("dashboard/refresh/minute", 0);
     }
@@ -61,19 +60,20 @@ public class LauncherThread extends ExtendedThread
 
         // Retrieve browser and provider
         Browser browser = launcherService.getBrowser();
-        DashboardProvider dashboardProvider = launcherService.getDashboardProvider();
 
-        // Launch initial dashboard
-        LOG.info("Launching initial dashboard");
-        browser.openUrl(dashboardProvider.fetchUrl());
+        // Monitor URL of current dashboard, health of browser and periodically refresh
+        DashboardProvider dashboardProvider;
 
-        // Monitor health of dashboard and periodically refresh
         while (!isExit())
         {
             try
             {
-                // Check browser is still running, else refresh it...
-                if (shouldRefreshBrowser(browser))
+                // Retrieve the current dashboard provider
+                dashboardProvider = launcherService.getDashboardProvider();
+
+                // Check if to change dashboard or if browser should be refreshed
+                // -- If the dashboard URL changes, method invokes URL on browser, not a refresh
+                if (!dashboardUrlChanged(dashboardProvider, browser) && shouldRefreshBrowser(browser))
                 {
                     browser.refresh();
                     lastRefreshed = System.currentTimeMillis();
@@ -102,6 +102,25 @@ public class LauncherThread extends ExtendedThread
         if (dateTime.hourOfDay().get() == 0 && dateTime.minuteOfDay().get() == 0 && (System.currentTimeMillis() - lastRefreshed) > MINIMUM_REFRESH_PERIOD_MS)
         {
             LOG.info("Time of day to refresh browser");
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean dashboardUrlChanged(DashboardProvider dashboardProvider, Browser browser)
+    {
+        String browserUrl = browser.getCurrentUrl();
+        String currentUrl = dashboardProvider.fetchUrl();
+
+        // Check if dashboard URL is available and has changed
+        if (currentUrl != null && !currentUrl.equals(browserUrl))
+        {
+            LOG.info("Dashboard URL has changed...");
+
+            // Open new URL in browser
+            browser.openUrl(currentUrl);
+
             return true;
         }
 

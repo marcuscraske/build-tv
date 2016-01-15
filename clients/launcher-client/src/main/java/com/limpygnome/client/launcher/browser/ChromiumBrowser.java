@@ -58,6 +58,11 @@ public class ChromiumBrowser implements Browser
     }
 
     @Override
+    public String getCurrentUrl() {
+        return currentUrl;
+    }
+
+    @Override
     public synchronized void refresh()
     {
         if (currentUrl != null)
