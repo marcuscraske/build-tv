@@ -24,6 +24,13 @@ public interface Browser
     void openUrl(String url);
 
     /**
+     * Retrieves the current URL open in the browser.
+     *
+     * @return The URL
+     */
+    String getCurrentUrl();
+
+    /**
      * Refreshes the current URL.
      */
     void refresh();

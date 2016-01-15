@@ -11,11 +11,14 @@ import com.limpygnome.daemon.common.rest.RestRequest;
 import com.limpygnome.daemon.common.rest.RestResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.io.File;
 import java.io.FileReader;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * A service used to control the dashboard.
@@ -28,15 +31,35 @@ public class LauncherService implements Service, RestServiceHandler
 
     public static final String SERVICE_NAME = "launcher";
 
+    private JSONObject dashboardSettings;
     private LauncherThread launcherThread;
     private Browser browser;
-    private DashboardProvider dashboardProvider;
-    private JSONObject dashboardSettings;
+    private DashboardProvider[] dashboardProviders;
+    /* Used for when URLs are manually set via REST service. */
+    private DashboardProvider overrideDashboard;
+    private int currentDashboardProviderIndex;
+    private long currentDashboardProviderChanged;
 
     @Override
     public void start(Controller controller)
     {
         // Load dashboard config
+        loadDashboardConfig(controller);
+
+        // Parse dashboard providers
+        parseProviders(controller);
+
+        // Setup browser
+        browser = new ChromiumBrowser();
+        browser.setup(controller);
+
+        // Start launcher thread to monitor and refresh dashboard
+        launcherThread = new LauncherThread(controller, this, dashboardSettings);
+        launcherThread.start();
+    }
+
+    private void loadDashboardConfig(Controller controller)
+    {
         try
         {
             File dashboardConfigFile = controller.getFilePathConfig(DASHBOARD_CONFIG_FILE);
@@ -47,17 +70,30 @@ public class LauncherService implements Service, RestServiceHandler
         {
             throw new RuntimeException("Failed to read dashboard configuration - file: " + DASHBOARD_CONFIG_FILE, e);
         }
+    }
 
-        // Setup dashboard provider
-        dashboardProvider = DashboardProvider.load(controller, dashboardSettings);
+    private void parseProviders(Controller controller)
+    {
+        JSONArray dashboardPages = (JSONArray) dashboardSettings.get("pages");
 
-        // Setup browser
-        browser = new ChromiumBrowser();
-        browser.setup(controller);
+        List<DashboardProvider> dashboardProviders = new LinkedList<>();
+        DashboardProvider dashboardProvider;
+        JSONObject page;
 
-        // Start launcher thread to monitor and refresh dashboard
-        launcherThread = new LauncherThread(controller, this, dashboardSettings);
-        launcherThread.start();
+        for (Object rawElement : dashboardPages)
+        {
+            // Fetch config for page / dashboard provider
+            page = (JSONObject) rawElement;
+
+            // Parse provider
+            dashboardProvider = DashboardProvider.parse(controller, page);
+            dashboardProviders.add(dashboardProvider);
+        }
+
+        // Setup final array
+        this.dashboardProviders = dashboardProviders.toArray(new DashboardProvider[dashboardProviders.size()]);
+        this.currentDashboardProviderIndex = 0;
+        this.currentDashboardProviderChanged = System.currentTimeMillis();
     }
 
     @Override
@@ -77,7 +113,8 @@ public class LauncherService implements Service, RestServiceHandler
             browser = null;
         }
 
-        dashboardProvider = null;
+        dashboardProviders = null;
+        currentDashboardProviderIndex = -1;
     }
 
     @Override
@@ -134,6 +171,10 @@ public class LauncherService implements Service, RestServiceHandler
 
     private boolean handleRequestGetUrl(RestRequest restRequest, RestResponse restResponse)
     {
+        // Fetch current dashboard
+        DashboardProvider dashboardProvider = getDashboardProvider();
+
+        // Build response
         JSONObject response = new JSONObject();
         response.put("url", dashboardProvider.fetchPublicUrl());
         restResponse.writeJsonResponseIgnoreExceptions(restResponse, response);
@@ -158,6 +199,20 @@ public class LauncherService implements Service, RestServiceHandler
 
     public DashboardProvider getDashboardProvider()
     {
+        we need to add zero dashboard protection...when loading...
+        DashboardProvider dashboardProvider;
+
+        if (overrideDashboard != null)
+        {
+            dashboardProvider = overrideDashboard;
+        }
+        else
+        {
+            // Determine if current dashboard has expired
+
+            dashboardProvider = dashboardProviders[currentDashboardProviderIndex];
+        }
+
         return dashboardProvider;
     }
 
