@@ -17,8 +17,12 @@ public class DefaultDashbordProvider extends DashboardProvider
     @Override
     public void loadParams(JSONObject root)
     {
+        // Setup URL
         url = (String) root.get("url");
         publicUrl = (String) root.get("public.url");
+
+        // Setup time
+        this.lifespan = (long) root.get("lifespan");
 
         if (url == null || url.length() == 0)
         {

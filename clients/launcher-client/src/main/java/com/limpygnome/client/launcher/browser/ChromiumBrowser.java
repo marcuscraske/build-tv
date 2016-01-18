@@ -34,27 +34,35 @@ public class ChromiumBrowser implements Browser
         // Update current URL
         currentUrl = url;
 
-        // Fetch screen size
-        Dimension dimension = EnvironmentUtil.getScreenSize();
+        // Determine we have a URL
+        if (url != null && url.length() > 0)
+        {
+            // Fetch screen size
+            Dimension dimension = EnvironmentUtil.getScreenSize();
 
-        // Start process and store as current window
-        LOG.info("Opening URL - url: {}", url);
+            // Start process and store as current window
+            LOG.info("Opening URL - url: {}", url);
 
-        currentWindow = EnvironmentUtil.exec(
-            new String[]{
-                    "chromium-browser",
-                    "--no-default-browser-check",
-                    "--disable-save-password-bubble",
-                    "--kiosk",
-                    "--incognito",
-                    "--disable-translate",
-                    "--disable-session-crashed-bubble",
-                    "--window-position=0,0",
-                    "--window-size=" + dimension.getWidth() + "," + dimension.getHeight(),
-                    url
-            },
-            0, false
-        );
+            currentWindow = EnvironmentUtil.exec(
+                    new String[]{
+                            "chromium-browser",
+                            "--no-default-browser-check",
+                            "--disable-save-password-bubble",
+                            "--kiosk",
+                            "--incognito",
+                            "--disable-translate",
+                            "--disable-session-crashed-bubble",
+                            "--window-position=0,0",
+                            "--window-size=" + dimension.getWidth() + "," + dimension.getHeight(),
+                            url
+                    },
+                    0, false
+            );
+        }
+        else
+        {
+            LOG.warn("An invalid URL has been passed, not opening new browser window...");
+        }
     }
 
     @Override
