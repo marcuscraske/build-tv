@@ -21,7 +21,7 @@ public class EnvironmentUtil
 
     static
     {
-        // Determine if this is a dev environment and cache the result
+        // Determine if this is a dev environment -> set flag if so...
         DEV_ENVIRONMENT = new File("pom.xml").exists();
 
         if (DEV_ENVIRONMENT)

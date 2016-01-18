@@ -16,17 +16,7 @@ public abstract class DashboardProvider
      * The time, or rather the lifespan, for which the page can live / be open until the next item
      * is used.
      */
-    protected long time;
-
-    /**
-     * Creates a new instance.
-     *
-     * @param time The lifespan of this provider when used as current dashboard
-     */
-    protected DashboardProvider(long time)
-    {
-        this.time = time;
-    }
+    protected long lifespan;
 
     /**
      * Loads parameters for the provider from the provided JSON object.
@@ -50,6 +40,18 @@ public abstract class DashboardProvider
      * @return The public URL
      */
     public abstract String fetchPublicUrl();
+
+    /**
+     * Retrieves the lifespan of this dashboard.
+     *
+     * TIme unit is milliseconds.
+     *
+     * @return The lifespan
+     */
+    public long getLifespan()
+    {
+        return lifespan;
+    }
 
     /**
      * Loads dashboard provider configured by the global settings.

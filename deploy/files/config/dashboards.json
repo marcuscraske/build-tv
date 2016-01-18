@@ -8,25 +8,25 @@
                 "url": "http://www.mock.jira.dashboard",
                 "user": "user",
                 "pass": "pass",
-                "dashboard": "test"
-            },
-            "time" : 1000
+                "dashboard": "test",
+                "lifespan" : 2000
+            }
         },
         {
             "provider" : "url",
             "params" :
             {
-                "url": "http://www.google.com"
-            },
-            "time" : 1000
+                "url": "http://www.google.com",
+                "lifespan" : 2000
+            }
         },
         {
             "provider" : "url",
             "params" :
             {
-                "url": "http://www.bbc.com"
-            },
-            "time" : 1000
+                "url": "http://www.bbc.com",
+                "lifespan" : 2000
+            }
         }
     ]
 }

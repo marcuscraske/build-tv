@@ -35,6 +35,9 @@ public class JiraDashboardProvider extends DashboardProvider
         values.put("url", (String) root.get("url"));
         values.put("dashboard", (String) root.get("dashboard"));
 
+        // Setup time
+        this.lifespan = (long) root.get("lifespan");
+
         // Build URLs
         StrSubstitutor substitutor = new StrSubstitutor(values);
 

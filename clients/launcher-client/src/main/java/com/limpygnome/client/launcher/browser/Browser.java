@@ -19,14 +19,17 @@ public interface Browser
     /**
      * Opens a URL in the browser.
      *
-     * @param url The URL
+     * If the URL is null, the browser will show the default page, depending on its implementation, or close the
+     * window.
+     *
+     * @param url The URL; can be null
      */
     void openUrl(String url);
 
     /**
      * Retrieves the current URL open in the browser.
      *
-     * @return The URL
+     * @return The URL; can be null
      */
     String getCurrentUrl();
 
