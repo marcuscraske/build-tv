@@ -34,11 +34,12 @@ public class LauncherThread extends ExtendedThread
 
     private Controller controller;
     private LauncherService launcherService;
+
     private long lastRefreshed;
     private long refreshHour;
     private long refreshMinute;
 
-    public LauncherThread(Controller controller, LauncherService launcherService, JSONObject dashboardSettings)
+    public LauncherThread(Controller controller, LauncherService launcherService)
     {
         this.controller = controller;
         this.launcherService = launcherService;
@@ -61,21 +62,17 @@ public class LauncherThread extends ExtendedThread
         // Retrieve browser and provider
         Browser browser = launcherService.getBrowser();
 
-        // Monitor URL of current dashboard, health of browser and periodically refresh
-        DashboardProvider dashboardProvider;
+        // Start browser...
+        launcherService.reloadBrowser();
 
         while (!isExit())
         {
             try
             {
-                // Retrieve the current dashboard provider
-                dashboardProvider = launcherService.getDashboardProvider();
-
-                // Check if to change dashboard or if browser should be refreshed
-                // -- If the dashboard URL changes, method invokes URL on browser, not a refresh
-                if (!dashboardUrlChanged(dashboardProvider, browser) && shouldRefreshBrowser(browser))
+                // Check if browser should be refreshed
+                if (shouldRefreshBrowser(browser))
                 {
-                    browser.refresh();
+                    launcherService.reloadBrowser();
                     lastRefreshed = System.currentTimeMillis();
                 }
 
@@ -99,28 +96,10 @@ public class LauncherThread extends ExtendedThread
 
         // Determine if to refresh based on time
         DateTime dateTime = DateTime.now();
-        if (dateTime.hourOfDay().get() == 0 && dateTime.minuteOfDay().get() == 0 && (System.currentTimeMillis() - lastRefreshed) > MINIMUM_REFRESH_PERIOD_MS)
+
+        if (dateTime.hourOfDay().get() == refreshHour && dateTime.minuteOfDay().get() == refreshMinute && (System.currentTimeMillis() - lastRefreshed) > MINIMUM_REFRESH_PERIOD_MS)
         {
             LOG.info("Time of day to refresh browser");
-            return true;
-        }
-
-        return false;
-    }
-
-    private boolean dashboardUrlChanged(DashboardProvider dashboardProvider, Browser browser)
-    {
-        String browserUrl = browser.getCurrentUrl();
-        String currentUrl = dashboardProvider.fetchUrl();
-
-        // Check if dashboard URL is available and has changed
-        if (currentUrl != null && !currentUrl.equals(browserUrl))
-        {
-            LOG.info("Dashboard URL has changed...");
-
-            // Open new URL in browser
-            browser.openUrl(currentUrl);
-
             return true;
         }
 

@@ -1,6 +1,7 @@
 package com.limpygnome.client.launcher;
 
 import com.limpygnome.client.launcher.service.LauncherService;
+import com.limpygnome.client.launcher.service.WebServerService;
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.imp.DefaultController;
 import com.limpygnome.daemon.service.RestService;
@@ -17,6 +18,7 @@ public class Program
 
         // Add services
         controller.add(LauncherService.SERVICE_NAME, new LauncherService());
+        controller.add(WebServerService.SERVICE_NAME, new WebServerService());
 
         // Attach any REST handlers
         RestService.attachControllerRestHandlerServices(controller);
