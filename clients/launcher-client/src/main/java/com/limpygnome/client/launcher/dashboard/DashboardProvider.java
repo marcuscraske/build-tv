@@ -19,11 +19,20 @@ public abstract class DashboardProvider
     protected long lifespan;
 
     /**
+     * The interval at which to refresh the dashboard.
+     */
+    protected long refresh;
+
+    /**
      * Loads parameters for the provider from the provided JSON object.
      *
      * @param root Root element with parameters
      */
-    public abstract void loadParams(JSONObject root);
+    public void loadParams(JSONObject root)
+    {
+        this.lifespan = (long) root.get("lifespan");
+        this.refresh = (long) root.get("refresh");
+    }
 
     /**
      * Builds the URL for the dashboard, which is used to display the dashboard on the attached monitor.
@@ -51,6 +60,16 @@ public abstract class DashboardProvider
     public long getLifespan()
     {
         return lifespan;
+    }
+
+    /**
+     * Retrieves the internal at which to refresh the provider.
+     *
+     * @return The refresh interval
+     */
+    public long getRefresh()
+    {
+        return refresh;
     }
 
     /**

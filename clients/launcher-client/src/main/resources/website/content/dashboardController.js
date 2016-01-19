@@ -13,15 +13,27 @@ dashboardController = {
     /* Total number of dashboards. */
     totalDashboards: 0,
 
+    /* The dashboards to be transitioned. */
+    dashboards: {},
+
     retrieveRoot: function()
     {
-        return document.getElementById("dashboards");
+        return $("#dashboards");
     },
 
     setup: function()
     {
+        // Setup periodic calling of REST service for dashboards...
+    },
+
+    resetTransitioning: function()
+    {
         var root = this.retrieveRoot();
 
+        // Reset existing dashboards
+        $(root).children().removeAll();
+
+        // Add dashboards
         var dashboard;
         var iframe;
 
@@ -48,7 +60,7 @@ dashboardController = {
 
     retrieve: function(index)
     {
-        return document.getElementById("dashboard_" + index);
+        return $("#dashboard_" + index);
     },
 
     hide: function(index)
@@ -103,4 +115,5 @@ dashboardController = {
             setTimeout(function() { self.transition(); }, iframe.lifespan);
         }
     }
+
 };
