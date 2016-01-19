@@ -3,5 +3,10 @@
     {
         "local-only" : true,
         "port" : 2900
+    },
+
+    "webserver" :
+    {
+        "port" : 7890
     }
 }

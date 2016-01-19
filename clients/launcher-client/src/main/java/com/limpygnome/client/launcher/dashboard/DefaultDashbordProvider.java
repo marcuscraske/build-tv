@@ -14,6 +14,23 @@ public class DefaultDashbordProvider extends DashboardProvider
     private String url;
     private String publicUrl;
 
+    /**
+     * Creates a new instance.
+     */
+    public DefaultDashbordProvider() { }
+
+    /**
+     * Creates a new instance.
+     *
+     * @param url The URL
+     * @param publicUrl The public URL; can be null to inherit URL
+     */
+    public DefaultDashbordProvider(String url, String publicUrl)
+    {
+        this.url = url;
+        this.publicUrl = publicUrl != null ? publicUrl : url;
+    }
+
     @Override
     public void loadParams(JSONObject root)
     {
@@ -44,6 +61,12 @@ public class DefaultDashbordProvider extends DashboardProvider
     public String fetchPublicUrl()
     {
         return publicUrl;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "[url: " + url + ", public url: " + publicUrl + "]";
     }
 
 }

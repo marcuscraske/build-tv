@@ -3,12 +3,14 @@ package com.limpygnome.client.launcher.service;
 import com.limpygnome.client.launcher.browser.Browser;
 import com.limpygnome.client.launcher.browser.ChromiumBrowser;
 import com.limpygnome.client.launcher.dashboard.DashboardProvider;
+import com.limpygnome.client.launcher.dashboard.DefaultDashbordProvider;
 import com.limpygnome.client.launcher.thread.LauncherThread;
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.RestServiceHandler;
 import com.limpygnome.daemon.api.Service;
 import com.limpygnome.daemon.common.rest.RestRequest;
 import com.limpygnome.daemon.common.rest.RestResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
@@ -38,18 +40,18 @@ public class LauncherService implements Service, RestServiceHandler
     /* Available dashboard providers. */
     private DashboardProvider[] dashboardProviders;
 
-    /* Used for when URLs are manually set via REST service. */
-    private DashboardProvider overrideDashboard;
+    /* Used for when dashboard URLs are manually set via REST service. */
+    private DashboardProvider[] overrideDashboardProviders;
 
-    /* The index of the current dashboard provider */
-    private int currentDashboardProviderIndex;
-
-    /* Timestamp of when the dashboard provider changed. */
-    private long currentDashboardProviderChanged;
+    /* Web server service, used to retrieve URL for rendering dashboards. */
+    private WebServerService webServerService;
 
     @Override
     public synchronized void start(Controller controller)
     {
+        // Fetch webserver service
+        webServerService = (WebServerService) controller.getServiceByName(WebServerService.SERVICE_NAME);
+
         // Load dashboard config
         loadDashboardConfig(controller);
 
@@ -61,7 +63,7 @@ public class LauncherService implements Service, RestServiceHandler
         browser.setup(controller);
 
         // Start launcher thread to monitor and refresh dashboard
-        launcherThread = new LauncherThread(controller, this, dashboardSettings);
+        launcherThread = new LauncherThread(controller, this);
         launcherThread.start();
     }
 
@@ -99,8 +101,6 @@ public class LauncherService implements Service, RestServiceHandler
 
         // Setup final array
         this.dashboardProviders = dashboardProviders.toArray(new DashboardProvider[dashboardProviders.size()]);
-        this.currentDashboardProviderIndex = 0;
-        this.currentDashboardProviderChanged = System.currentTimeMillis();
     }
 
     @Override
@@ -120,8 +120,9 @@ public class LauncherService implements Service, RestServiceHandler
             browser = null;
         }
 
+        overrideDashboardProviders = null;
         dashboardProviders = null;
-        currentDashboardProviderIndex = -1;
+        webServerService = null;
     }
 
     @Override
@@ -131,21 +132,21 @@ public class LauncherService implements Service, RestServiceHandler
         {
             return handleRequestRefresh(restRequest, restResponse);
         }
-        else if (restRequest.isPathMatch(new String[]{ "launcher-client", "url", "get" }))
+        else if (restRequest.isPathMatch(new String[]{ "launcher-client", "urls", "get" }))
         {
-            return handleRequestGetUrl(restRequest, restResponse);
+            return handleRequestGetUrls(restRequest, restResponse);
         }
         else if (restRequest.isPathMatch(new String[]{ "launcher-client", "kill" }))
         {
             return handleRequestKill(restRequest, restResponse);
         }
-        else if (restRequest.isPathMatch(new String[]{ "launcher-client", "url", "set" }))
+        else if (restRequest.isPathMatch(new String[]{ "launcher-client", "urls", "set" }))
         {
-            return handleRequestOpenUrl(restRequest, restResponse);
+            return handleRequestOpenUrls(restRequest, restResponse);
         }
-        else if (restRequest.isPathMatch(new String[]{ "launcher-client", "url", "reset" }))
+        else if (restRequest.isPathMatch(new String[]{ "launcher-client", "urls", "reset" }))
         {
-            return handleRequestResetToDashboard(restRequest, restResponse);
+            return handleRequestResetUrls(restRequest, restResponse);
         }
 
         return false;
@@ -167,59 +168,77 @@ public class LauncherService implements Service, RestServiceHandler
         return true;
     }
 
-    private synchronized boolean handleRequestOpenUrl(RestRequest restRequest, RestResponse restResponse)
+    private synchronized boolean handleRequestOpenUrls(RestRequest restRequest, RestResponse restResponse)
     {
-        String url = (String) restRequest.getJsonElement(new String[]{ "url" });
-        LOG.info("Opening URL in browser from REST request... - url: {}", url);
+        JSONArray requestDashboards = (JSONArray) restRequest.getJsonElement(new String[]{ "dashboards" });
 
-        browser.openUrl(url);
+        DashboardProvider[] dashboardProviders = new DashboardProvider[requestDashboards.size()];
+
+        Object rawRequestDashboard;
+        JSONObject requestDashboard;
+        String url;
+        String publicUrl;
+
+        for (int i = 0; i < requestDashboards.size(); i++)
+        {
+            rawRequestDashboard = requestDashboards.get(i);
+            requestDashboard = (JSONObject) rawRequestDashboard;
+
+            // Fetch URLs
+            url = (String) requestDashboard.get("url");
+            publicUrl = (String) requestDashboard.get("public_url");
+
+            // Create provider...
+            dashboardProviders[i] = new DefaultDashbordProvider(url, publicUrl);
+        }
+
+        // Switch override dashboards...
+        overrideDashboardProviders = dashboardProviders;
+
+        LOG.info("Dashboards override from REST request... - providers: {}", StringUtils.join(overrideDashboardProviders, ","));
+
         return true;
     }
 
-    private synchronized boolean handleRequestGetUrl(RestRequest restRequest, RestResponse restResponse)
+    private synchronized boolean handleRequestGetUrls(RestRequest restRequest, RestResponse restResponse)
     {
         // Fetch current dashboard
-        DashboardProvider dashboardProvider = getDashboardProvider();
+        DashboardProvider[] dashboardProviders = getDashboardProviders();
 
         // Build response
         JSONObject response = new JSONObject();
+        JSONArray responseDashboards = new JSONArray();
+        JSONObject responseDashboard;
 
-        if (dashboardProvider != null)
+        for (DashboardProvider dashboardProvider : dashboardProviders)
         {
-            response.put("url", dashboardProvider.fetchPublicUrl());
+            responseDashboard = new JSONObject();
+            responseDashboard.put("url", dashboardProvider.fetchPublicUrl());
+            responseDashboards.add(responseDashboard);
         }
-        else
-        {
-            response.put("url", "");
-        }
+        response.put("dashboards", responseDashboards);
 
         restResponse.writeJsonResponseIgnoreExceptions(restResponse, response);
 
         return true;
     }
 
-    private synchronized boolean handleRequestResetToDashboard(RestRequest restRequest, RestResponse restResponse)
+    private synchronized boolean handleRequestResetUrls(RestRequest restRequest, RestResponse restResponse)
     {
-        LOG.info("Resetting browser to dashboard from REST request...");
+        LOG.info("Reset override dashboards, reloading dashboards from REST request...");
 
-        // Reset override dashboard
-        overrideDashboard = null;
+        // Reset override dashboards
+        overrideDashboardProviders = null;
 
-        // Fetch current dashboard
-        DashboardProvider dashboardProvider = getDashboardProvider();
-
-        if (dashboardProvider != null)
-        {
-            String dashboardUrl = dashboardProvider.fetchUrl();
-            browser.openUrl(dashboardUrl);
-        }
-        else
-        {
-            LOG.info("No available dashboard for resetting URL...");
-            browser.openUrl(null);
-        }
+        // Re-open dashboard renderer...
+        reloadBrowser();
 
         return true;
+    }
+
+    public void reloadBrowser()
+    {
+        browser.openUrl(webServerService.getWebserverUrl());
     }
 
     public Browser getBrowser()
@@ -228,63 +247,22 @@ public class LauncherService implements Service, RestServiceHandler
     }
 
     /**
-     * Retrieves the current dashboard provider.
+     * Retrieves the current dashboard providers.
      *
      * This is not a simple accessor, so invocations should be held/cached where/when appropriate.
      *
      * @return The current dashboard provider
      */
-    public synchronized DashboardProvider getDashboardProvider()
+    public synchronized DashboardProvider[] getDashboardProviders()
     {
-        DashboardProvider dashboardProvider;
-
-        if (overrideDashboard != null)
+        if (overrideDashboardProviders != null)
         {
-            dashboardProvider = overrideDashboard;
+            return overrideDashboardProviders;
         }
         else
         {
-            int totalDashboardProviders = dashboardProviders.length;
-
-            // Determine if we have any dashboards available
-            if (totalDashboardProviders == 0)
-            {
-                dashboardProvider = null;
-            }
-            else
-            {
-                long currentTime = System.currentTimeMillis();
-
-                // Protection against index sync issues
-                if (currentDashboardProviderIndex < 0 || currentDashboardProviderIndex >= totalDashboardProviders)
-                {
-                    currentDashboardProviderIndex = 0;
-                    currentDashboardProviderChanged = currentTime;
-                }
-
-                // Retrieve current dashboard
-                dashboardProvider = dashboardProviders[currentDashboardProviderIndex];
-                long lifespan = dashboardProvider.getLifespan();
-                long currentProviderLifespan = currentTime - currentDashboardProviderChanged;
-
-                // Determine if current dashboard has expired
-                if (lifespan == 0 || (currentProviderLifespan > lifespan))
-                {
-                    currentDashboardProviderIndex++;
-
-                    // Check if to start from the first provider
-                    if (currentDashboardProviderIndex >= totalDashboardProviders)
-                    {
-                        currentDashboardProviderIndex = 0;
-                    }
-
-                    dashboardProvider = dashboardProviders[currentDashboardProviderIndex];
-                    currentDashboardProviderChanged = currentTime;
-                }
-            }
+            return dashboardProviders;
         }
-
-        return dashboardProvider;
     }
 
 }
