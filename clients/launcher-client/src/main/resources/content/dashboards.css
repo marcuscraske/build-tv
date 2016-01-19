@@ -1,0 +1,33 @@
+html,
+body
+{
+    background: black;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+#dashboards
+{
+    height: 100%;
+}
+
+#dashboards iframe
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    border: none;
+    width: 100%;
+    height: 100%;
+}
+
+#dashboards iframe.hide
+{
+    visibility: hidden;
+}
+
+#dashboards iframe.show
+{
+    visibility: visible;
+}
