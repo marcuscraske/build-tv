@@ -28,15 +28,14 @@ public class JiraDashboardProvider extends DashboardProvider
     @Override
     public void loadParams(JSONObject root)
     {
+        super.loadParams(root);
+
         // Prepare to build URLs
         Map<String, String> values = new HashMap<>();
         values.put("user", (String) root.get("user"));
         values.put("pass", (String) root.get("pass"));
         values.put("url", (String) root.get("url"));
         values.put("dashboard", (String) root.get("dashboard"));
-
-        // Setup time
-        this.lifespan = (long) root.get("lifespan");
 
         // Build URLs
         StrSubstitutor substitutor = new StrSubstitutor(values);
