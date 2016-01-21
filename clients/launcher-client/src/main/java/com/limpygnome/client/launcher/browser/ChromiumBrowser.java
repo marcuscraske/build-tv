@@ -14,6 +14,8 @@ public class ChromiumBrowser implements Browser
 {
     private static final Logger LOG = LogManager.getLogger(ChromiumBrowser.class);
 
+    public static final String BROWSER_NAME = "chromium";
+
     private Process currentWindow;
     private String currentUrl;
 
@@ -28,17 +30,20 @@ public class ChromiumBrowser implements Browser
     @Override
     public synchronized void openUrl(String url)
     {
-        // Kill current window, if any
-        kill();
-
-        // Update current URL
-        currentUrl = url;
-
         // Determine we have a URL
         if (url != null && url.length() > 0)
         {
+            // Kill current window, if any
+            kill();
+
+            // Update current URL
+            currentUrl = url;
+
             // Fetch screen size
             Dimension dimension = EnvironmentUtil.getScreenSize();
+
+            long dimensionWidth = (long) dimension.getWidth();
+            long dimensionHeight = (long) dimension.getHeight();
 
             // Start process and store as current window
             LOG.info("Opening URL - url: {}", url);
@@ -53,7 +58,7 @@ public class ChromiumBrowser implements Browser
                             "--disable-translate",
                             "--disable-session-crashed-bubble",
                             "--window-position=0,0",
-                            "--window-size=" + dimension.getWidth() + "," + dimension.getHeight(),
+                            "--window-size=" + dimensionWidth + "," + dimensionHeight,
                             url
                     },
                     0, false

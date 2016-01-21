@@ -64,6 +64,13 @@ public class RestResponse
         {
             try
             {
+                // Allow any client to consume this request
+                httpExchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
+
+                // Set content type to json
+                httpExchange.getResponseHeaders().add("Content-Type", "application/json");
+
+                // Set the status
                 httpExchange.sendResponseHeaders(statusCode, dataLength);
             }
             catch (IOException e)

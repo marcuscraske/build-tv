@@ -6,8 +6,16 @@ import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.eclipse.jetty.servlet.FilterHolder;
+import org.eclipse.jetty.servlet.FilterMapping;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.eclipse.jetty.util.resource.Resource;
+
+import javax.servlet.DispatcherType;
+import java.util.EnumSet;
 
 /**
  * Used to provide a web server for dashboard content.
@@ -52,7 +60,7 @@ public class WebServerService implements Service
             ResourceHandler resourceHandler = new ResourceHandler();
             resourceHandler.setBaseResource(Resource.newClassPathResource(RESOURCE_PATH));
             resourceHandler.setDirectoriesListed(true);
-            resourceHandler.setWelcomeFiles(new String[]{ "index.html" });
+            resourceHandler.setWelcomeFiles(new String[]{"index.html"});
 
             // -- Setup context path for serving assets
             ContextHandler contextHandler = new ContextHandler(CONTEXT_PATH);

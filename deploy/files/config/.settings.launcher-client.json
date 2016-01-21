@@ -8,5 +8,7 @@
     "webserver" :
     {
         "port" : 7890
-    }
+    },
+
+    "browser" : "mock"
 }
