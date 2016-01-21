@@ -102,7 +102,7 @@ public class StatsForwarderThread extends ExtendedThread
 
         while (!isExit())
         {
-            // Initially we will send our info to the endpoint, as a way to register with them, unless dashboard changes
+            // Initially we will send our info to the endpoint, as a way to register with them, unless dashboards changes
             if (shouldSendInfo)
             {
                 shouldSendInfo = !sendInfo();
@@ -138,7 +138,7 @@ public class StatsForwarderThread extends ExtendedThread
         // Build info request
         try
         {
-            // Fetch Jira dashboard
+            // Fetch Jira dashboards
             String dashboardUrl = fetchDashboardUrl(true);
             // -- Update cached value
             cacheDashboardUrl = dashboardUrl;
@@ -203,7 +203,7 @@ public class StatsForwarderThread extends ExtendedThread
 
         try
         {
-            // Fetch latest dashboard; we'll abort if it has changed, so that we can resend dashboard
+            // Fetch latest dashboards; we'll abort if it has changed, so that we can resend dashboards
             String dashboardUrl = fetchDashboardUrl(fetchExternalData);
 
             if  (   ((dashboardUrl != null || cacheDashboardUrl != null) && (dashboardUrl == null || cacheDashboardUrl == null)) ||

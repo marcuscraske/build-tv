@@ -247,19 +247,19 @@ public class JenkinsStatusThread extends ExtendedThread
             switch (hostsResult.getLedPattern())
             {
                 case BUILD_FAILURE:
-                    notification = new Notification("build failure", text, 60000, Color.decode("#CC3300"), 10);
+                    notification = new Notification("build failure", text, 60000, "build-failure", 10);
                     break;
                 case BUILD_OK:
-                    notification = new Notification("build success", text, 10000, Color.decode("#339933"), 10);
+                    notification = new Notification("build success", text, 10000, "build-ok", 10);
                     break;
                 case BUILD_PROGRESS:
-                    notification = new Notification("build in progress...", text, 10000, Color.decode("#003D99"), 10);
+                    notification = new Notification("build in progress...", text, 10000, "build-progress", 10);
                     break;
                 case BUILD_UNSTABLE:
-                    notification = new Notification("build unstable", text, 60000, Color.decode("#FF9933"), 10);
+                    notification = new Notification("build unstable", text, 60000, "build-unstable", 10);
                     break;
                 case JENKINS_UNAVAILABLE:
-                    notification = new Notification("Jenkins offline", text, 0, Color.decode("#CC0000"), 10);
+                    notification = new Notification("Jenkins offline", text, 0, "jenkins-unavailable", 10);
                     break;
                 default:
                     notification = null;

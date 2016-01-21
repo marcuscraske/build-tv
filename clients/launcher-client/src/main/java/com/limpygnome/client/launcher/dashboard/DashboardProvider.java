@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 
 /**
- * A provider for building the URLS and maintaining a dashboard.
+ * A provider for building the URLS and maintaining a dashboards.
  */
 public abstract class DashboardProvider
 {
@@ -19,7 +19,7 @@ public abstract class DashboardProvider
     protected long lifespan;
 
     /**
-     * The interval at which to refresh the dashboard.
+     * The interval at which to refresh the dashboards.
      */
     protected long refresh;
 
@@ -35,11 +35,11 @@ public abstract class DashboardProvider
     }
 
     /**
-     * Builds the URL for the dashboard, which is used to display the dashboard on the attached monitor.
+     * Builds the URL for the dashboards, which is used to display the dashboards on the attached monitor.
      *
      * Can contain sensitive information.
      *
-     * @return The dashboard URL
+     * @return The dashboards URL
      */
     public abstract String fetchUrl();
 
@@ -51,7 +51,7 @@ public abstract class DashboardProvider
     public abstract String fetchPublicUrl();
 
     /**
-     * Retrieves the lifespan of this dashboard.
+     * Retrieves the lifespan of this dashboards.
      *
      * TIme unit is milliseconds.
      *
@@ -73,7 +73,7 @@ public abstract class DashboardProvider
     }
 
     /**
-     * Loads dashboard provider configured by the global settings.
+     * Loads dashboards provider configured by the global settings.
      *
      * If no provider can be loaded, or incorrect settings are specified, a runtime exception will be thrown.
      *

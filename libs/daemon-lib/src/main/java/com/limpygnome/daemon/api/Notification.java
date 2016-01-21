@@ -1,7 +1,5 @@
 package com.limpygnome.daemon.api;
 
-import java.awt.*;
-
 /**
  * Represents a notification, intended to be displayed on the screen/VHD connected to the system.
  */
@@ -10,15 +8,15 @@ public class Notification
     private String header;
     private String text;
     private long lifespan;
-    private Color background;
+    private String type;
     private int priority;
 
-    public Notification(String header, String text, long lifespanMs, Color background, int priority)
+    public Notification(String header, String text, long lifespanMs, String type, int priority)
     {
         this.header = header;
         this.text = text;
         this.lifespan = lifespanMs;
-        this.background = background;
+        this.type = type;
         this.priority = priority;
     }
 
@@ -37,9 +35,9 @@ public class Notification
         return lifespan;
     }
 
-    public Color getBackground()
+    public String getType()
     {
-        return background;
+        return type;
     }
 
     public int getPriority()
@@ -55,6 +53,7 @@ public class Notification
                 "text: " + text + ", " +
                 "lifespan: " + lifespan + ", " +
                 "priority: " + priority +
+                "type: " + type +
                 "]";
     }
 }

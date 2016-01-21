@@ -12,7 +12,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -133,7 +132,7 @@ public class IntervalService implements Service
                 (String) root.get("header"),
                 (String) root.get("text"),
                 (long) root.get("lifespan"),
-                Color.decode((String) root.get("background")),
+                (String) root.get("type"),
                 root.containsKey("priority") ? (int) (long) root.get("priority") : IntervalPatternSource.NOTIFICATION_DEFAULT_PRIORITY
         );
     }

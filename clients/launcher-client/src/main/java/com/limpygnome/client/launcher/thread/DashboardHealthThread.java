@@ -11,14 +11,14 @@ import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 
 /**
- * Used to monitor the dashboard and periodically restart it.
+ * Used to monitor the dashboards and periodically restart it.
  */
 public class DashboardHealthThread extends ExtendedThread
 {
     private static final Logger LOG = LogManager.getLogger(DashboardHealthThread.class);
 
     /*
-        The dashboard will only be refreshed if it was last refreshed greater than this period.
+        The dashboards will only be refreshed if it was last refreshed greater than this period.
 
         Unit is milliseconds.
      */

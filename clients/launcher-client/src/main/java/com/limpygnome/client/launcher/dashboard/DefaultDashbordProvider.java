@@ -3,7 +3,7 @@ package com.limpygnome.client.launcher.dashboard;
 import org.json.simple.JSONObject;
 
 /**
- * THe default implementation of a dashboard provider, which supports opening a URL.
+ * THe default implementation of a dashboards provider, which supports opening a URL.
  *
  * JSON parameter configuration:
  * - url: mandatory URL to be opened
@@ -24,8 +24,8 @@ public class DefaultDashbordProvider extends DashboardProvider
      *
      * @param url The URL
      * @param publicUrl The public URL; can be null to inherit URL
-     * @param lifespan The lifespan of the dashboard, before it's transitioned
-     * @param refresh The refresh interval of the dashboard
+     * @param lifespan The lifespan of the dashboards, before it's transitioned
+     * @param refresh The refresh interval of the dashboards
      */
     public DefaultDashbordProvider(String url, String publicUrl, long lifespan, long refresh)
     {

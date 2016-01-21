@@ -7,7 +7,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 
-import java.awt.*;
 import java.net.ConnectException;
 
 /**
@@ -67,11 +66,7 @@ public class NotificationClient
             jsonRoot.put("header", notification.getHeader());
             jsonRoot.put("text", notification.getText());
             jsonRoot.put("lifespan", notification.getLifespan());
-
-            Color background = notification.getBackground();
-            jsonRoot.put("backgroundR", background.getRed());
-            jsonRoot.put("backgroundG", background.getGreen());
-            jsonRoot.put("backgroundB", background.getBlue());
+            jsonRoot.put("type", notification.getType());
 
             jsonRoot.put("source", sourceName);
             jsonRoot.put("priority", notification.getPriority());

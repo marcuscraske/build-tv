@@ -15,7 +15,7 @@ import java.io.FileInputStream;
 import java.util.Properties;
 
 /**
- * A service for retrieving the current Jira dashboard ID used for the wallboard.
+ * A service for retrieving the current Jira dashboards ID used for the wallboard.
  */
 public class JiraDashboardService implements Service, RestServiceHandler
 {
@@ -23,7 +23,7 @@ public class JiraDashboardService implements Service, RestServiceHandler
 
     public static final String SERVICE_NAME = "jira-dashboard";
 
-    /* The key of the dashboard ID property in the wallboard properties file. */
+    /* The key of the dashboards ID property in the wallboard properties file. */
     private static final String WALLBOARD_PROPERTIES_DASHBOARDID_KEY = "JIRA_WALLBOARD_ID";
 
     /* The mock ID used when the properties file does not exist and we're running on a dev machine. */
@@ -37,7 +37,7 @@ public class JiraDashboardService implements Service, RestServiceHandler
         // Fetch path of properties file
         String wallboardPropertiesPath = controller.getSettings().getString("jira.wallboard.path");
 
-        // Read the current dashboard
+        // Read the current dashboards
         try
         {
             File wallboardPropertiesFile = new File(wallboardPropertiesPath);
