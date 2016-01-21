@@ -16,7 +16,6 @@
     - { role: 11_interval-daemon,   tags: ["interval-daemon"] }
     - { role: 12_system-daemon, tags: ["system-daemon"] }
     - { role: 13_remote-daemon, tags: ["remote-daemon"] }
-    - { role: 14_notification-client, tags: ["notification-client"] }
-    - { role: 15_launcher-client, tags: ["launcher-client"] }
-    - { role: 16_remove-temp-files, tags: ["always"] }
-    - { role: 17_setup-reboot, tags: ["reboot"] }
+    - { role: 14_launcher-client, tags: ["launcher-client"] }
+    - { role: 15_remove-temp-files, tags: ["always"] }
+    - { role: 16_setup-reboot, tags: ["reboot"] }
