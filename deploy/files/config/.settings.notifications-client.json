@@ -1,7 +1,0 @@
-{
-    "notifications" :
-    {
-        "enabled"   : true,
-        "endpoint"  : "http://localhost:2800/interval-daemon/notifications/get"
-    }
-}
