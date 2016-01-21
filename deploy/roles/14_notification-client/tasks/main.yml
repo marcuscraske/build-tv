@@ -1,7 +1,0 @@
-- name: Copying notification client JAR
-  copy: src={{ notification_client }}/target/notification-client.jar
-        dest={{ deploy_path }}
-        mode=0770
-        owner=wallboard
-        group=wallboard
-  sudo: true

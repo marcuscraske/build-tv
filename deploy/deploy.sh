@@ -31,7 +31,6 @@ PATH_BUILDTV_DAEMON="${PATH_BASE}/daemons/build-tv-daemon"
 PATH_INTERVAL_DAEMON="${PATH_BASE}/daemons/interval-daemon"
 PATH_SYSTEM_DAEMON="${PATH_BASE}/daemons/system-daemon"
 PATH_REMOTE_DAEMON="${PATH_BASE}/daemons/remote-daemon"
-PATH_NOTIFICATION_CLIENT="${PATH_BASE}/clients/notification-client"
 PATH_LAUNCHER_CLIENT="${PATH_BASE}/clients/launcher-client"
 
 
@@ -59,7 +58,6 @@ echo "Path - build TV daemon:       ${PATH_BUILDTV_DAEMON}"
 echo "Path - interval daemon:       ${PATH_INTERVAL_DAEMON}"
 echo "Path - system daemon:         ${PATH_SYSTEM_DAEMON}"
 echo "Path - remote daemon:         ${PATH_REMOTE_DAEMON}"
-echo "Path - notification client:   ${PATH_NOTIFICATION_CLIENT}"
 echo "Path - launcher client:       ${PATH_LAUNCHER_CLIENT}"
 
 
@@ -79,7 +77,6 @@ EXTRA_VARS+="build_tv_daemon=\"${PATH_BUILDTV_DAEMON}\" "
 EXTRA_VARS+="interval_daemon=\"${PATH_INTERVAL_DAEMON}\" "
 EXTRA_VARS+="system_daemon=\"${PATH_SYSTEM_DAEMON}\" "
 EXTRA_VARS+="remote_daemon=\"${PATH_REMOTE_DAEMON}\" "
-EXTRA_VARS+="notification_client=\"${PATH_NOTIFICATION_CLIENT}\" "
 EXTRA_VARS+="launcher_client=\"${PATH_LAUNCHER_CLIENT}\" "
 
 # Attach any args after first as variables
@@ -98,7 +95,6 @@ if [[ -z "${1}" || "${1}" == "*" ]]; then
     DEPLOY_TAGS+="interval-daemon,"
     DEPLOY_TAGS+="system-daemon,"
     DEPLOY_TAGS+="remote-daemon,"
-    DEPLOY_TAGS+="notification-client,"
     DEPLOY_TAGS+="launcher-client,"
     DEPLOY_TAGS+="reboot"
 else
