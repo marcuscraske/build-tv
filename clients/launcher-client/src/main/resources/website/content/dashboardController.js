@@ -168,7 +168,10 @@ dashboardController = {
         if (iframe.lifespan > 0)
         {
             var self = this;
-            setTimeout(function() { self.transition(); }, iframe.lifespan);
+            setTimeout(function() {
+                self.transition();
+            },
+            iframe.lifespan);
         }
         else
         {
