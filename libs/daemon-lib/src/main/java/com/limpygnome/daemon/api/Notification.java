@@ -52,7 +52,7 @@ public class Notification
                 "header: " + header + ", " +
                 "text: " + text + ", " +
                 "lifespan: " + lifespan + ", " +
-                "priority: " + priority +
+                "priority: " + priority + ", " +
                 "type: " + type +
                 "]";
     }
