@@ -16,6 +16,9 @@ dashboardController = {
     /* The dashboards to be transitioned. */
     dashboards: {},
 
+    /* The rate at which to poll for dashboard changes in milliseconds. */
+    dashboardPollingInterval: 1000,
+
     retrieveRoot: function()
     {
         return $("#dashboards");
@@ -24,35 +27,77 @@ dashboardController = {
     setup: function()
     {
         // Setup periodic calling of REST service for dashboards...
+        setInterval(this.pollDashboards, this.dashboardPollingInterval);
+
+        console.info("dashboardController - setup complete");
     },
 
-    resetTransitioning: function()
+    currentTime: function()
+    {
+        return new Date().getTime();
+    },
+
+    pollDashboards: function()
+    {
+        console.info("dashboardController - polling dashboard REST service...");
+
+        $.getJSON("http://localhost:2900/dashboards/urls/get", function(data){
+
+            // Fetch existing dashboards
+            var dashboards = dashboardController.dashboards;
+            var newDashboards = data.dashboards;
+
+            // Check if dashboard data has changed...
+            if (JSON.stringify(newDashboards) != JSON.stringify(dashboards))
+            {
+                // Reset transitioning
+                dashboardController.resetTransitioning(newDashboards);
+            }
+            else
+            {
+                console.debug("dashboardController - polled data unchanged");
+            }
+
+        }).fail(function(){
+            console.error("dashboardController - failed to retrieve dashboards from REST service");
+        });
+    },
+
+    resetTransitioning: function(data)
     {
         var root = this.retrieveRoot();
 
+        // Update dashboard data
+        console.info("dashboardController - dashboard data changed - old: " + this.dashboards + ", new: " + data);
+
+        this.dashboards = data;
+
         // Reset existing dashboards
-        $(root).children().removeAll();
+        $(root).empty();
 
         // Add dashboards
         var dashboard;
         var iframe;
 
-        for (var i = 0; i < dashboards.length; i++)
+        for (var i = 0; i < this.dashboards.length; i++)
         {
-            dashboard = dashboards[i];
+            dashboard = this.dashboards[i];
 
             // Create iframe for each dashboard...
             iframe = document.createElement("iframe");
             iframe.id = "dashboard_" + i;
             iframe.src = dashboard.url;
             iframe.lifespan = dashboard.lifespan;
+            iframe.refresh = dashboard.refresh;
+            iframe.lastRefresh = this.currentTime();
+            iframe.className = "hide";
 
-            root.appendChild(iframe);
+            root.append(iframe);
         }
 
-        this.totalDashboards = dashboards.length;
+        this.totalDashboards = this.dashboards.length;
 
-        console.info("Setup " + this.totalDashboards + " dashboards");
+        console.info("dashboardController - setup " + this.totalDashboards + " dashboards");
 
         // Begin transition of dashboaards...
         this.transition();
@@ -60,7 +105,7 @@ dashboardController = {
 
     retrieve: function(index)
     {
-        return $("#dashboard_" + index);
+        return $("#dashboard_" + index)[0];
     },
 
     hide: function(index)
@@ -70,10 +115,21 @@ dashboardController = {
         var iframe = this.retrieve(index);
         iframe.className = "hide";
 
-        // Reload page...
-        var currentUrl = iframe.src;
-        iframe.src = null;
-        iframe.src = currentUrl;
+        // Reload page if surpassed refresh interval
+        var lastRefreshed = iframe.lastRefresh;
+        var currentTime = this.currentTime();
+
+        if (currentTime - iframe.refresh >= lastRefreshed)
+        {
+            var currentUrl = iframe.src;
+            console.debug("refreshing iframe " + index + " - interval: " + iframe.refresh + ", last: " +
+                            iframe.lastRefresh + ", url: " + currentUrl
+            );
+
+            iframe.src = null;
+            iframe.src = currentUrl;
+            iframe.lastRefresh = this.currentTime();
+        }
     },
 
     show: function(index)
@@ -113,6 +169,10 @@ dashboardController = {
         {
             var self = this;
             setTimeout(function() { self.transition(); }, iframe.lifespan);
+        }
+        else
+        {
+            console.debug("dashboardController - infinite/invalid lifespan (" + iframe.lifespan + "), no transitions left...");
         }
     }
 

@@ -5,19 +5,20 @@
             "provider" : "jira",
             "params" :
             {
-                "url": "http://www.mock.jira.dashboard",
+                "url": "content/test_a.html",
                 "user": "user",
                 "pass": "pass",
                 "dashboard": "test",
-                "lifespan" : 2000
+                "lifespan" : 5000,
+                "refresh" : 60000
             }
         },
         {
             "provider" : "url",
             "params" :
             {
-                "url": "http://www.google.com",
-                "lifespan" : 2000,
+                "url": "content/test_b.html",
+                "lifespan" : 5000,
                 "refresh" : 5000
             }
         },
@@ -25,9 +26,9 @@
             "provider" : "url",
             "params" :
             {
-                "url": "http://www.bbc.com",
-                "lifespan" : 2000,
-                "refresh" : 30000
+                "url": "content/test_c.html",
+                "lifespan" : 5000,
+                "refresh" : 60000
             }
         }
     ]

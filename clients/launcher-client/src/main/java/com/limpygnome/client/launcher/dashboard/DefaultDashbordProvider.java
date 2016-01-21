@@ -24,11 +24,15 @@ public class DefaultDashbordProvider extends DashboardProvider
      *
      * @param url The URL
      * @param publicUrl The public URL; can be null to inherit URL
+     * @param lifespan The lifespan of the dashboard, before it's transitioned
+     * @param refresh The refresh interval of the dashboard
      */
-    public DefaultDashbordProvider(String url, String publicUrl)
+    public DefaultDashbordProvider(String url, String publicUrl, long lifespan, long refresh)
     {
         this.url = url;
         this.publicUrl = publicUrl != null ? publicUrl : url;
+        this.lifespan = lifespan;
+        this.refresh = refresh;
     }
 
     @Override

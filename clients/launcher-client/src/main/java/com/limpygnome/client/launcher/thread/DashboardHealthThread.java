@@ -1,24 +1,21 @@
 package com.limpygnome.client.launcher.thread;
 
 import com.limpygnome.client.launcher.browser.Browser;
-import com.limpygnome.client.launcher.dashboard.DashboardProvider;
-import com.limpygnome.client.launcher.service.LauncherService;
+import com.limpygnome.client.launcher.service.DashboardService;
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.ControllerState;
 import com.limpygnome.daemon.common.ExtendedThread;
 import com.limpygnome.daemon.common.Settings;
-import com.limpygnome.daemon.util.JsonUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
-import org.json.simple.JSONObject;
 
 /**
  * Used to monitor the dashboard and periodically restart it.
  */
-public class LauncherThread extends ExtendedThread
+public class DashboardHealthThread extends ExtendedThread
 {
-    private static final Logger LOG = LogManager.getLogger(LauncherThread.class);
+    private static final Logger LOG = LogManager.getLogger(DashboardHealthThread.class);
 
     /*
         The dashboard will only be refreshed if it was last refreshed greater than this period.
@@ -33,16 +30,16 @@ public class LauncherThread extends ExtendedThread
     private long THREAD_SLEEP = 1000;
 
     private Controller controller;
-    private LauncherService launcherService;
+    private DashboardService dashboardService;
 
     private long lastRefreshed;
     private long refreshHour;
     private long refreshMinute;
 
-    public LauncherThread(Controller controller, LauncherService launcherService)
+    public DashboardHealthThread(Controller controller, DashboardService dashboardService)
     {
         this.controller = controller;
-        this.launcherService = launcherService;
+        this.dashboardService = dashboardService;
         this.lastRefreshed = System.currentTimeMillis();
 
         Settings settings = controller.getSettings();
@@ -60,10 +57,10 @@ public class LauncherThread extends ExtendedThread
         controller.waitForState(ControllerState.RUNNING);
 
         // Retrieve browser and provider
-        Browser browser = launcherService.getBrowser();
+        Browser browser = dashboardService.getBrowser();
 
         // Start browser...
-        launcherService.reloadBrowser();
+        dashboardService.reloadBrowser();
 
         while (!isExit())
         {
@@ -72,7 +69,7 @@ public class LauncherThread extends ExtendedThread
                 // Check if browser should be refreshed
                 if (shouldRefreshBrowser(browser))
                 {
-                    launcherService.reloadBrowser();
+                    dashboardService.reloadBrowser();
                     lastRefreshed = System.currentTimeMillis();
                 }
 

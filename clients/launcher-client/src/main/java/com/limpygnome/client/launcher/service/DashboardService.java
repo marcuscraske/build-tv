@@ -2,9 +2,10 @@ package com.limpygnome.client.launcher.service;
 
 import com.limpygnome.client.launcher.browser.Browser;
 import com.limpygnome.client.launcher.browser.ChromiumBrowser;
+import com.limpygnome.client.launcher.browser.MockBrowser;
 import com.limpygnome.client.launcher.dashboard.DashboardProvider;
 import com.limpygnome.client.launcher.dashboard.DefaultDashbordProvider;
-import com.limpygnome.client.launcher.thread.LauncherThread;
+import com.limpygnome.client.launcher.thread.DashboardHealthThread;
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.RestServiceHandler;
 import com.limpygnome.daemon.api.Service;
@@ -25,16 +26,16 @@ import java.util.List;
 /**
  * A service used to control the dashboard.
  */
-public class LauncherService implements Service, RestServiceHandler
+public class DashboardService implements Service, RestServiceHandler
 {
-    private static final Logger LOG = LogManager.getLogger(LauncherService.class);
+    private static final Logger LOG = LogManager.getLogger(DashboardService.class);
 
     private static final String DASHBOARD_CONFIG_FILE = "dashboards.json";
 
-    public static final String SERVICE_NAME = "launcher";
+    public static final String SERVICE_NAME = "dashboards";
 
     private JSONObject dashboardSettings;
-    private LauncherThread launcherThread;
+    private DashboardHealthThread dashboardHealthThread;
     private Browser browser;
 
     /* Available dashboard providers. */
@@ -59,12 +60,25 @@ public class LauncherService implements Service, RestServiceHandler
         parseProviders(controller);
 
         // Setup browser
-        browser = new ChromiumBrowser();
+        String browserSetting = controller.getSettings().getString("browser");
+
+        switch (browserSetting)
+        {
+            case ChromiumBrowser.BROWSER_NAME:
+                browser = new ChromiumBrowser();
+                break;
+            case MockBrowser.BROWSER_NAME:
+                browser = new MockBrowser();
+                break;
+            default:
+                throw new IllegalArgumentException("Browser '" + browserSetting + "' not available");
+        }
+
         browser.setup(controller);
 
         // Start launcher thread to monitor and refresh dashboard
-        launcherThread = new LauncherThread(controller, this);
-        launcherThread.start();
+        dashboardHealthThread = new DashboardHealthThread(controller, this);
+        dashboardHealthThread.start();
     }
 
     private synchronized void loadDashboardConfig(Controller controller)
@@ -107,10 +121,10 @@ public class LauncherService implements Service, RestServiceHandler
     public synchronized void stop(Controller controller)
     {
         // Destroy thread
-        if (launcherThread != null)
+        if (dashboardHealthThread != null)
         {
-            launcherThread.kill();
-            launcherThread = null;
+            dashboardHealthThread.kill();
+            dashboardHealthThread = null;
         }
 
         // Destroy browser
@@ -128,23 +142,23 @@ public class LauncherService implements Service, RestServiceHandler
     @Override
     public synchronized boolean handleRequestInChain(RestRequest restRequest, RestResponse restResponse)
     {
-        if (restRequest.isPathMatch(new String[]{ "launcher-client", "refresh" }))
+        if (restRequest.isPathMatch(new String[]{ "dashboards", "refresh" }))
         {
             return handleRequestRefresh(restRequest, restResponse);
         }
-        else if (restRequest.isPathMatch(new String[]{ "launcher-client", "urls", "get" }))
+        else if (restRequest.isPathMatch(new String[]{ "dashboards", "urls", "get" }))
         {
             return handleRequestGetUrls(restRequest, restResponse);
         }
-        else if (restRequest.isPathMatch(new String[]{ "launcher-client", "kill" }))
+        else if (restRequest.isPathMatch(new String[]{ "dashboards", "kill" }))
         {
             return handleRequestKill(restRequest, restResponse);
         }
-        else if (restRequest.isPathMatch(new String[]{ "launcher-client", "urls", "set" }))
+        else if (restRequest.isPathMatch(new String[]{ "dashboards", "urls", "set" }))
         {
             return handleRequestOpenUrls(restRequest, restResponse);
         }
-        else if (restRequest.isPathMatch(new String[]{ "launcher-client", "urls", "reset" }))
+        else if (restRequest.isPathMatch(new String[]{ "dashboards", "urls", "reset" }))
         {
             return handleRequestResetUrls(restRequest, restResponse);
         }
@@ -176,8 +190,11 @@ public class LauncherService implements Service, RestServiceHandler
 
         Object rawRequestDashboard;
         JSONObject requestDashboard;
+
         String url;
         String publicUrl;
+        long lifespan;
+        long refresh;
 
         for (int i = 0; i < requestDashboards.size(); i++)
         {
@@ -187,9 +204,11 @@ public class LauncherService implements Service, RestServiceHandler
             // Fetch URLs
             url = (String) requestDashboard.get("url");
             publicUrl = (String) requestDashboard.get("public_url");
+            lifespan = (long) requestDashboard.get("lifespan");
+            refresh = (long) requestDashboard.get("refresh");
 
             // Create provider...
-            dashboardProviders[i] = new DefaultDashbordProvider(url, publicUrl);
+            dashboardProviders[i] = new DefaultDashbordProvider(url, publicUrl, lifespan, refresh);
         }
 
         // Switch override dashboards...
@@ -213,7 +232,12 @@ public class LauncherService implements Service, RestServiceHandler
         for (DashboardProvider dashboardProvider : dashboardProviders)
         {
             responseDashboard = new JSONObject();
-            responseDashboard.put("url", dashboardProvider.fetchPublicUrl());
+
+            responseDashboard.put("url", dashboardProvider.fetchUrl());
+            responseDashboard.put("public_url", dashboardProvider.fetchPublicUrl());
+            responseDashboard.put("lifespan", dashboardProvider.getLifespan());
+            responseDashboard.put("refresh", dashboardProvider.getRefresh());
+
             responseDashboards.add(responseDashboard);
         }
         response.put("dashboards", responseDashboards);

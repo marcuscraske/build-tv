@@ -24,10 +24,16 @@ body
 
 #dashboards iframe.hide
 {
-    visibility: hidden;
+    opacity: 0;
 }
 
 #dashboards iframe.show
 {
-    visibility: visible;
+    opacity: 1;
+}
+
+#dashboards iframe.hide,
+#dashboards iframe.show
+{
+    transition: opacity 2s linear;
 }
