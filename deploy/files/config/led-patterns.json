@@ -15,7 +15,7 @@
             {
                 "header"        : "Standup",
                 "text"          : null,
-                "background"    : "#666666",
+                "type"          : "standup",
                 "priority"      : 50,
                 "lifespan"      : 0
             }
