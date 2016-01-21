@@ -1,0 +1,141 @@
+#notification
+{
+    display: table;
+    position: fixed;
+    top: 10%;
+    left: 10%;
+    width: 80%;
+    height: 80%;
+    text-align: center;
+    border-radius: 4em;
+
+    /* Default properties */
+    background: #333;
+    color: #FFF;
+    text-shadow: 0em 0em 3em #FFF;
+    box-shadow: inset 0em 0em 6em #666, 0em 0em 10em #666;
+}
+
+#notification.show
+{
+    opacity: 1;
+    -webkit-animation: fadein 2s ease-in;
+}
+
+#notification.hide
+{
+    opacity: 0;
+}
+
+#notification.show,
+#notification.hide
+{
+    transition: opacity 2s linear;
+}
+
+
+#notification .wrapper
+{
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#notification .wrapper .header
+{
+    font-size: 15vh;
+}
+
+#notification .wrapper .text
+{
+    font-size: 8vh;
+}
+
+
+/*
+    Notification types
+*/
+#notification.jenkins-unavailable,
+#notification.build-failure
+{
+    -webkit-animation: pulsate 2s ease-in;
+    -webkit-animation-iteration-count: infinite;
+}
+
+#notification.jenkins-unavailable
+{
+    background: #C30;
+    box-shadow: inset 0em 0em 6em #666, 0em 0em 10em #C00;
+}
+
+#notification.build-failure
+{
+    background: #C00;
+    box-shadow: inset 0em 0em 6em #666, 0em 0em 10em #C00;
+
+    -webkit-animation: pulsate 2s ease-in;
+    -webkit-animation-iteration-count: infinite;
+}
+
+#notification.build-unstable
+{
+    background: #fc0;
+    color: #4d2e00;
+    box-shadow: inset 0em 0em 6em #4d2e00, 0em 0em 10em #ffad33;
+    text-shadow: 0em 0em 3em #cc7a00;
+}
+
+#notification.build-progress
+{
+    background: #00f;
+    box-shadow: inset 0em 0em 6em #006, 0em 0em 15em #009;
+}
+
+#notification.build-ok
+{
+    background: #0c0;
+    box-shadow: inset 0em 0em 6em #060, 0em 0em 15em #090;
+}
+
+#notification.standup
+{
+    background: #f0f;
+    box-shadow: inset 0em 0em 6em #80007f, 0em 0em 15em #ff66fe;
+
+    -webkit-animation: pulsate 4s ease-in;
+    -webkit-animation-iteration-count: infinite;
+}
+
+
+/*
+    Shared animations
+*/
+
+@-webkit-keyframes fadein {
+    0% {
+        -webkit-transform: scale(0.5, 0.5);
+        opacity: 0.0;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    90% {
+        -webkit-transform: scale(1.1, 1.1);
+    }
+    100% {
+        -webkit-transform: scale(1.0, 1.0);
+        opacity: 1.0;
+    }
+}
+
+
+@-webkit-keyframes pulsate {
+    0% {
+        opacity: 1.0;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1.0;
+    }
+}

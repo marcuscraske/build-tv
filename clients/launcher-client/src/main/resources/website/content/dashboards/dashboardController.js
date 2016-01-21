@@ -1,8 +1,7 @@
 // Hook onload event so that the page can load...
-window.onload = function()
-{
+$(window).ready(function(){
     dashboardController.setup();
-}
+});
 
 // Our dashboard controller, for creating and changing the visibility of dashboards (which are iframe elements)
 dashboardController = {
@@ -30,11 +29,6 @@ dashboardController = {
         setInterval(this.pollDashboards, this.dashboardPollingInterval);
 
         console.info("dashboardController - setup complete");
-    },
-
-    currentTime: function()
-    {
-        return new Date().getTime();
     },
 
     pollDashboards: function()
@@ -89,7 +83,7 @@ dashboardController = {
             iframe.src = dashboard.url;
             iframe.lifespan = dashboard.lifespan;
             iframe.refresh = dashboard.refresh;
-            iframe.lastRefresh = this.currentTime();
+            iframe.lastRefresh = dashboardUtils.currentTime();
             iframe.className = "hide";
 
             root.append(iframe);
@@ -117,7 +111,7 @@ dashboardController = {
 
         // Reload page if surpassed refresh interval
         var lastRefreshed = iframe.lastRefresh;
-        var currentTime = this.currentTime();
+        var currentTime = dashboardUtils.currentTime();
 
         if (currentTime - iframe.refresh >= lastRefreshed)
         {
@@ -128,7 +122,7 @@ dashboardController = {
 
             iframe.src = null;
             iframe.src = currentUrl;
-            iframe.lastRefresh = this.currentTime();
+            iframe.lastRefresh = dashboardUtils.currentTime();
         }
     },
 

@@ -24,7 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * A service used to control the dashboard.
+ * A service used to control the dashboards.
  */
 public class DashboardService implements Service, RestServiceHandler
 {
@@ -38,10 +38,10 @@ public class DashboardService implements Service, RestServiceHandler
     private DashboardHealthThread dashboardHealthThread;
     private Browser browser;
 
-    /* Available dashboard providers. */
+    /* Available dashboards providers. */
     private DashboardProvider[] dashboardProviders;
 
-    /* Used for when dashboard URLs are manually set via REST service. */
+    /* Used for when dashboards URLs are manually set via REST service. */
     private DashboardProvider[] overrideDashboardProviders;
 
     /* Web server service, used to retrieve URL for rendering dashboards. */
@@ -53,10 +53,10 @@ public class DashboardService implements Service, RestServiceHandler
         // Fetch webserver service
         webServerService = (WebServerService) controller.getServiceByName(WebServerService.SERVICE_NAME);
 
-        // Load dashboard config
+        // Load dashboards config
         loadDashboardConfig(controller);
 
-        // Parse dashboard providers
+        // Parse dashboards providers
         parseProviders(controller);
 
         // Setup browser
@@ -76,7 +76,7 @@ public class DashboardService implements Service, RestServiceHandler
 
         browser.setup(controller);
 
-        // Start launcher thread to monitor and refresh dashboard
+        // Start launcher thread to monitor and refresh dashboards
         dashboardHealthThread = new DashboardHealthThread(controller, this);
         dashboardHealthThread.start();
     }
@@ -105,7 +105,7 @@ public class DashboardService implements Service, RestServiceHandler
 
         for (Object rawElement : dashboardPages)
         {
-            // Fetch config for page / dashboard provider
+            // Fetch config for page / dashboards provider
             page = (JSONObject) rawElement;
 
             // Parse provider
@@ -221,7 +221,7 @@ public class DashboardService implements Service, RestServiceHandler
 
     private synchronized boolean handleRequestGetUrls(RestRequest restRequest, RestResponse restResponse)
     {
-        // Fetch current dashboard
+        // Fetch current dashboards
         DashboardProvider[] dashboardProviders = getDashboardProviders();
 
         // Build response
@@ -254,7 +254,7 @@ public class DashboardService implements Service, RestServiceHandler
         // Reset override dashboards
         overrideDashboardProviders = null;
 
-        // Re-open dashboard renderer...
+        // Re-open dashboards renderer...
         reloadBrowser();
 
         return true;
@@ -271,11 +271,11 @@ public class DashboardService implements Service, RestServiceHandler
     }
 
     /**
-     * Retrieves the current dashboard providers.
+     * Retrieves the current dashboards providers.
      *
      * This is not a simple accessor, so invocations should be held/cached where/when appropriate.
      *
-     * @return The current dashboard provider
+     * @return The current dashboards provider
      */
     public synchronized DashboardProvider[] getDashboardProviders()
     {

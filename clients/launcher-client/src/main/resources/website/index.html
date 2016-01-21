@@ -6,24 +6,28 @@
         </title>
 
         <script type="text/javascript" src="content/jquery-2.2.0.min.js"></script>
+        <script type="text/javascript" src="content/dashboardUtils.js"></script>
 
-        <link rel="stylesheet" type="text/css" href="content/dashboards.css" />
-        <script type="text/javascript" src="content/dashboardController.js"></script>
+        <!-- Dashboards -->
+        <link rel="stylesheet" type="text/css" href="content/dashboards/dashboards.css" />
+        <script type="text/javascript" src="content/dashboards/dashboardController.js"></script>
 
-        <link rel="stylesheet" type="text/css" href="content/notifications.css" />
+        <!-- Notifications -->
+        <link rel="stylesheet" type="text/css" href="content/notifications/notifications.css" />
+        <script type="text/javascript" src="content/notifications/notificationController.js"></script>
 
     </head>
-    <body>
+    <body>a
         <div id="container">
             <div id="dashboards">
                 <!-- Dashboards will be populated here -->
             </div>
-            <div class="notification">
+            <div id="notification" class="hide">
                 <div class="wrapper">
-                    <div class="title">
-                        loading...
+                    <div class="header">
+                        standup
                     </div>
-                    <div class="message">
+                    <div class="text">
                     </div>
                 </div>
             </div>

@@ -52,7 +52,7 @@ public class NotificationService implements Service, RestServiceHandler
         }
 
         Notification notification = new Notification(
-            hostname, "ip: " + ip, 30000, Color.DARK_GRAY, 0
+            hostname, "ip: " + ip, 30000, "startup", 0
         );
 
         updateCurrentNotification(LOCAL_SOURCE_NAME, notification);
@@ -156,7 +156,6 @@ public class NotificationService implements Service, RestServiceHandler
         if (notificationSource != null)
         {
             Notification notification = notificationSource.getNotification();
-            Color background = notification.getBackground();
 
             // Build into response message
             JSONObject response = new JSONObject();
@@ -165,13 +164,7 @@ public class NotificationService implements Service, RestServiceHandler
             response.put("header", notification.getHeader());
             response.put("text", notification.getText());
             response.put("lifespan", notification.getLifespan());
-
-            JSONObject resonseBackground = new JSONObject();
-            resonseBackground.put("r", background.getRed());
-            resonseBackground.put("g", background.getGreen());
-            resonseBackground.put("b", background.getBlue());
-
-            response.put("background", resonseBackground);
+            response.put("type", notification.getType());
 
             // Write response
             restResponse.writeJsonResponseIgnoreExceptions(restResponse, response);
@@ -196,17 +189,14 @@ public class NotificationService implements Service, RestServiceHandler
         String header = (String) request.get("header");
         String text = (String) request.get("text");
         long lifespan = (long) request.get("lifespan");
-        float backgroundR = ((long) request.get("backgroundR")) / 255.0f;
-        float backgroundG = ((long) request.get("backgroundG")) / 255.0f;
-        float backgroundB = ((long) request.get("backgroundB")) / 255.0f;
+        String type = (String) request.get("type");
 
         // -- Source
         String source = (String) request.get("source");
         int priority = (int) (long) request.get("priority");
 
         // Build notification
-        Color background = new Color(backgroundR, backgroundG, backgroundB);
-        Notification notification = new Notification(header, text, lifespan, background, priority);
+        Notification notification = new Notification(header, text, lifespan, type, priority);
 
         // Update current notification
         updateCurrentNotification(source, notification);

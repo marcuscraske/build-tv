@@ -18,7 +18,7 @@ import javax.servlet.DispatcherType;
 import java.util.EnumSet;
 
 /**
- * Used to provide a web server for dashboard content.
+ * Used to provide a web server for dashboards content.
  */
 public class WebServerService implements Service
 {
