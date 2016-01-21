@@ -1,12 +1,32 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Dashboards</title>
+        <title>
+            Dashboards
+        </title>
+
+        <script type="text/javascript" src="content/jquery-2.2.0.min.js"></script>
+
         <link rel="stylesheet" type="text/css" href="content/dashboards.css" />
         <script type="text/javascript" src="content/dashboardController.js"></script>
-        <script type="text/javascript" src="content/jquery-2.2.0.min.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="content/notifications.css" />
+
     </head>
     <body>
-        <div id="dashboards"></div>
+        <div id="container">
+            <div id="dashboards">
+                <!-- Dashboards will be populated here -->
+            </div>
+            <div class="notification">
+                <div class="wrapper">
+                    <div class="title">
+                        loading...
+                    </div>
+                    <div class="message">
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
