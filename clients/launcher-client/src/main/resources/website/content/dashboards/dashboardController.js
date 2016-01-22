@@ -65,6 +65,17 @@ dashboardController = {
         console.info("dashboardController - dashboard data changed - old: " + this.dashboards + ", new: " + data);
 
         this.dashboards = data;
+        this.currentIframeIndex = -1;
+
+        // Iterate existing dashboards to cancel intervals
+        $(root).children().each(function(){
+            var iframe = this;
+
+            if (iframe.interval) {
+                clearInterval(iframe.interval);
+                console.debug("dashboardController - cleared interval attached to iframe");
+            }
+        });
 
         // Reset existing dashboards
         $(root).empty();
@@ -115,15 +126,21 @@ dashboardController = {
 
         if (currentTime - iframe.refresh >= lastRefreshed)
         {
-            var currentUrl = iframe.src;
-            console.debug("refreshing iframe " + index + " - interval: " + iframe.refresh + ", last: " +
-                            iframe.lastRefresh + ", url: " + currentUrl
-            );
-
-            iframe.src = null;
-            iframe.src = currentUrl;
-            iframe.lastRefresh = dashboardUtils.currentTime();
+            this.refresh(index, iframe);
         }
+    },
+
+    refresh: function(index, iframe)
+    {
+        var currentUrl = iframe.src;
+
+        console.debug("refreshing iframe " + index + " - interval: " + iframe.refresh + ", last: " +
+                        iframe.lastRefresh + ", url: " + currentUrl
+        );
+
+        iframe.src = null;
+        iframe.src = currentUrl;
+        iframe.lastRefresh = dashboardUtils.currentTime();
     },
 
     show: function(index)
@@ -170,6 +187,24 @@ dashboardController = {
         else
         {
             console.debug("dashboardController - infinite/invalid lifespan (" + iframe.lifespan + "), no transitions left...");
+
+            // Hook for refresh if not zero/infinite
+            if (iframe.refresh > 0)
+            {
+                var self = this;
+                var index = this.currentIframeIndex;
+
+                // Create interval'd function to refresh iframe
+                var interval = setInterval(function() {
+                    self.refresh(index, iframe);
+                },
+                iframe.refresh);
+
+                // Attach interval handle to iframe
+                iframe.interval = interval;
+
+                console.debug("dashboardController - hooked refresh for infinite dashboard");
+            }
         }
     }
 
