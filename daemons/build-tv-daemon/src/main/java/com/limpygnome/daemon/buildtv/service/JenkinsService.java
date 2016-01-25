@@ -3,6 +3,7 @@ package com.limpygnome.daemon.buildtv.service;
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Service;
 import com.limpygnome.daemon.buildtv.jenkins.JenkinsStatusThread;
+import com.limpygnome.daemon.buildtv.model.JenkinsHostUpdateResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,6 +40,14 @@ public class JenkinsService implements Service
             jenkinsStatusThread.kill();
             jenkinsStatusThread = null;
         }
+    }
+
+    /**
+     * @return The latest result from polling Jenkins
+     */
+    public JenkinsHostUpdateResult getLatestResult()
+    {
+        return jenkinsStatusThread.getLatestResult();
     }
 
 }

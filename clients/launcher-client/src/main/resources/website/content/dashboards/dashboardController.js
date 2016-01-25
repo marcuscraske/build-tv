@@ -187,6 +187,7 @@ dashboardController = {
 
         if (iframe.lifespan > 0)
         {
+            // Hook transition for end of lifespan of iframe
             var self = this;
             setTimeout(function() {
                 self.transition();

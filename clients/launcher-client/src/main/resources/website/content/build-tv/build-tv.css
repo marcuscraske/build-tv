@@ -1,0 +1,17 @@
+#jobs
+{
+    margin: auto;
+    padding: 1em;
+    list-style: none;
+}
+
+#jobs li
+{
+    display: inline-block;
+    border: solid 0.1em #fff;
+    font-size: 2em;
+    width: 48%;
+    padding: 0.2em;
+    box-sizing: border-box;
+    overflow: hidden;
+}

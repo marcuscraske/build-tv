@@ -2,16 +2,16 @@ package com.limpygnome.daemon.buildtv.model;
 
 import com.limpygnome.daemon.api.LedPattern;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
- * Created by limpygnome on 27/08/15.
+ * Used to hold the latest result from polling Jenkins.
  */
 public class JenkinsHostUpdateResult
 {
     private LedPattern ledPattern;
     private List<String> affectedJobs;
+    private Set<JenkinsJob> jobs;
 
     public JenkinsHostUpdateResult()
     {
@@ -22,8 +22,12 @@ public class JenkinsHostUpdateResult
     {
         this.ledPattern = ledPattern;
         this.affectedJobs = new LinkedList<>();
+        this.jobs = new TreeSet<>();
     }
 
+    /**
+     * @return The current LED pattern.
+     */
     public LedPattern getLedPattern()
     {
         return ledPattern;
@@ -34,6 +38,9 @@ public class JenkinsHostUpdateResult
         this.ledPattern = ledPattern;
     }
 
+    /**
+     * @return List of affected jobs for the current LED pattern (for failures etc).
+     */
     public List<String> getAffectedJobs()
     {
         return affectedJobs;
@@ -48,4 +55,23 @@ public class JenkinsHostUpdateResult
     {
         this.affectedJobs.addAll(result.affectedJobs);
     }
+
+    public void addJob(JenkinsJob jobName)
+    {
+        this.jobs.add(jobName);
+    }
+
+    public void mergeJobs(JenkinsHostUpdateResult result)
+    {
+        this.jobs.addAll(result.jobs);
+    }
+
+    /**
+     * @return The jobs found whilst polling
+     */
+    public Set<JenkinsJob> getJobs()
+    {
+        return jobs;
+    }
+
 }

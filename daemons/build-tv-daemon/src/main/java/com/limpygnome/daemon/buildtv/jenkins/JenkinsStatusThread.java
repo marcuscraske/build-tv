@@ -34,7 +34,7 @@ public class JenkinsStatusThread extends ExtendedThread
     private static final String JENKINS_SETTINGS_FILENAME = "jenkins.json";
 
     /* The HTTP user agent for any requests made by the build TV to Jenkins. */
-    private static final String USER_AGENT = "Build TV";
+    private static final String USER_AGENT = "build-tv-jenkins-poller";
 
     /* The source name for notifications sent to the notification service. */
     private static final String NOTIFICATION_SOURCE_NAME = "build-tv-jenkins";
@@ -49,6 +49,10 @@ public class JenkinsStatusThread extends ExtendedThread
     private RestClient restClient;
 
     private JenkinsHost[] jenkinsHosts;
+
+    /* Latest result from polling hosts. */
+    private JenkinsHostUpdateResult result;
+
 
     public JenkinsStatusThread(Controller controller)
     {
@@ -164,19 +168,17 @@ public class JenkinsStatusThread extends ExtendedThread
         controller.waitForState(ControllerState.RUNNING);
 
         // Run until thread exits, polling Jenkins for status and updating pattern source
-        JenkinsHostUpdateResult hostsResult;
-
         while (!isExit())
         {
             try
             {
                 // Poll Jenkins
-                hostsResult = pollHosts();
+                result = pollHosts();
 
                 // Set LED pattern to highest found from hosts
                 try
                 {
-                    ledClient.changeLedPattern(hostsResult.getLedPattern());
+                    ledClient.changeLedPattern(result.getLedPattern());
                 }
                 catch (Exception e)
                 {
@@ -186,7 +188,7 @@ public class JenkinsStatusThread extends ExtendedThread
                 // Display notification for certain LED patterns
                 try
                 {
-                    updateNotificationFromJenkinsResult(hostsResult);
+                    updateNotificationFromJenkinsResult(result);
                 }
                 catch (Exception e)
                 {
@@ -300,12 +302,18 @@ public class JenkinsStatusThread extends ExtendedThread
 
             // Merge affected jobs into overall result
             hostsResult.mergeAffectedJobs(result);
+            hostsResult.mergeJobs(result);
         }
 
         // Set overall LED pattern to highest found
         hostsResult.setLedPattern(highestLedPattern);
 
         return hostsResult;
+    }
+
+    public JenkinsHostUpdateResult getLatestResult()
+    {
+        return result;
     }
 
 }

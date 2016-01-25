@@ -1,0 +1,23 @@
+*
+{
+    cursor: none;
+}
+
+html,
+body
+{
+    font: normal 14px Arial;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: black;
+    color: #FFF;
+}
+
+h1
+{
+    margin: 0;
+    text-align: center;
+    padding: 0.2em;
+    font-size: 3em;
+}

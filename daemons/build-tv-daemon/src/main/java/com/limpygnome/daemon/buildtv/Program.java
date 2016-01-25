@@ -17,7 +17,7 @@ public class Program
 
         // Add services
         controller.add(JenkinsService.SERVICE_NAME, new JenkinsService());
-        controller.add(JiraDashboardService.SERVICE_NAME, new JiraDashboardService());
+        controller.add(BuildStatusService.SERVICE_NAME, new BuildStatusService());
 
         // Attach REST handlers
         RestService.attachControllerRestHandlerServices(controller);

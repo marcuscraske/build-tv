@@ -29,16 +29,16 @@ public class RestResponse
         return httpExchange;
     }
 
-    public void writeJsonResponse(RestResponse restResponse, JSONObject jsonObject) throws IOException
+    public void writeJsonResponse(JSONObject jsonObject) throws IOException
     {
-        StreamUtil.writeJsonResponse(restResponse, jsonObject);
+        StreamUtil.writeJsonResponse(this, jsonObject);
     }
 
-    public void writeJsonResponseIgnoreExceptions(RestResponse restResponse, JSONObject jsonObject)
+    public void writeJsonResponseIgnoreExceptions(JSONObject jsonObject)
     {
         try
         {
-            writeJsonResponse(restResponse, jsonObject);
+            writeJsonResponse(jsonObject);
         }
         catch (Exception e)
         {

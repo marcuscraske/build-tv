@@ -2,6 +2,7 @@ package com.limpygnome.daemon.buildtv.jenkins;
 
 import com.limpygnome.daemon.api.LedPattern;
 import com.limpygnome.daemon.buildtv.model.JenkinsHostUpdateResult;
+import com.limpygnome.daemon.buildtv.model.JenkinsJob;
 import com.limpygnome.daemon.util.RestClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,21 +55,22 @@ public class JenkinsHost
             JSONArray rawJobsArray = (JSONArray) root.get("jobs");
 
             JSONObject rawJob;
-            String project;
+            String projectName;
             String status;
 
             JenkinsHostUpdateResult result = new JenkinsHostUpdateResult();
+            JenkinsJob jenkinsJob;
 
             for (int i = 0; i < rawJobsArray.size(); i++)
             {
                 rawJob = (JSONObject) rawJobsArray.get(i);
 
                 // Fetch project information
-                project = (String) rawJob.get("name");
+                projectName = (String) rawJob.get("name");
                 status = (String) rawJob.get("color");
 
                 // Check if project within list
-                if (jobsEmpty || jobs.contains(project))
+                if (jobsEmpty || jobs.contains(projectName))
                 {
                     // Handle status to get led pattern
                     LedPattern ledPattern;
@@ -80,7 +82,7 @@ public class JenkinsHost
                         case "red_anime":
                         case "aborted_anime":
                             ledPattern = LedPattern.BUILD_PROGRESS;
-                            result.addAffectedJob(project);
+                            result.addAffectedJob(projectName);
                             break;
                         case "blue":
                         case "notbuilt":
@@ -89,20 +91,24 @@ public class JenkinsHost
                             break;
                         case "red":
                             ledPattern = LedPattern.BUILD_FAILURE;
-                            result.addAffectedJob(project);
+                            result.addAffectedJob(projectName);
                             break;
                         case "yellow":
                         case "aborted":
                             ledPattern = LedPattern.BUILD_UNSTABLE;
-                            result.addAffectedJob(project);
+                            result.addAffectedJob(projectName);
                             break;
                         default:
                             LOG.warn("Unknown build status/colour - name: {}, project: {}, status: {}",
-                                    name, project, status);
+                                    name, projectName, status);
 
                             ledPattern = LedPattern.BUILD_UNKNOWN;
                             break;
                     }
+
+                    // Add to jobs handled
+                    jenkinsJob = new JenkinsJob(projectName, ledPattern);
+                    result.addJob(jenkinsJob);
 
                     // Check if pattern is higher than highest found thus far
                     if (ledPattern.PRIORITY > result.getLedPattern().PRIORITY)
