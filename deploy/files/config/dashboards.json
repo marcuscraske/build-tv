@@ -19,7 +19,7 @@
             {
                 "url": "build-status.html",
                 "lifespan" : 20000,
-                "refresh" : 5000
+                "refresh" : 0
             }
         },
         {
