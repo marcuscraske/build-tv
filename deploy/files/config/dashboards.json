@@ -5,7 +5,7 @@
             "provider" : "jira",
             "params" :
             {
-                "url": "content/test_a.html",
+                "url": "content/mock/test_a.html",
                 "user": "user",
                 "pass": "pass",
                 "dashboard": "test",
@@ -17,7 +17,7 @@
             "provider" : "url",
             "params" :
             {
-                "url": "content/test_b.html",
+                "url": "content/mock/test_b.html",
                 "lifespan" : 5000,
                 "refresh" : 5000
             }
@@ -26,7 +26,7 @@
             "provider" : "url",
             "params" :
             {
-                "url": "content/test_c.html",
+                "url": "content/mock/test_c.html",
                 "lifespan" : 5000,
                 "refresh" : 60000
             }

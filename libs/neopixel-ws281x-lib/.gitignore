@@ -1,2 +1,4 @@
 output/
 
+# Ignore dynamically generated JNI classes
+*.java

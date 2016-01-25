@@ -12,6 +12,7 @@
     font-size: 2em;
     width: 48%;
     padding: 0.2em;
+    margin: 0.2em;
     box-sizing: border-box;
     overflow: hidden;
 }

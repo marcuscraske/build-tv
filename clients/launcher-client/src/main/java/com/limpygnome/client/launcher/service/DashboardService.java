@@ -242,7 +242,7 @@ public class DashboardService implements Service, RestServiceHandler
         }
         response.put("dashboards", responseDashboards);
 
-        restResponse.writeJsonResponseIgnoreExceptions(restResponse, response);
+        restResponse.writeJsonResponseIgnoreExceptions(response);
 
         return true;
     }

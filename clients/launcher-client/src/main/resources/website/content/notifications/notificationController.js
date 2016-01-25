@@ -9,6 +9,8 @@ notificationController = {
     /* The rate at which to poll for dashboard changes in milliseconds. */
     notificationPollingInterval: 1000,
 
+    notificationsServiceUrl: "http://localhost:2800/interval-daemon/notifications/get",
+
     /* The current notification; set to null once expired. */
     currentNotification: null,
 
@@ -38,13 +40,20 @@ notificationController = {
     {
         console.info("notificationController - polling notification REST service...");
 
-        $.getJSON("http://localhost:2800/interval-daemon/notifications/get", function(data){
+        try
+        {
+            $.getJSON(notificationController.notificationsServiceUrl, function(data){
 
-            notificationController.handlePollData(data);
+                notificationController.handlePollData(data);
 
-        }).fail(function(){
-            console.error("dashboardController - failed to retrieve dashboards from REST service");
-        });
+            }).fail(function(){
+                console.error("dashboardController - failed to retrieve dashboards from REST service");
+            });
+        }
+        catch (e)
+        {
+            console.error("dashboardController - failed to poll: " + e);
+        }
     },
 
     handlePollData: function(notification)

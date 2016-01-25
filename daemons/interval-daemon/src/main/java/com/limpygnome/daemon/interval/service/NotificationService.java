@@ -167,7 +167,7 @@ public class NotificationService implements Service, RestServiceHandler
             response.put("type", notification.getType());
 
             // Write response
-            restResponse.writeJsonResponseIgnoreExceptions(restResponse, response);
+            restResponse.writeJsonResponseIgnoreExceptions(response);
         }
         else
         {

@@ -6,6 +6,8 @@ $(window).ready(function(){
 // Our dashboard controller, for creating and changing the visibility of dashboards (which are iframe elements)
 dashboardController = {
 
+    dashboardServiceUrl: "http://localhost:2900/dashboards/urls/get",
+
     /* The index of the current dashboard being shown. */
     currentIframeIndex: -1,
 
@@ -38,26 +40,33 @@ dashboardController = {
     {
         console.info("dashboardController - polling dashboard REST service...");
 
-        $.getJSON("http://localhost:2900/dashboards/urls/get", function(data){
+        try
+        {
+            $.getJSON(dashboardController.dashboardServiceUrl, function(data) {
 
-            // Fetch existing dashboards
-            var dashboards = dashboardController.dashboards;
-            var newDashboards = data.dashboards;
+                // Fetch existing dashboards
+                var dashboards = dashboardController.dashboards;
+                var newDashboards = data.dashboards;
 
-            // Check if dashboard data has changed...
-            if (JSON.stringify(newDashboards) != JSON.stringify(dashboards))
-            {
-                // Reset transitioning
-                dashboardController.resetTransitioning(newDashboards);
-            }
-            else
-            {
-                console.debug("dashboardController - polled data unchanged");
-            }
+                // Check if dashboard data has changed...
+                if (JSON.stringify(newDashboards) != JSON.stringify(dashboards))
+                {
+                    // Reset transitioning
+                    dashboardController.resetTransitioning(newDashboards);
+                }
+                else
+                {
+                    console.debug("dashboardController - polled data unchanged");
+                }
 
-        }).fail(function(){
-            console.error("dashboardController - failed to retrieve dashboards from REST service");
-        });
+            }).fail(function(){
+                console.error("dashboardController - failed to retrieve dashboards from REST service");
+            });
+        }
+        catch (e)
+        {
+            console.error("dashboardController - failed to poll: " + e);
+        }
     },
 
     resetTransitioning: function(data)
@@ -123,33 +132,42 @@ dashboardController = {
         var iframe = this.retrieve(index);
         iframe.className = "hide";
 
-        // Reload page if surpassed refresh interval
-        var lastRefreshed = iframe.lastRefresh;
-        var currentTime = dashboardUtils.currentTime();
-
-        if (currentTime - iframe.refresh >= lastRefreshed)
+        // Hook for refresh if not zero/infinite
+        if (iframe.refresh > 0)
         {
-            this.refresh(index, iframe);
+            // Reload page if surpassed refresh interval
+            var lastRefreshed = iframe.lastRefresh;
+            var currentTime = dashboardUtils.currentTime();
+
+            if (currentTime - iframe.refresh >= lastRefreshed)
+            {
+                // Set delay for refresh incase of any transitioning
+                var self = this;
+
+                setTimeout(
+                    function()
+                    {
+                        self.refresh(index, iframe);
+                    },
+                    this.refreshDelay
+                );
+            }
+
+            console.debug("dashboardController - hooked refresh for dashboard - index: " + index);
         }
     },
 
     refresh: function(index, iframe)
     {
-        setTimeout(
-            function()
-            {
-                var currentUrl = iframe.src;
+        var currentUrl = iframe.src;
 
-                console.debug("refreshing iframe " + index + " - interval: " + iframe.refresh + ", last: " +
-                                iframe.lastRefresh + ", url: " + currentUrl
-                );
-
-                iframe.src = null;
-                iframe.src = currentUrl;
-                iframe.lastRefresh = dashboardUtils.currentTime();
-            },
-            refreshDelay
+        console.debug("refreshing iframe " + index + " - interval: " + iframe.refresh + ", last: " +
+                        iframe.lastRefresh + ", url: " + currentUrl
         );
+
+        iframe.src = null;
+        iframe.src = currentUrl;
+        iframe.lastRefresh = dashboardUtils.currentTime();
     },
 
     show: function(index)
@@ -197,24 +215,6 @@ dashboardController = {
         else
         {
             console.debug("dashboardController - infinite/invalid lifespan (" + iframe.lifespan + "), no transitions left...");
-
-            // Hook for refresh if not zero/infinite
-            if (iframe.refresh > 0)
-            {
-                var self = this;
-                var index = this.currentIframeIndex;
-
-                // Create interval'd function to refresh iframe
-                var interval = setInterval(function() {
-                    self.refresh(index, iframe);
-                },
-                iframe.refresh);
-
-                // Attach interval handle to iframe
-                iframe.interval = interval;
-
-                console.debug("dashboardController - hooked refresh for infinite dashboard");
-            }
         }
     }
 
