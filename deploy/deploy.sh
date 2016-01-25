@@ -23,7 +23,7 @@ PATH_CURR=$(pwd)
 PATH_BASE=$(dirname "${PATH_CURR}")
 
 PATH_FILES_BASE="${PATH_CURR}/files"
-PATH_FILES_OVERRIDE="${PATH_CURR}/../../rpi-config/environments"
+PATH_FILES_OVERRIDE="${PATH_CURR}/../../build-tv-config/environments"
 
 PATH_NEOPIXEL_WS281X_LIB="${PATH_BASE}/libs/neopixel-ws281x-lib"
 PATH_LED_DAEMON="${PATH_BASE}/daemons/led-daemon"

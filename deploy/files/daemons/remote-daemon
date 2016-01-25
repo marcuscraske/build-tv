@@ -5,8 +5,8 @@
 # **********************************************************************************************************************
 
 DAEMON_NAME="remote-daemon"
-DAEMON_JAR="/rpi-misc/remote-daemon.jar"
-DAEMON_WORKING_DIR="/rpi-misc"
+DAEMON_JAR="/build-tv/remote-daemon.jar"
+DAEMON_WORKING_DIR="/build-tv"
 DAEMON_USER="rpi-daemon"
 
 # **********************************************************************************************************************

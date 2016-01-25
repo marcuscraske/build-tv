@@ -14,6 +14,6 @@ mvn clean install
 ````
 
 ## Overriding Configuration
-You can override the default configuration, which either adds or copies over pre-existing files. The path of the overriding configuration is controlled by the variable `PATH_FILES_OVERRIDE` in `deploy.sh` - by default this looks at the path `../../rpi-config` (relative to this module's path).
+You can override the default configuration, which either adds or copies over pre-existing files. The path of the overriding configuration is controlled by the variable `PATH_FILES_OVERRIDE` in `deploy.sh` - by default this looks at the path `../../build-tv-config` (relative to this module's path).
 
 The purpose of overriding configuration is to have private files in a separate repository.

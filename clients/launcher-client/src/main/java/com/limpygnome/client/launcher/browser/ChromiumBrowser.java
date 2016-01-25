@@ -59,6 +59,11 @@ public class ChromiumBrowser implements Browser
                             "--disable-session-crashed-bubble",
                             "--window-position=0,0",
                             "--window-size=" + dimensionWidth + "," + dimensionHeight,
+
+                            // Disable security and the bubble (with test-type); allows embedding webpages in iframe
+                            //"--disable-web-security",
+                            //"--test-type",
+
                             url
                     },
                     0, false

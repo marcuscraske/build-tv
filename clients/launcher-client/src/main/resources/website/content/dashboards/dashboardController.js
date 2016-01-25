@@ -18,6 +18,9 @@ dashboardController = {
     /* The rate at which to poll for dashboard changes in milliseconds. */
     dashboardPollingInterval: 1000,
 
+    /* The delay in refreshing a dashboard, to counter CSS transition animations. */
+    refreshDelay: 2000,
+
     retrieveRoot: function()
     {
         return $("#dashboards");
@@ -132,15 +135,21 @@ dashboardController = {
 
     refresh: function(index, iframe)
     {
-        var currentUrl = iframe.src;
+        setTimeout(
+            function()
+            {
+                var currentUrl = iframe.src;
 
-        console.debug("refreshing iframe " + index + " - interval: " + iframe.refresh + ", last: " +
-                        iframe.lastRefresh + ", url: " + currentUrl
+                console.debug("refreshing iframe " + index + " - interval: " + iframe.refresh + ", last: " +
+                                iframe.lastRefresh + ", url: " + currentUrl
+                );
+
+                iframe.src = null;
+                iframe.src = currentUrl;
+                iframe.lastRefresh = dashboardUtils.currentTime();
+            },
+            refreshDelay
         );
-
-        iframe.src = null;
-        iframe.src = currentUrl;
-        iframe.lastRefresh = dashboardUtils.currentTime();
     },
 
     show: function(index)

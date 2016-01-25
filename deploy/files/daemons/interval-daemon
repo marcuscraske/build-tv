@@ -5,8 +5,8 @@
 # **********************************************************************************************************************
 
 DAEMON_NAME="interval-daemon"
-DAEMON_JAR="/rpi-misc/interval-daemon.jar"
-DAEMON_WORKING_DIR="/rpi-misc"
+DAEMON_JAR="/build-tv/interval-daemon.jar"
+DAEMON_WORKING_DIR="/build-tv"
 DAEMON_USER="rpi-daemon"
 
 # **********************************************************************************************************************

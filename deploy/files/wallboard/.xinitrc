@@ -13,4 +13,4 @@ xset s noblank
 matchbox-window-manager -use_titlebar no -use_cursor no &
 
 # Start launcher client
-(cd /rpi-misc; java -jar /rpi-misc/launcher-client.jar)
+(cd /build-tv; java -jar /build-tv/launcher-client.jar)

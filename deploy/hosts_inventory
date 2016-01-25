@@ -17,7 +17,7 @@ hostname_override="pi2-team-example"
 pi2-team-example
 
 [pi2:vars]
-deploy_path="/rpi-misc"
-backup_path="/rpi-backups"
-temp_path="/rpi-setup-files"
+deploy_path="/build-tv"
+backup_path="/build-tv-backups"
+temp_path="/build-tv-setup-files"
 monitor_password="password123"

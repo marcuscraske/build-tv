@@ -2,20 +2,10 @@ package com.limpygnome.client.launcher.service;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Service;
-import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.ContextHandler;
-import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.eclipse.jetty.servlet.FilterHolder;
-import org.eclipse.jetty.servlet.FilterMapping;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.eclipse.jetty.util.resource.Resource;
-
-import javax.servlet.DispatcherType;
-import java.util.EnumSet;
 
 /**
  * Used to provide a web server for dashboards content.
@@ -57,14 +47,15 @@ public class WebServerService implements Service
             server.addConnector(connector);
 
             // -- Setup resource handler to serve assets from class-path
-            ResourceHandler resourceHandler = new ResourceHandler();
-            resourceHandler.setBaseResource(Resource.newClassPathResource(RESOURCE_PATH));
-            resourceHandler.setDirectoriesListed(true);
-            resourceHandler.setWelcomeFiles(new String[]{"index.html"});
+            WebServerHandler webServerHandler = new WebServerHandler();
+            webServerHandler.setBaseResource(Resource.newClassPathResource(RESOURCE_PATH));
+            webServerHandler.setDirectoriesListed(true);
+            webServerHandler.setWelcomeFiles(new String[]{"index.html"});
 
             // -- Setup context path for serving assets
             ContextHandler contextHandler = new ContextHandler(CONTEXT_PATH);
-            contextHandler.setHandler(resourceHandler);
+            contextHandler.setHandler(webServerHandler);
+
             server.setHandler(contextHandler);
 
             // -- Start the Jetty!
