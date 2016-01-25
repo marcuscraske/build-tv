@@ -13,7 +13,7 @@ $(window).ready(function(){
 buildTvController = {
 
     /* The URL of the REST service for retrieving the build statuses of jobs. */
-    buildTvServiceUrl: "content/mock/build.json",
+    buildTvServiceUrl: "http://localhost:2700/build-tv-daemon/status/get",
 
     /* The rate at which to poll for changes. */
     pollDelay: 1000,
@@ -35,20 +35,22 @@ buildTvController = {
     {
         console.info("buildTvController - polling build TV REST service...");
 
-        try
-        {
-            $.getJSON(buildTvController.buildTvServiceUrl, function(data) {
+        setInterval(function(){
+            try
+            {
+                $.getJSON(buildTvController.buildTvServiceUrl, function(data) {
 
-                buildTvController.pollHandle(data);
+                    buildTvController.pollHandle(data);
 
-            }).fail(function(){
-                console.error("buildTvController - failed to retrieve dashboards from REST service");
-            });
-        }
-        catch (e)
-        {
-            console.error("buildTvController - failed to poll: " + e);
-        }
+                }).fail(function(){
+                    console.error("buildTvController - failed to retrieve dashboards from REST service");
+                });
+            }
+            catch (e)
+            {
+                console.error("buildTvController - failed to poll: " + e);
+            }
+        }, this.pollDelay);
     },
 
     pollHandle: function(data)
@@ -77,30 +79,54 @@ buildTvController = {
         this.jobRemoveNonUpdated();
     },
 
+    jobNameEscape: function(name)
+    {
+        // Escape job name so that spaces and periods become _ to form valid ID
+        name = name.replace(/\./g, "_");    // periods
+        name = name.replace(/\ /g, "_");    // spaces
+
+        return name;
+    },
+
+    jobFetch: function(name)
+    {
+        return $("#jobs #job_" + name);
+    },
+
     jobUpdate: function(name, status)
     {
-        var element = $("#jobs #job_" + name);
+        var jobName = this.jobNameEscape(name);
+        var element = this.jobFetch(jobName);
 
         if (element.length == 0)
         {
             // Add the job
-            $("#jobs").append("<li id=\"job_" + name + "\">" + name + "</li>");
+            $("#jobs").append("<li id=\"job_" + jobName + "\">" + name + "</li>");
+
+            element = this.jobFetch(jobName);
         }
 
-        // Update the class using status
-        $(element).removeClass().addClass(status);
-
         // Update the poll time
-        $(element).attrib("updated", this.pollTimestamp);
+        $(element).attr("updated", this.pollTimestamp);
 
-        console.debug("buildTvController - updated job: " + $(element).text());
+        if (status != $(element).attr("status"))
+        {
+            // Update the class using status
+            $(element).removeClass().addClass(status);
+
+            // Update status
+            $(element).attr("status", status);
+
+            console.debug("buildTvController - added/updated job: " + $(element).text());
+        }
     },
 
     jobRemoveNonUpdated: function()
     {
         // Iterate each element, check updated attrib matches pollTimestamp -> else remove it
-        $("#jobs li").each(function(){
-            if (this.updated != this.pollTimestamp)
+        var self = this;
+        $("#jobs li").each(function() {
+            if (self.pollTimestamp != $(this).attr("updated"))
             {
                 var jobName = $(this).text();
                 $(this).remove();

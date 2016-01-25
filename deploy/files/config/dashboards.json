@@ -17,6 +17,15 @@
             "provider" : "url",
             "params" :
             {
+                "url": "build-status.html",
+                "lifespan" : 20000,
+                "refresh" : 5000
+            }
+        },
+        {
+            "provider" : "url",
+            "params" :
+            {
                 "url": "content/mock/test_b.html",
                 "lifespan" : 5000,
                 "refresh" : 5000

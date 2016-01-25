@@ -6,12 +6,7 @@
     [
         {
             "name"      : "Apache - Subset",
-            "url"       : "https://builds.apache.org/view/All/",
-            "jobs"      :
-            [
-                "xmlgraphics-fop",
-                "incubator-taverna-server"
-            ]
+            "url"       : "https://builds.apache.org/view/All/"
         }
     ]
 }
