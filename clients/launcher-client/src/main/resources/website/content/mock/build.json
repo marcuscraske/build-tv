@@ -1,1 +1,25 @@
-{"jobs":[{"name":"incubator-taverna-server","status":"BUILD_FAILURE"},{"name":"xmlgraphics-fop","status":"BUILD_OK"}]}
+{
+    "jobs":
+    [
+        {
+            "name" : "com-example-job-unknown",
+            "status" : "BUILD_UNKNOWN"
+        },
+        {
+            "name" : "com-example-job-ok",
+            "status" : "BUILD_OK"
+        },
+        {
+            "name" : "com-example-job-unstable",
+            "status" : "BUILD_UNSTABLE"
+        },
+        {
+            "name" : "com-example-job-failure",
+            "status" : "BUILD_FAILURE"
+        },
+        {
+            "name" : "com-example-job-progress",
+            "status" : "BUILD_PROGRESS"
+        }
+    ]
+}
