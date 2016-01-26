@@ -2,7 +2,6 @@ package com.limpygnome.client.launcher.thread;
 
 import com.limpygnome.client.launcher.browser.Browser;
 import com.limpygnome.client.launcher.service.DashboardBrowserService;
-import com.limpygnome.client.launcher.service.DashboardService;
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.ControllerState;
 import com.limpygnome.daemon.common.ExtendedThread;
