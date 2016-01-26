@@ -1,4 +1,4 @@
-package com.limpygnome.client.launcher.dashboard;
+package com.limpygnome.daemon.interval.dashboard;
 
 import org.json.simple.JSONObject;
 

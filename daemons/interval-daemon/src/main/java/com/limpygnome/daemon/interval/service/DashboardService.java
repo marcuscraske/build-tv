@@ -1,7 +1,7 @@
-package com.limpygnome.client.launcher.service;
+package com.limpygnome.daemon.interval.service;
 
-import com.limpygnome.client.launcher.dashboard.DashboardProvider;
-import com.limpygnome.client.launcher.dashboard.DefaultDashbordProvider;
+import com.limpygnome.daemon.interval.dashboard.DashboardProvider;
+import com.limpygnome.daemon.interval.dashboard.DefaultDashbordProvider;
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.RestServiceHandler;
 import com.limpygnome.daemon.api.Service;

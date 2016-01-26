@@ -1,4 +1,4 @@
-package com.limpygnome.client.launcher.dashboard;
+package com.limpygnome.daemon.interval.dashboard;
 
 import com.limpygnome.daemon.api.Controller;
 import org.apache.logging.log4j.LogManager;

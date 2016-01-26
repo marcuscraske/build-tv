@@ -7,10 +7,9 @@ import com.limpygnome.daemon.common.rest.RestResponse;
 import com.limpygnome.daemon.api.RestServiceHandler;
 import com.limpygnome.daemon.api.Notification;
 
-import com.limpygnome.daemon.interval.model.NotificationSource;
+import com.limpygnome.daemon.interval.notification.NotificationSource;
 import com.limpygnome.daemon.util.EnvironmentUtil;
-import java.awt.*;
-import java.net.InetAddress;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;

@@ -10,8 +10,10 @@ import com.limpygnome.daemon.api.Service;
 /**
  * A service for controlling the browser for rendering dashboards.
  */
-public class BrowserService implements Service
+public class DashboardBrowserService implements Service
 {
+    public static final String SERVICE_NAME = "dashboard-browser";
+
     /* Thread used to monitor health of dashboards. */
     private DashboardHealthThread dashboardHealthThread;
 

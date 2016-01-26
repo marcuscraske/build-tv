@@ -1,4 +1,4 @@
-package com.limpygnome.daemon.interval.model;
+package com.limpygnome.daemon.interval.notification;
 
 import com.limpygnome.daemon.api.Notification;
 
