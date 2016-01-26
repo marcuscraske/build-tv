@@ -94,15 +94,15 @@ public class DashboardService implements Service, RestServiceHandler
     @Override
     public synchronized boolean handleRequestInChain(RestRequest restRequest, RestResponse restResponse)
     {
-        if (restRequest.isPathMatch(new String[]{ "dashboards", "urls", "get" }))
+        if (restRequest.isPathMatch(new String[]{ "interval-daemon", "dashboards", "urls", "get" }))
         {
             return handleRequestGetUrls(restRequest, restResponse);
         }
-        else if (restRequest.isPathMatch(new String[]{ "dashboards", "urls", "set" }))
+        else if (restRequest.isPathMatch(new String[]{ "interval-daemon", "dashboards", "urls", "set" }))
         {
             return handleRequestOpenUrls(restRequest, restResponse);
         }
-        else if (restRequest.isPathMatch(new String[]{ "dashboards", "urls", "reset" }))
+        else if (restRequest.isPathMatch(new String[]{ "interval-daemon", "dashboards", "urls", "reset" }))
         {
             return handleRequestResetUrls(restRequest, restResponse);
         }
