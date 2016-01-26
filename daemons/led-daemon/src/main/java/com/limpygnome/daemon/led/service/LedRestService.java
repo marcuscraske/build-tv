@@ -127,7 +127,7 @@ public class LedRestService implements Service, RestServiceHandler
         }
         response.put("sources", arraySources);
 
-        restResponse.writeJsonResponseIgnoreExceptions(restResponse, response);
+        restResponse.writeJsonResponseIgnoreExceptions(response);
 
         return true;
     }

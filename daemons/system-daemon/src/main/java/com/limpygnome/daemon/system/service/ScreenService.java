@@ -189,7 +189,7 @@ public class ScreenService implements Service, RestServiceHandler
         response.put("on", screenOn);
 
         // Write response
-        restResponse.writeJsonResponseIgnoreExceptions(restResponse, response);
+        restResponse.writeJsonResponseIgnoreExceptions(response);
 
         return true;
     }

@@ -5,6 +5,7 @@
 
 - name: Forcing ntpupdate...
   shell:  ntpdate pool.ntp.org
+  ignore_errors: true
   sudo: true
 
 - name: Starting ntp service
