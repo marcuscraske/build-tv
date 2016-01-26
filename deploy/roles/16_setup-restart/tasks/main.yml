@@ -1,0 +1,15 @@
+- name: Restarting build TV daemon...
+  shell: service build-tv-daemon restart
+  sudo: true
+
+- name: Restarting interval daemon...
+  shell: service interval-daemon restart
+  sudo: true
+
+- name: Restarting system daemon...
+  shell: service system-daemon restart
+  sudo: true
+
+- name: Restarting remote daemon...
+  shell: service remote-daemon restart
+  sudo: true

@@ -18,7 +18,7 @@ ${SCRIPT_HEADER}
 # Target hosts group
 TARGET_HOSTS="pi2"
 
-# Define paths
+# Build dynamic paths
 PATH_CURR=$(pwd)
 PATH_BASE=$(dirname "${PATH_CURR}")
 
@@ -82,24 +82,48 @@ EXTRA_VARS+="launcher_client=\"${PATH_LAUNCHER_CLIENT}\" "
 # Attach any args after first as variables
 EXTRA_VARS+="${@:2} "
 
-# Build tags
-if [[ -z "${1}" || "${1}" == "*" ]]; then
-    DEPLOY_TAGS+="backup,"
-    DEPLOY_TAGS+="remove,"
-    DEPLOY_TAGS+="setup-pi,"
-    DEPLOY_TAGS+="wallboard,"
-    DEPLOY_TAGS+="config,"
-    DEPLOY_TAGS+="neopixel-lib,"
-    DEPLOY_TAGS+="led-daemon,"
-    DEPLOY_TAGS+="build-tv-daemon,"
-    DEPLOY_TAGS+="interval-daemon,"
-    DEPLOY_TAGS+="system-daemon,"
-    DEPLOY_TAGS+="remote-daemon,"
-    DEPLOY_TAGS+="launcher-client,"
-    DEPLOY_TAGS+="reboot"
-else
-    DEPLOY_TAGS="${1}"
+# Check tags param passed
+if [[ -z "${1}" ]]; then
+    # Reset terminal colour
+    echo -e "\033[0m"
+
+    # Output documentation
+    echo "Expected format: deploy.sh <type> <variables/flags added to Ansible... >"
+    echo " "
+    echo "Available types:"
+    echo "- all         : full deployment of all tags"
+    echo "- backup      : creates a backup of the current installation"
+    echo "- setup       : environmental setup of the host"
+    echo "- config      : deploys config"
+    echo "- apps        : deploys apps"
+    echo "- restart     : restarts daemons"
+    echo "- reboot      : reboot hosts"
+    echo " "
+    echo "Available boolean variables:"
+    echo "- nopackages  : disable interaction with package manager"
+    echo "- notime      : disable synchronising time"
+    echo "- noproxy     : disable adding proxy configuration"
+    echo ""
+    echo "Example usage of boolean variable:"
+    echo "./deploy all \"nopackages=true,notime=true,noproxy=true\""
+    echo ""
+
+    exit 1
 fi
+
+# Definitions of available tags by alias/category
+TAGS_LIBS="neopixel-lib"
+TAGS_APPS="led-daemon,build-tv-daemon,interval-daemon,system-daemon,remote-daemon,launcher-client"
+TAGS_SETUP="backup,remove,setup-pi,wallboard,config"
+TAGS_ALL="${TAGS_SETUP},${TAGS_LIBS},${TAGS_APPS},reboot"
+
+# Replace alias tags
+DEPLOY_TAGS="${1}"
+DEPLOY_TAGS="${DEPLOY_TAGS/setup/$TAGS_SETUP}"
+DEPLOY_TAGS="${DEPLOY_TAGS/libs/$TAGS_LIBS}"
+DEPLOY_TAGS="${DEPLOY_TAGS/apps/$TAGS_APPS}"
+DEPLOY_TAGS="${DEPLOY_TAGS/all/$TAGS_ALL}"
+
 
 # Reset terminal colour
 echo -e "\033[0m"

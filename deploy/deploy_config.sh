@@ -1,2 +1,2 @@
 #!/bin/bash
-./deploy.sh "config,reboot"
+./deploy.sh "config,restart"
