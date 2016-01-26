@@ -1,6 +1,7 @@
 package com.limpygnome.client.launcher.thread;
 
 import com.limpygnome.client.launcher.browser.Browser;
+import com.limpygnome.client.launcher.service.BrowserService;
 import com.limpygnome.client.launcher.service.DashboardService;
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.ControllerState;
@@ -30,13 +31,13 @@ public class DashboardHealthThread extends ExtendedThread
     private long THREAD_SLEEP = 1000;
 
     private Controller controller;
-    private DashboardService dashboardService;
+    private BrowserService dashboardService;
 
     private long lastRefreshed;
     private long refreshHour;
     private long refreshMinute;
 
-    public DashboardHealthThread(Controller controller, DashboardService dashboardService)
+    public DashboardHealthThread(Controller controller, BrowserService dashboardService)
     {
         this.controller = controller;
         this.dashboardService = dashboardService;

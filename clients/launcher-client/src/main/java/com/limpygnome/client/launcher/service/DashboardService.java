@@ -1,11 +1,7 @@
 package com.limpygnome.client.launcher.service;
 
-import com.limpygnome.client.launcher.browser.Browser;
-import com.limpygnome.client.launcher.browser.ChromiumBrowser;
-import com.limpygnome.client.launcher.browser.MockBrowser;
 import com.limpygnome.client.launcher.dashboard.DashboardProvider;
 import com.limpygnome.client.launcher.dashboard.DefaultDashbordProvider;
-import com.limpygnome.client.launcher.thread.DashboardHealthThread;
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.RestServiceHandler;
 import com.limpygnome.daemon.api.Service;
@@ -35,8 +31,6 @@ public class DashboardService implements Service, RestServiceHandler
     public static final String SERVICE_NAME = "dashboards";
 
     private JSONObject dashboardSettings;
-    private DashboardHealthThread dashboardHealthThread;
-    private Browser browser;
 
     /* Available dashboards providers. */
     private DashboardProvider[] dashboardProviders;
@@ -44,41 +38,14 @@ public class DashboardService implements Service, RestServiceHandler
     /* Used for when dashboards URLs are manually set via REST service. */
     private DashboardProvider[] overrideDashboardProviders;
 
-    /* Web server service, used to retrieve URL for rendering dashboards. */
-    private WebServerService webServerService;
-
     @Override
     public synchronized void start(Controller controller)
     {
-        // Fetch webserver service
-        webServerService = (WebServerService) controller.getServiceByName(WebServerService.SERVICE_NAME);
-
         // Load dashboards config
         loadDashboardConfig(controller);
 
         // Parse dashboards providers
         parseProviders(controller);
-
-        // Setup browser
-        String browserSetting = controller.getSettings().getString("browser");
-
-        switch (browserSetting)
-        {
-            case ChromiumBrowser.BROWSER_NAME:
-                browser = new ChromiumBrowser();
-                break;
-            case MockBrowser.BROWSER_NAME:
-                browser = new MockBrowser();
-                break;
-            default:
-                throw new IllegalArgumentException("Browser '" + browserSetting + "' not available");
-        }
-
-        browser.setup(controller);
-
-        // Start launcher thread to monitor and refresh dashboards
-        dashboardHealthThread = new DashboardHealthThread(controller, this);
-        dashboardHealthThread.start();
     }
 
     private synchronized void loadDashboardConfig(Controller controller)
@@ -120,39 +87,16 @@ public class DashboardService implements Service, RestServiceHandler
     @Override
     public synchronized void stop(Controller controller)
     {
-        // Destroy thread
-        if (dashboardHealthThread != null)
-        {
-            dashboardHealthThread.kill();
-            dashboardHealthThread = null;
-        }
-
-        // Destroy browser
-        if (browser != null)
-        {
-            browser.kill();
-            browser = null;
-        }
-
         overrideDashboardProviders = null;
         dashboardProviders = null;
-        webServerService = null;
     }
 
     @Override
     public synchronized boolean handleRequestInChain(RestRequest restRequest, RestResponse restResponse)
     {
-        if (restRequest.isPathMatch(new String[]{ "dashboards", "refresh" }))
-        {
-            return handleRequestRefresh(restRequest, restResponse);
-        }
-        else if (restRequest.isPathMatch(new String[]{ "dashboards", "urls", "get" }))
+        if (restRequest.isPathMatch(new String[]{ "dashboards", "urls", "get" }))
         {
             return handleRequestGetUrls(restRequest, restResponse);
-        }
-        else if (restRequest.isPathMatch(new String[]{ "dashboards", "kill" }))
-        {
-            return handleRequestKill(restRequest, restResponse);
         }
         else if (restRequest.isPathMatch(new String[]{ "dashboards", "urls", "set" }))
         {
@@ -164,22 +108,6 @@ public class DashboardService implements Service, RestServiceHandler
         }
 
         return false;
-    }
-
-    private synchronized boolean handleRequestRefresh(RestRequest restRequest, RestResponse restResponse)
-    {
-        LOG.info("Refreshing browser from REST request...");
-
-        browser.refresh();
-        return true;
-    }
-
-    private synchronized boolean handleRequestKill(RestRequest restRequest, RestResponse restResponse)
-    {
-        LOG.info("Killing browser from REST request...");
-
-        browser.kill();
-        return true;
     }
 
     private synchronized boolean handleRequestOpenUrls(RestRequest restRequest, RestResponse restResponse)
@@ -254,20 +182,7 @@ public class DashboardService implements Service, RestServiceHandler
         // Reset override dashboards
         overrideDashboardProviders = null;
 
-        // Re-open dashboards renderer...
-        reloadBrowser();
-
         return true;
-    }
-
-    public void reloadBrowser()
-    {
-        browser.openUrl(webServerService.getWebserverUrl());
-    }
-
-    public Browser getBrowser()
-    {
-        return browser;
     }
 
     /**
