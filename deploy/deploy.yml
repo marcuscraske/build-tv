@@ -18,4 +18,5 @@
     - { role: 13_remote-daemon, tags: ["remote-daemon"] }
     - { role: 14_launcher-client, tags: ["launcher-client"] }
     - { role: 15_remove-temp-files, tags: ["always"] }
-    - { role: 16_setup-reboot, tags: ["reboot"] }
+    - { role: 16_setup-restart, tags: ["restart"] }
+    - { role: 17_setup-reboot, tags: ["reboot"] }
