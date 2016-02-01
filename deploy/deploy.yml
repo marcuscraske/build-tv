@@ -1,4 +1,5 @@
 - hosts: all
+  accelerate: true
 
   gather_facts: no
 

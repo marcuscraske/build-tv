@@ -1,3 +1,6 @@
+- name: Compiling setup files for host
+  local_action: script compile-files.sh "{{ inventory_hostname }}" "{{ files_base }}" "{{ files_override }}"
+
 - name: Removing previous setup files (in case of failure last run)
   command: rm -R {{ temp_path }}
   ignore_errors: true
@@ -12,33 +15,15 @@
         recurse=yes
   sudo: true
 
-- name: Copying base files
-  copy: src="{{ files_base }}/"
+- name: Copy setup files
+  copy: src="{{ files_base }}/../compile/{{ inventory_hostname }}/"
         dest="{{ temp_path }}"
         mode=0775
-  sudo: true
-
-- name: Copying override base files
-  copy: src="{{ files_override }}/{{ override_base }}/"
-        dest="{{ temp_path }}"
-        mode=0775
-  when: files_override is defined and override_base is defined
-  sudo: true
-
-- name: Copying override files
-  copy: src="{{ files_override }}/{{ inventory_hostname }}/"
-        dest="{{ temp_path }}"
-        mode=0775
-  when: files_override is defined and hostname_override is not defined
-  sudo: true
-
-- name: Copying override files (hostname override)
-  copy: src="{{ files_override }}/{{ hostname_override }}/"
-        dest="{{ temp_path }}"
-        mode=0775
-  when: files_override is defined and hostname_override is defined
   sudo: true
 
 - name: Setting permissions on setup files...
   shell: chmod -R 775 "{{ temp_path }}"
   sudo: true
+
+- name: Removing local setup files
+  local_action: script cleanup-files.sh "{{ inventory_hostname }}" "{{ files_base }}"
