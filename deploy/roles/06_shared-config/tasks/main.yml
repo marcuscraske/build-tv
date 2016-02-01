@@ -25,3 +25,16 @@
 
       sudo:         true
   }
+
+- {
+      name:         Copying website override files,
+      include:      ../../common/tasks/copyOnRemote.yml,
+
+      src:          "{{ temp_path }}/website/",
+      dest:         "{{ deploy_path }}/website/",
+      owner:        "monitor",
+      group:        "rpi-group",
+      perms:        "775",
+
+      sudo:         true
+  }

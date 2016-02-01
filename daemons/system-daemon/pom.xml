@@ -18,18 +18,18 @@
     <dependencies>
 
         <!-- Local -->
-		<dependency>
-			<groupId>com.limpygnome.buildindicator.libs</groupId>
-			<artifactId>daemon-lib</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>com.limpygnome.buildindicator.libs</groupId>
+            <artifactId>daemon-lib</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
-		<!-- HTTP Client -->
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.5</version>
-		</dependency>
+        <!-- HTTP Client -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5</version>
+        </dependency>
 
         <!-- JSON Serialization -->
         <dependency>
@@ -51,36 +51,36 @@
         </dependency>
 
     </dependencies>
-	
-	<build>
-		<plugins>
-		
-			<!-- Builds executable JAR with dependencies included -->
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<executions>
-					<execution>
-					<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>com.limpygnome.daemon.system.Program</mainClass>
-						</manifest>
-					</archive>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<appendAssemblyId>false</appendAssemblyId>
+    
+    <build>
+        <plugins>
+        
+            <!-- Builds executable JAR with dependencies included -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                    <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.limpygnome.daemon.system.Program</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <appendAssemblyId>false</appendAssemblyId>
                     <finalName>system-daemon</finalName>
-				</configuration>
-			</plugin>
-			
-		</plugins>
-	</build>
-	
+                </configuration>
+            </plugin>
+            
+        </plugins>
+    </build>
+    
 </project>

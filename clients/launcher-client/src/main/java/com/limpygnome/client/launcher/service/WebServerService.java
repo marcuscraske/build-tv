@@ -5,7 +5,10 @@ import com.limpygnome.daemon.api.Service;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.util.resource.Resource;
+
+import java.io.File;
 
 /**
  * Used to provide a web server for dashboards content.
@@ -21,6 +24,12 @@ public class WebServerService implements Service
     /* The class-path to resources within this application's artifact.  */
     private static final String RESOURCE_PATH = "/website";
 
+    /* Local path to website directory. */
+    private static final String LOCAL_PATH = "website";
+
+    /* Welcome / default files. */
+    private static final String[] WELCOME_FILES = new String[]{ "index.html" };
+
     /* Jetty embedded web server. */
     private Server server;
 
@@ -35,7 +44,7 @@ public class WebServerService implements Service
             int webserverPort = controller.getSettings().getInt("webserver/port");
 
             // Build webserver URL
-            webserverUrl = "http://localhost:" + webserverPort;
+            webserverUrl = "http://localhost:" + webserverPort + "/index.html";
 
             // Start the Jetty...
             server = new Server();
@@ -46,15 +55,23 @@ public class WebServerService implements Service
             connector.setPort(webserverPort);
             server.addConnector(connector);
 
-            // -- Setup resource handler to serve assets from class-path
+            // -- Setup handler to serve assets from class-path
             WebServerHandler webServerHandler = new WebServerHandler();
             webServerHandler.setBaseResource(Resource.newClassPathResource(RESOURCE_PATH));
-            webServerHandler.setDirectoriesListed(true);
-            webServerHandler.setWelcomeFiles(new String[]{"index.html"});
+            webServerHandler.setDirectoriesListed(false);
+            webServerHandler.setWelcomeFiles(WELCOME_FILES);
+
+            // -- Setup handler to serve assets from file system
+            File pathWebsite = controller.getFile(LOCAL_PATH);
+
+            ResourceHandler resourceHandler = new ResourceHandler();
+            resourceHandler.setBaseResource(Resource.newResource(pathWebsite));
+            resourceHandler.setDirectoriesListed(false);
+            resourceHandler.setHandler(webServerHandler);
 
             // -- Setup context path for serving assets
             ContextHandler contextHandler = new ContextHandler(CONTEXT_PATH);
-            contextHandler.setHandler(webServerHandler);
+            contextHandler.setHandler(resourceHandler);
 
             server.setHandler(contextHandler);
 

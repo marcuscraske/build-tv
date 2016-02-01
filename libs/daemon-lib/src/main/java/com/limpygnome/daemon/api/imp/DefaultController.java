@@ -20,9 +20,14 @@ public class DefaultController implements Controller
     private static final Logger LOG = LogManager.getLogger(DefaultController.class);
 
     /*
+        Relative path to files in development environment.
+     */
+    private final static String PATH_DEV = "deploy/files";
+
+    /*
         Relative path to config in a development environment.
      */
-    private final static String CONFIG_PATH_DEV = "deploy/files/config";
+    private final static String CONFIG_PATH_DEV = PATH_DEV + "/config";
 
     /*
         Relative path to config in a production/live system.
@@ -216,6 +221,19 @@ public class DefaultController implements Controller
         else
         {
             return new File(CONFIG_PATH_PRODUCTION, fileName);
+        }
+    }
+
+    @Override
+    public synchronized File getFile(String fileName)
+    {
+        if (EnvironmentUtil.isDevEnvironment())
+        {
+            return new File(PATH_DEV + "/" + fileName);
+        }
+        else
+        {
+            return new File(fileName);
         }
     }
 

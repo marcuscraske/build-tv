@@ -74,6 +74,14 @@ public interface Controller
     File getFilePathConfig(String fileName);
 
     /**
+     * Provides the path to a relative file of the working directory of the application.
+     *
+     * @param fileName the relative path
+     * @return an instance
+     */
+    File getFile(String fileName);
+
+    /**
      * Retrieves the name of this controller.
      *
      * @return The name of this controller
