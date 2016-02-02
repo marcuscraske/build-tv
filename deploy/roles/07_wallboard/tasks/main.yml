@@ -26,17 +26,14 @@
   when: nopackages is not defined
   sudo: true
 
-- {
-      name:         Setting up .xinitrc for wallboard user,
-      include:      ../../common/tasks/copyOnRemote.yml,
-
-      src:          "{{ temp_path }}/wallboard/.xinitrc",
-      dest:         "/home/wallboard/.xinitrc",
-      owner:        "wallboard",
-      group:        "wallboard",
-      perms:        "755",
-      sudo:         true,
-  }
+- name:     Setting up .xinitrc for wallboard user,
+  include:  ../../common/tasks/copyOnRemote.yml,
+            src="{{ temp_path }}/wallboard/.xinitrc",
+            dest="/home/wallboard/.xinitrc",
+            owner="wallboard",
+            group="wallboard",
+            perms="755",
+  sudo:     true,
 
 - name: Setting up automatic login of wallboard user
   shell: "{{ temp_path }}/setup-scripts/automatic-login.sh wallboard"
