@@ -36,3 +36,6 @@
 
 - name: Setting up motd...
   include: motd.yml
+
+- name: Setting up firewall...
+  include: firewall.yml

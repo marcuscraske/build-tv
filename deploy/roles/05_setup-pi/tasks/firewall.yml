@@ -1,0 +1,32 @@
+- name: Updating apt-get cache
+  apt:  update_cache=yes
+  sudo: true
+
+- name: Make sure ufw installed
+  apt:  name=ufw
+        state=present
+  sudo: true
+
+- name: Allow SSH traffic
+  ufw:  proto=tcp
+        port=22
+        rule=allow
+  sudo: true
+
+- name: Allow remote daemon traffic
+  ufw:  proto=tcp
+        port=2000
+        rule=allow
+  sudo: true
+
+- name: Allow Ansible Accelerate traffic
+  ufw:  proto=any
+        port=5099
+        rule=allow
+  sudo: true
+
+- name: Deny all other traffic
+  ufw:  state=enabled
+        direction=incoming
+        policy=deny
+  sudo: true
