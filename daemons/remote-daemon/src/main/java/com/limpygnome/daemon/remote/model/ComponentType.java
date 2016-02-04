@@ -25,9 +25,7 @@ public enum ComponentType
     /**
      * The interval daemon - timed patterns/notifications etc.
      */
-    INTERVAL_DAEMON("interval-daemon", "local-ports/interval-daemon"),
-
-    LAUNCHER_CLIENT("launcher-client", "local-ports/launcher-client")
+    INTERVAL_DAEMON("interval-daemon", "local-ports/interval-daemon")
     ;
 
     public final String COMPONENT_NAME;

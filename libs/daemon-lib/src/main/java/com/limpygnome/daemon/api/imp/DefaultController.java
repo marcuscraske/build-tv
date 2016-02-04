@@ -83,7 +83,7 @@ public class DefaultController implements Controller
 
     public synchronized void start()
     {
-        LOG.info("Starting controller...");
+        LOG.info("Starting controller... - name: {}", controllerName);
 
         setState(ControllerState.STARTING);
 

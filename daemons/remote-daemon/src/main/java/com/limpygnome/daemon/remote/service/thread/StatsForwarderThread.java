@@ -39,9 +39,9 @@ public class StatsForwarderThread extends ExtendedThread
     private String ledDaemonPatternEndpointUrl;
     private String systemDaemonStatsEndpointUrl;
     private String systemDaemonScreenGetEndpointUrl;
-    private String launcherClientDashboardEndpointUrl;
+    private String intervalServiceDashboardEndpointUrl;
 
-    private String cacheDashboardUrl;
+    private JSONArray cacheDashboardUrls;
 
     public StatsForwarderThread(Controller controller, StatsForwarderService statsForwarderService)
     {
@@ -54,14 +54,14 @@ public class StatsForwarderThread extends ExtendedThread
 
         // Build endpoint URLs for available daemons
         // -- build-tv-daemon
-        if (controller.isComponentEnabled(ComponentType.LAUNCHER_CLIENT.COMPONENT_NAME))
+        if (controller.isComponentEnabled(ComponentType.INTERVAL_DAEMON.COMPONENT_NAME))
         {
-            long launcherClientPort = controller.getSettings().getLong(ComponentType.LAUNCHER_CLIENT.SETTING_KEY_PORT);
-            launcherClientDashboardEndpointUrl = "http://localhost:" + launcherClientPort + "/" + ComponentType.LAUNCHER_CLIENT.TOP_LEVEL_PATH + "/url/get";
+            long launcherClientPort = controller.getSettings().getLong(ComponentType.INTERVAL_DAEMON.SETTING_KEY_PORT);
+            intervalServiceDashboardEndpointUrl = "http://localhost:" + launcherClientPort + "/" + ComponentType.INTERVAL_DAEMON.TOP_LEVEL_PATH + "/dashboards/urls/get";
         }
         else
         {
-            launcherClientDashboardEndpointUrl = null;
+            intervalServiceDashboardEndpointUrl = null;
         }
 
         // -- led-daemon
@@ -139,9 +139,9 @@ public class StatsForwarderThread extends ExtendedThread
         try
         {
             // Fetch Jira dashboards
-            String dashboardUrl = fetchDashboardUrl(true);
+            JSONArray dashboardUrls = fetchDashboardUrl(true);
             // -- Update cached value
-            cacheDashboardUrl = dashboardUrl;
+            cacheDashboardUrls = dashboardUrls;
 
             // Build info object
             request = new JSONObject();
@@ -152,7 +152,7 @@ public class StatsForwarderThread extends ExtendedThread
             request.put("port", hostInformationService.getRestPort());
             request.put("auth", authProviderService.getAuthToken());
             request.put("version", versionService.getVersion());
-            request.put("dashboard", dashboardUrl);
+            request.put("dashboards", dashboardUrls);
         }
         catch (Exception e)
         {
@@ -204,13 +204,13 @@ public class StatsForwarderThread extends ExtendedThread
         try
         {
             // Fetch latest dashboards; we'll abort if it has changed, so that we can resend dashboards
-            String dashboardUrl = fetchDashboardUrl(fetchExternalData);
+            JSONArray dashboardUrls = fetchDashboardUrl(fetchExternalData);
 
-            if  (   ((dashboardUrl != null || cacheDashboardUrl != null) && (dashboardUrl == null || cacheDashboardUrl == null)) ||
-                    (dashboardUrl != null && !dashboardUrl.equals(cacheDashboardUrl))
+            if  (   ((dashboardUrls != null || cacheDashboardUrls != null) && (dashboardUrls == null || cacheDashboardUrls == null)) ||
+                    (dashboardUrls != null && !dashboardUrls.equals(cacheDashboardUrls))
                 )
             {
-                LOG.info("Dashboard has changed, aborting update");
+                LOG.info("Dashboards have changed, aborting update and re-sending info...");
                 return false;
             }
 
@@ -281,12 +281,35 @@ public class StatsForwarderThread extends ExtendedThread
         return response;
     }
 
-    private String fetchDashboardUrl(boolean fetchExternalData)
+    private JSONArray fetchDashboardUrl(boolean fetchExternalData)
     {
-        String response = (String) fetchJsonObjectFromUrl(launcherClientDashboardEndpointUrl, new String[]{"url"}, fetchExternalData);
-        LOG.debug("Retrieved dashboard url -: {}", response);
+        // WARNING: THE FOLLOWING IS SENSITIVE CODE AND COULD BE USED AS AN ATTACK VECTOR TO
+        // COMPROMISE NON-PUBLIC URLs, SUCH AS JIRA WALLBOARDS, WITH PASSWORDS
 
-        return response;
+        JSONArray response = (JSONArray) fetchJsonObjectFromUrl(intervalServiceDashboardEndpointUrl, new String[]{"dashboards"}, fetchExternalData);
+        LOG.debug("Retrieved dashboard - url: {}, size: {}", intervalServiceDashboardEndpointUrl, response != null ? response.size() : 0);
+
+        // Re-wrap with only public URLs
+        JSONArray sanitisedResponse = new JSONArray();
+
+        if (response != null && response.size() > 0)
+        {
+            Object rawItem;
+            JSONObject dashboard;
+            String sanitisedDashboardUrl;
+
+            for (int i = 0; i < response.size(); i++)
+            {
+                rawItem = response.get(i);
+                dashboard = (JSONObject) rawItem;
+
+                // Convert to sanitised dashboard and add
+                sanitisedDashboardUrl = (String) dashboard.get("public_url");
+                sanitisedResponse.add(sanitisedDashboardUrl);
+            }
+        }
+
+        return sanitisedResponse;
     }
 
     public Boolean fetchScreenState(boolean fetchExternalData)
