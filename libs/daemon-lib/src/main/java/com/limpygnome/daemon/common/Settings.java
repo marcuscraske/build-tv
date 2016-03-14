@@ -24,6 +24,11 @@ public class Settings
 
     public Settings() { }
 
+    public Settings(Controller controller, String fileName)
+    {
+        reload(controller, fileName);
+    }
+
     /**
      * Reloads settings from default controller config file.
      *

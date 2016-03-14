@@ -16,10 +16,15 @@ public class StatsForwarderService implements Service
 
     public static final String SERVICE_NAME = "stats-forwarder";
 
-    private static final String STATS_FORWARDER_CONFIG_FILENAME = "stats-forwarder.json";
+    public static final String STATS_FORWARDER_CONFIG_FILENAME = "stats-forwarder.json";
 
+    /* Interval/frequency at which to send info/updates to REST endpoint */
     private long frequency;
+
+    /* URL to receive info */
     private String endpointUrlInfo;
+
+    /* URL to receive updates */
     private String endpointUrlUpdate;
 
     private StatsForwarderThread statsForwarderThread;
@@ -27,8 +32,7 @@ public class StatsForwarderService implements Service
     @Override
     public void start(Controller controller)
     {
-        Settings settingsForwarder = new Settings();
-        settingsForwarder.reload(controller, STATS_FORWARDER_CONFIG_FILENAME);
+        Settings settingsForwarder = new Settings(controller, STATS_FORWARDER_CONFIG_FILENAME);
 
         // Check service is enabled
         boolean enabled = settingsForwarder.getBoolean("enabled");
