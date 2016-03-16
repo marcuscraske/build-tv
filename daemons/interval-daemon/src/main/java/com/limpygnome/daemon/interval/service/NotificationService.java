@@ -212,9 +212,10 @@ public class NotificationService implements Service, RestServiceHandler
         if (source != null)
         {
             removeNotificationSource(source);
+            return true;
         }
 
-        return true;
+        throw new IllegalArgumentException("Missing source from notification removal request");
     }
 
 }
