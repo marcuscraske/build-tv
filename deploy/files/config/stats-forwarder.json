@@ -1,6 +1,7 @@
 {
     "enabled" : true,
     "frequency" : 5000,
+    "hostname" : "*",
     "url" :
     {
         "info" : "http://localhost:8085/rest/tv/info",
