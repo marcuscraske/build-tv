@@ -19,12 +19,6 @@
         rule=allow
   sudo: true
 
-- name: Allow Ansible Accelerate traffic
-  ufw:  proto=any
-        port=5099
-        rule=allow
-  sudo: true
-
 - name: Deny all other traffic
   ufw:  state=enabled
         direction=incoming

@@ -1,2 +1,6 @@
 # Ignore compile directory for setup files
 compile/
+build/
+
+deploy.retry
+
