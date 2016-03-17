@@ -5,6 +5,11 @@
         "port" : 2000
     },
 
+    "proxy" :
+    {
+        "port" : 2100
+    },
+
     "local-ports" :
     {
         "led-daemon"        : 2500,

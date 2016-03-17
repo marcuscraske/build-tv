@@ -22,13 +22,13 @@ public class Program
         Controller controller = new DefaultController("remote-daemon");
 
         // Add services
-//        controller.add(RandomTokenAuthProviderService.SERVICE_NAME, new RandomTokenAuthProviderService());
-//        controller.add(RestProxyService.SERVICE_NAME, new RestProxyService());
-//        controller.add(InstanceIdentityService.SERVICE_NAME, new InstanceIdentityService());
-//        controller.add(VersionService.SERVICE_NAME, new VersionService());
-//        controller.add(HostInformationService.SERVICE_NAME, new HostInformationService());
-//        controller.add(StatsForwarderService.SERVICE_NAME, new StatsForwarderService());
-        controller.add("proxy", new ProxyService());
+        controller.add(RandomTokenAuthProviderService.SERVICE_NAME, new RandomTokenAuthProviderService());
+        controller.add(RestProxyService.SERVICE_NAME, new RestProxyService());
+        controller.add(InstanceIdentityService.SERVICE_NAME, new InstanceIdentityService());
+        controller.add(VersionService.SERVICE_NAME, new VersionService());
+        controller.add(HostInformationService.SERVICE_NAME, new HostInformationService());
+        controller.add(StatsForwarderService.SERVICE_NAME, new StatsForwarderService());
+        controller.add(ProxyService.SERVICE_NAME, new ProxyService());
 
         // Attach REST handlers
         RestService.attachControllerRestHandlerServices(controller);
