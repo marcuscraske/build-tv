@@ -8,13 +8,13 @@
   sudo: true
   when: noproxy is not defined
 
-- name:     Update Pi boot configuration,
-  include:  ../../common/tasks/copyOnRemote.yml,
-            src="{{ temp_path }}/system/config.txt",
-            dest="/boot/config.txt",
-            owner="root",
-            group="root",
-            perms="777",
+- name:     Update Pi boot configuration
+  include:  ../../common/tasks/copyOnRemote.yml
+            src="{{ temp_path }}/system/config.txt"
+            dest="/boot/config.txt"
+            owner="root"
+            group="root"
+            perms="777"
   sudo:     true
 
 - name: Setting up packages...

@@ -14,19 +14,19 @@
   sudo: true
 
 - name:     Copying shared configuration,
-  include:  ../../common/tasks/copyOnRemote.yml,
-            src="{{ temp_path }}/config/",
-            dest="{{ deploy_path }}/config/",
-            owner="monitor",
-            group="rpi-group",
-            perms="775",
+  include:  ../../common/tasks/copyOnRemote.yml
+            src="{{ temp_path }}/config/"
+            dest="{{ deploy_path }}/config/"
+            owner="monitor"
+            group="rpi-group"
+            perms="775"
   sudo:     true
 
 - name:     Copying website override files,
-  include:  ../../common/tasks/copyOnRemote.yml,
-            src="{{ temp_path }}/website/",
-            dest="{{ deploy_path }}/website/",
-            owner="monitor",
-            group="rpi-group",
-            perms="775",
+  include:  ../../common/tasks/copyOnRemote.yml
+            src="{{ temp_path }}/website/"
+            dest="{{ deploy_path }}/website/"
+            owner="monitor"
+            group="rpi-group"
+            perms="775"
   sudo:     true

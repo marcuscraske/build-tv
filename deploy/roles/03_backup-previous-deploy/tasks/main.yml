@@ -25,12 +25,12 @@
   sudo: true
   when: logs_exist.stat.exists
 
-- name:     Creating backup of previous deployment,
-  include:  ../../common/tasks/copyOnRemote.yml,
-            src="{{ deploy_path }}/",
-            dest="{{ backup_path }}/{{ backup_datetime.stdout }}/",
-            owner="monitor",
-            group="rpi-group",
-            perms="775",
-  sudo:     true,
+- name:     Creating backup of previous deployment
+  include:  ../../common/tasks/copyOnRemote.yml
+            src="{{ deploy_path }}/"
+            dest="{{ backup_path }}/{{ backup_datetime.stdout }}/"
+            owner="monitor"
+            group="rpi-group"
+            perms="775"
+  sudo:     true
   when:     deploy_exists.stat.exists
