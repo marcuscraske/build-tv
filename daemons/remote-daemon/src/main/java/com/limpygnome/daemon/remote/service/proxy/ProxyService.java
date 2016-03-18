@@ -41,7 +41,7 @@ public class ProxyService implements Service
             httpServer.setExecutor(null);
             httpServer.start();
 
-            LOG.info("Started proxy server");
+            LOG.info("Started proxy server - port: {}", proxyPort);
         }
         catch (IOException e)
         {

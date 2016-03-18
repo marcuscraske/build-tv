@@ -41,7 +41,7 @@ public class HostInformationService implements Service
         // Read REST port
         this.restPort = controller.getSettings().getLong("rest/port");
 
-        LOG.info("host information service setup - hostname: {}, port: {}", hostname, restPort);
+        LOG.info("Host information service setup - hostname: {}, port: {}", hostname, restPort);
     }
 
     @Override

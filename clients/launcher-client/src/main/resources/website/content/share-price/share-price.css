@@ -1,0 +1,23 @@
+table th
+{
+    border: none !important;
+}
+
+table#ticker td
+{
+    font-size: 6em !important;
+    padding: 0;
+}
+
+table.details
+{
+    font-size: 3em;
+}
+table.details th
+{
+    text-align: right;
+}
+table.details td
+{
+    text-align: left;
+}
