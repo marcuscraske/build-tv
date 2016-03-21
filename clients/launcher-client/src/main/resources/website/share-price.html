@@ -5,6 +5,8 @@
             Share Price
         </title>
 
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
         <!-- Shared -->
         <link rel="stylesheet" type="text/css" href="content/shared/layout.css" />
         <script type="text/javascript" src="content/shared/jquery-2.2.0.min.js"></script>
@@ -12,12 +14,13 @@
 
         <!-- Build TV service -->
         <link rel="stylesheet" type="text/css" href="content/share-price/share-price.css" />
-        <script type="text/javascript" src="content/build-tv/sharePriceController.js"></script>
+        <script type="text/javascript" src="content/shared/snowfall.jquery.min.js"></script>
+        <script type="text/javascript" src="content/share-price/sharePriceController.js"></script>
 
     </head>
     <body>
         <h1>
-            Share Price - XXX
+            Share Price - <span id="share-symbol"></span>
         </h1>
         <table id="ticker">
             <tr>
@@ -26,10 +29,10 @@
                 </th>
             </tr>
             <tr>
-                <td>
+                <td id="field-open">
                     000
                 </td>
-                <td>
+                <td id="field-change">
                     0.00%
                 </td>
             </tr>
@@ -39,13 +42,13 @@
                 <th>
                     Sell
                 </th>
-                <td colspan="2">
+                <td colspan="2" id="field-sell">
                     000
                 </td>
                 <th>
                     Buy
                 </th>
-                <td colspan="2">
+                <td colspan="2" id="field-buy">
                     000
                 </td>
             </tr>
@@ -53,10 +56,10 @@
                 <th>
                     Previous Close
                 </th>
-                <td>
+                <td id="field-previous-close">
                     0000
                 </td>
-                <td>
+                <td id="field-previous-close-change">
                     0.00%
                 </td>
                 <td colspan="3"></td>
@@ -68,19 +71,19 @@
                 <th>
                     Year Low
                 </th>
-                <td>
+                <td id="field-year-low">
                     000
                 </td>
-                <td>
+                <td id="field-year-low-change">
                     0.00%
                 </td>
                 <th>
                     Year High
                 </th>
-                <td>
+                <td id="field-year-high">
                     000
                 </td>
-                <td>
+                <td id="field-year-high-change">
                     0.00%
                 </td>
             </tr>
@@ -88,13 +91,13 @@
                 <th>
                     Market Capitalisation
                 </th>
-                <td colspan="2">
+                <td colspan="2" id="field-market-cap">
                     &pound;000.000M
                 </td>
                 <th>
                     Volume
                 </th>
-                <td colspan="2">
+                <td colspan="2" id="field-volume">
                     0000000
                 </td>
             </tr>

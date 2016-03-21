@@ -6,7 +6,12 @@ table th
 table#ticker td
 {
     font-size: 6em !important;
-    padding: 0;
+    padding: 0 0.4em;
+}
+
+table#ticker td:nth-child(2)
+{
+    font-size: 2em !important;
 }
 
 table.details
@@ -20,4 +25,14 @@ table.details th
 table.details td
 {
     text-align: left;
+}
+
+
+.ticker-high
+{
+    color: #0C0;
+}
+.ticker-low
+{
+    color: red;
 }
