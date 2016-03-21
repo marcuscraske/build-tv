@@ -1,21 +1,17 @@
-// API: http://download.finance.yahoo.com/d/quotes.csv?s=WPG.L&f=snl1c1p2&e=.csv
-// https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22WPG.L%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=
-// https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22WPG.L%22)&format=json&diagnostics=false&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=
-
-
 // Hook onload event so that the page can load...
 $(window).ready(function(){
     sharePriceController.setup();
 });
 
 /*
-    todo
+    Used to render a share price ticker dashboard.
 */
 sharePriceController = {
 
-    sharePriceSymbol: "ABC",
+    /* The current share price symbol being displayed. */
+    sharePriceSymbol: null,
 
-    /* The API to use for querying the share price. - replace ABC.D with stoc */
+    /* The API to use for querying the share price. */
     sharePriceApiUrl: null,
 
     /* The rate at which to poll for changes. */
@@ -24,8 +20,23 @@ sharePriceController = {
     /* The old data; we avoid changes when new data is the same. */
     pollOldData: null,
 
+    /* Used to indicate if currently raining money. */
+    rainingMoney: false,
+
     setup: function()
     {
+        // Fetch URL params
+        var urlParams = dashboardUtils.queryParams();
+
+        // Fetch symbol from URL params
+        this.sharePriceSymbol = urlParams.get("symbol");
+
+        if (this.sharePriceSymbol == null || this.sharePriceSymbol.length == 0)
+        {
+            this.sharePriceSymbol = "XXX";
+            console.error("sharePriceController - no symbol specified; specify ?symbol=<share symbol here> at the end of this URL to set share to watch");
+        }
+
         // Build share price URL
         this.sharePriceApiUrl = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22" + this.sharePriceSymbol + "%22)&format=json&diagnostics=false&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=";
 
@@ -38,13 +49,6 @@ sharePriceController = {
 
         // Setup polling
         this.setupPoll();
-
-        $("body").snowfall({
-            image: "content/share-price/money.png",
-            minSize: 20,
-            maxSize: 40,
-            round: true
-        });
     },
 
     setupPoll: function()
@@ -89,12 +93,14 @@ sharePriceController = {
         // Update fields
         var stockData = data["query"]["results"]["quote"];
 
-        this.updateField(stockData, "Open", "#field-open");
-        this.updateTicker(stockData, "Change", "#field-change");
-        this.updateField(stockData, "Ask", "#field-sell");
-        this.updateField(stockData, "Bid", "#field-buy");
+        this.updateField(stockData, "LastTradePriceOnly", "#field-last-trade");
+        this.updateTicker(stockData, "Change", "#field-change", "", "p");
+        this.updateTicker(stockData, "ChangeinPercent", "#field-change-percent");
+        this.updateField(stockData, "Bid", "#field-bid");
+        this.updateField(stockData, "Ask", "#field-ask");
         this.updateField(stockData, "PreviousClose", "#field-previous-close");
         this.updateTicker(stockData, "ChangeinPercent", "#field-previous-close-change");
+        this.updateField(stockData, "Open", "#field-open");
 
         this.updateField(stockData, "YearLow", "#field-year-low");
         this.updateTicker(stockData, "ChangeFromYearLow", "#field-year-low-change");
@@ -104,6 +110,24 @@ sharePriceController = {
 
         this.updateField(stockData, "MarketCapitalization", "#field-market-cap", "£");
         this.updateField(stockData, "Volume", "#field-volume");
+
+        // Rain money if open share value is positive
+        var openValue = stockData["Open"];
+        var shouldRain = openValue > 0;
+
+        if (shouldRain != this.rainingMoney)
+        {
+            if (shouldRain)
+            {
+                this.rainMoney();
+            }
+            else
+            {
+                this.clearMoneyRain();
+            }
+
+            this.rainingMoney = shouldRain;
+        }
     },
 
     updateField: function(stockData, item, target, preSymbol, postSymbol)
@@ -112,45 +136,53 @@ sharePriceController = {
         var isPostSymbol = (postSymbol != null && postSymbol.length > 0);
 
         var value = stockData[item];
-        var actualValue;
 
-        if (isPreSymbol || isPostSymbol)
+        if (value != null)
         {
-            // Append symbols...
-            if (preSymbol)
-            {
-                actualValue = value.replace(preSymbol, "");
+            var actualValue;
 
-                if (value.indexOf(preSymbol) == -1)
+            if (isPreSymbol || isPostSymbol)
+            {
+                // Append symbols...
+                if (preSymbol)
                 {
-                    value = preSymbol + value;
+                    actualValue = value.replace(preSymbol, "");
+
+                    if (value.indexOf(preSymbol) == -1)
+                    {
+                        value = preSymbol + value;
+                    }
+                }
+                else
+                {
+                    actualValue = value.replace(postSymbol, "");
+
+                    if (value.indexOf(postSymbol) == -1)
+                    {
+                        value += postSymbol;
+                    }
                 }
             }
             else
             {
-                actualValue = value.replace(postSymbol, "");
-
-                if (value.indexOf(postSymbol) == -1)
-                {
-                    value += postSymbol;
-                }
+                actualValue = value;
             }
+
+            // Update value
+            $(target).text(value);
+
+            return actualValue;
         }
         else
         {
-            actualValue = value;
+            console.error("sharePriceController - unable to find JSON item - item: " + item)
         }
-
-        // Update value
-        $(target).text(value);
-
-        return actualValue;
     },
 
-    updateTicker: function(stockData, item, target)
+    updateTicker: function(stockData, item, target, preSymbol, postSymbol)
     {
         // Update field
-        var value = this.updateField(stockData, item, target, "", "%");
+        var value = this.updateField(stockData, item, target, preSymbol != null ? preSymbol : "", postSymbol != null ? postSymbol : "%");
 
         // Set class based on value being either positive or negative
         if (value >= 0)
@@ -161,6 +193,24 @@ sharePriceController = {
         {
             $(target).addClass("ticker-low")
         }
+    },
+
+    rainMoney: function()
+    {
+        $("body").snowfall({
+            image: "content/share-price/money.png",
+            minSize: 20,
+            maxSize: 40,
+            round: true
+        });
+
+        console.debug("sharePriceController - raining money enabled");
+    },
+
+    clearMoneyRain: function()
+    {
+        $("body").snowfall("clear");
+        console.debug("sharePriceController - raining money cleared");
     }
 
 };
