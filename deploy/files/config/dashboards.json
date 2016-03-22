@@ -26,6 +26,24 @@
             "provider" : "url",
             "params" :
             {
+                "url": "share-price.html?symbol=GOOG",
+                "lifespan" : 20000,
+                "refresh" : 0
+            }
+        },
+        {
+            "provider" : "url",
+            "params" :
+            {
+                "url": "http://localhost:2100/?url=http://www.bbc.com",
+                "lifespan" : 15000,
+                "refresh" : 0
+            }
+        },
+        {
+            "provider" : "url",
+            "params" :
+            {
                 "url": "content/mock/test_b.html",
                 "lifespan" : 5000,
                 "refresh" : 5000
