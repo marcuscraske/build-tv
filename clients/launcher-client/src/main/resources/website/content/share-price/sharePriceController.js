@@ -95,7 +95,7 @@ sharePriceController = {
 
         this.updateField(stockData, "LastTradePriceOnly", "#field-last-trade");
         this.updateTicker(stockData, "Change", "#field-change", "", "p");
-        this.updateTicker(stockData, "ChangeinPercent", "#field-change-percent");
+        this.updateTicker(stockData, "ChangeinPercent", "#field-change-percent", "", "");
         this.updateField(stockData, "Bid", "#field-bid");
         this.updateField(stockData, "Ask", "#field-ask");
         this.updateField(stockData, "PreviousClose", "#field-previous-close");
@@ -112,8 +112,8 @@ sharePriceController = {
         this.updateField(stockData, "Volume", "#field-volume");
 
         // Rain money if open share value is positive
-        var openValue = stockData["Open"];
-        var shouldRain = openValue > 0;
+        var currentValue = stockData["LastTradePriceOnly"];
+        var shouldRain = currentValue > 0;
 
         if (shouldRain != this.rainingMoney)
         {
@@ -200,7 +200,7 @@ sharePriceController = {
         $("body").snowfall({
             image: "content/share-price/money.png",
             minSize: 20,
-            maxSize: 40,
+            maxSize: 50,
             round: true
         });
 
