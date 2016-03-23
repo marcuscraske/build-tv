@@ -5,9 +5,25 @@ dashboardUtils = {
         return new Date().getTime();
     },
 
+    queryParam: function (key)
+    {
+        var urlParams = this.queryParams();
+        var value = null;
+
+        for (var i = 0; i < urlParams.length; i++)
+        {
+            if (urlParams[i][0] == key)
+            {
+                value = urlParams[i][1];
+            }
+        }
+
+        return value;
+    },
+
     queryParams: function()
     {
-        var params = new Map();
+        var params = [];
         var url = document.URL.split("?")[1];
 
         if (url != null)
@@ -32,7 +48,7 @@ dashboardUtils = {
                     v = true;
                 }
 
-                params.set(k, v);
+                params.push([k, v]);
             }
         }
 

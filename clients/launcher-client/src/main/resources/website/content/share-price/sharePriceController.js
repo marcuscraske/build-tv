@@ -25,11 +25,8 @@ sharePriceController = {
 
     setup: function()
     {
-        // Fetch URL params
-        var urlParams = dashboardUtils.queryParams();
-
         // Fetch symbol from URL params
-        this.sharePriceSymbol = urlParams.get("symbol");
+        this.sharePriceSymbol = dashboardUtils.queryParam("symbol");
 
         if (this.sharePriceSymbol == null || this.sharePriceSymbol.length == 0)
         {
@@ -197,19 +194,14 @@ sharePriceController = {
 
     rainMoney: function()
     {
-        $("body").snowfall({
-            image: "content/share-price/money.png",
-            minSize: 20,
-            maxSize: 50,
-            round: true
-        });
+        snowfallController.start();
 
         console.debug("sharePriceController - raining money enabled");
     },
 
     clearMoneyRain: function()
     {
-        $("body").snowfall("clear");
+        snowfallController.stop();
         console.debug("sharePriceController - raining money cleared");
     }
 
