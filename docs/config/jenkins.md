@@ -3,7 +3,7 @@
 Configuration is found at:
 
 <pre>
-deploy/files/config/jenkins.json
+/deploy/files/config/jenkins.json
 </pre>
 
 Example to poll all jobs for a Jenkins instance, where the URL is the view of the jobs:

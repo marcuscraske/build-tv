@@ -1,9 +1,7 @@
 #!/bin/bash
+
 # *********************************************************************************
 # Installs an image onto a disk i.e. the Pi's memory card
-#
-# Author(s):    limpygnome
-# Version:      1.0
 # *********************************************************************************
 
 # Output available images

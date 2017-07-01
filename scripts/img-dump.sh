@@ -1,9 +1,7 @@
 #!/bin/bash
+
 # *********************************************************************************
 # Dumps a disk to an image file.
-#
-# Author(s):    limpygnome
-# Version:      1.0
 # *********************************************************************************
 
 # Output current state and devices/partitions etc
