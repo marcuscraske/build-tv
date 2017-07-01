@@ -40,4 +40,4 @@ Or for Linux users, use our quick script:
 
 
 ## Configuration
-Refer to [configuration](configuration.md).
+The next step is [configuration](configuration.md).

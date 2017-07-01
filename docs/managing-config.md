@@ -2,12 +2,15 @@
 This is the recommended process, as you can check-in your build TV's configuration into version control. Useful for any
 quick re-setup and managing lots of build TVs.
 
+## Location
 Configuration lives in `../build-tv-config` (relative to root of this repository), which has a directory `environments`.
 Under `environments` is a directory for each build TV.
 
 Example:
 `/build-tv-config/environments/team-foobar`
 
+
+## Build TVs
 Under each build TV directory, you can create the following optional files/directories:
 - `config` (directory) - copied to `/build-tv/config`
 - `website` (directory) - copied to `/build-tv/website`, root folder of reusable HTML files and assets for dashboards.
@@ -19,3 +22,6 @@ Under each build TV directory, you can create the following optional files/direc
     - `splash` (file) - boot screen image, shown when the build TV first boots up
 
 Navigate to the `deploy` directory in this repository.
+
+
+## Templating
