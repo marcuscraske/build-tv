@@ -3,14 +3,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <name>Build Indicator - Clients - Launcher Client</name>
+    <name>Build TV - Clients - Launcher Client</name>
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.limpygnome.buildindicator</groupId>
+        <groupId>com.limpygnome.buildtv</groupId>
         <artifactId>clients</artifactId>
-        <version>2.1</version>
+        <version>3.0</version>
     </parent>
-    <groupId>com.limpygnome.buildindicator.clients</groupId>
+    <groupId>com.limpygnome.buildtv.clients</groupId>
     <artifactId>launcher-client</artifactId>
     <packaging>jar</packaging>
 
@@ -18,7 +18,7 @@
 
         <!-- Local -->
         <dependency>
-            <groupId>com.limpygnome.buildindicator.libs</groupId>
+            <groupId>com.limpygnome.buildtv.libs</groupId>
             <artifactId>daemon-lib</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -48,7 +48,7 @@
         </dependency>
 
     </dependencies>
-    
+
     <build>
         <plugins>
         

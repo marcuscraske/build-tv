@@ -1,5 +1,9 @@
 - hosts: all
   gather_facts: no
+  vars:
+    deploy_path:  "/build-tv"
+    backup_path:  "/build-tv-backups"
+    temp_path:    "/build-tv-setup-files"
 
   roles:
     - { role: 01_setup-temp-files, tags: ["always"] }

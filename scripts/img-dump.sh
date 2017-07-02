@@ -4,6 +4,12 @@
 # Dumps a disk to an image file.
 # *********************************************************************************
 
+# Check we're sudo
+if [[ "$EUID" != 0 ]]; then
+    echo "This script must be ran with sudo"
+    exit 1
+fi
+
 # Output current state and devices/partitions etc
 DEVICES=$(lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL)
 

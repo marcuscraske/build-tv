@@ -13,3 +13,6 @@ gpu_mem=256
 
 # Force usage of HDMI audio
 hdmi_drive=2
+
+# Enable audio
+dtparam=audio=on

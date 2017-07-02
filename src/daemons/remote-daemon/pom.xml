@@ -3,14 +3,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <name>Build Indicator - Daemons - Remote Daemon</name>
+    <name>Build TV - Daemons - Remote Daemon</name>
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.limpygnome.buildindicator</groupId>
+        <groupId>com.limpygnome.buildtv</groupId>
         <artifactId>daemons</artifactId>
-        <version>2.1</version>
+        <version>3.0</version>
     </parent>
-    <groupId>com.limpygnome.buildindicator.daemons</groupId>
+    <groupId>com.limpygnome.buildtv.daemons</groupId>
     <artifactId>remote-daemon</artifactId>
     <packaging>jar</packaging>
 
@@ -18,48 +18,48 @@
     <dependencies>
 
         <!-- Local -->
-		<dependency>
-			<groupId>com.limpygnome.buildindicator.libs</groupId>
-			<artifactId>daemon-lib</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>com.limpygnome.buildtv.libs</groupId>
+            <artifactId>daemon-lib</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
-		<!-- HTTP Client -->
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.5</version>
-		</dependency>
+        <!-- HTTP Client -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5</version>
+        </dependency>
 
     </dependencies>
-	
-	<build>
-		<plugins>
-		
-			<!-- Builds executable JAR with dependencies included -->
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<executions>
-					<execution>
-					<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>com.limpygnome.daemon.remote.Program</mainClass>
-						</manifest>
-					</archive>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<appendAssemblyId>false</appendAssemblyId>
+    
+    <build>
+        <plugins>
+        
+            <!-- Builds executable JAR with dependencies included -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                    <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.limpygnome.daemon.remote.Program</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <appendAssemblyId>false</appendAssemblyId>
                     <finalName>remote-daemon</finalName>
-				</configuration>
-			</plugin>
+                </configuration>
+            </plugin>
 
             <!-- Outputs the current version to a file -->
             <plugin>
@@ -88,7 +88,7 @@
                 </executions>
             </plugin>
 
-		</plugins>
-	</build>
-	
+        </plugins>
+    </build>
+    
 </project>

@@ -3,14 +3,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <name>Build Indicator - Libs</name>
+    <name>Build TV - libs</name>
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.limpygnome</groupId>
-        <artifactId>buildindicator</artifactId>
-        <version>2.1</version>
+        <artifactId>buildtv</artifactId>
+        <version>3.0</version>
     </parent>
-    <groupId>com.limpygnome.buildindicator</groupId>
+    <groupId>com.limpygnome.buildtv</groupId>
     <artifactId>libs</artifactId>
     <packaging>pom</packaging>
 

@@ -9,8 +9,8 @@
 - name: Creating setup files directory
   file: path="{{ temp_path }}"
         state=directory
-        owner="{{ ansible_ssh_user }}"
-        group="{{ ansible_ssh_user }}"
+        owner="{{ ansible_user }}"
+        group="{{ ansible_user }}"
         mode=0777
         recurse=yes
   sudo: true

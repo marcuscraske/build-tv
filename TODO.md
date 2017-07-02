@@ -1,7 +1,8 @@
-# Rotate between windows
-``
-xdotool search --all --onlyvisible --name chromium | sed -n '3p' | xargs -I {} xdotool windowactivate {}
-``
+# TODO
 
-Where 3 is the line to use. Seems to pickup incorrect windows, needs further investigation, may avoid reopening
-windows or alt+tabbing.
+- Binaries should be pre-compiled and installed as Debian packages.
+    - Ansible deploy dir could still be used, but no need for user to build project.
+
+- Config setup and management needs to be simplified, replace Ansible with APIs for all settings and having a
+  panel/interface for management instead? Not sure how firewall config etc works. If software is installed as
+  binaries, perhaps have either a custom distro *or* a JAR to configure environment.

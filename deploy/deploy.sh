@@ -16,23 +16,22 @@ ${SCRIPT_HEADER}
 "
 
 # Target hosts group
-TARGET_HOSTS="pi2"
+TARGET_HOSTS="build-tv"
 
 # Build dynamic paths
-PATH_CURR=$(pwd)
+PATH_CURR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PATH_BASE=$(dirname "${PATH_CURR}")
 
 PATH_FILES_BASE="${PATH_CURR}/files"
 PATH_FILES_OVERRIDE="${PATH_CURR}/../../build-tv-config/environments"
 
-PATH_NEOPIXEL_WS281X_LIB="${PATH_BASE}/libs/neopixel-ws281x-lib"
-PATH_LED_DAEMON="${PATH_BASE}/daemons/led-daemon"
-PATH_BUILDTV_DAEMON="${PATH_BASE}/daemons/build-tv-daemon"
-PATH_INTERVAL_DAEMON="${PATH_BASE}/daemons/interval-daemon"
-PATH_SYSTEM_DAEMON="${PATH_BASE}/daemons/system-daemon"
-PATH_REMOTE_DAEMON="${PATH_BASE}/daemons/remote-daemon"
-PATH_LAUNCHER_CLIENT="${PATH_BASE}/clients/launcher-client"
-
+PATH_NEOPIXEL_WS281X_LIB="${PATH_BASE}/src/libs/neopixel-ws281x-lib"
+PATH_LED_DAEMON="${PATH_BASE}/src/daemons/led-daemon"
+PATH_BUILDTV_DAEMON="${PATH_BASE}/src/daemons/build-tv-daemon"
+PATH_INTERVAL_DAEMON="${PATH_BASE}/src/daemons/interval-daemon"
+PATH_SYSTEM_DAEMON="${PATH_BASE}/src/daemons/system-daemon"
+PATH_REMOTE_DAEMON="${PATH_BASE}/src/daemons/remote-daemon"
+PATH_LAUNCHER_CLIENT="${PATH_BASE}/src/clients/launcher-client"
 
 # Determine inventory file to use
 INVENTORY="${PATH_FILES_OVERRIDE}/hosts_inventory"
@@ -139,6 +138,8 @@ echo "${EXTRA_VARS}"
 echo ""
 echo "Running deployment..."
 
+# Include Ansible on path
+source ${PATH_CURR}/ansible/hacking/env-setup -q
 
 # Run deployment"
 ansible-playbook deploy.yml -v -i "${INVENTORY}" -l "${TARGET_HOSTS}" --extra-vars "${EXTRA_VARS}" --tags "${DEPLOY_TAGS}"

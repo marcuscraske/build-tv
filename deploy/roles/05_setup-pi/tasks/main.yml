@@ -8,6 +8,10 @@
   sudo: true
   when: noproxy is not defined
 
+- name: Setting up packages...
+  include: packages.yml
+  when: nopackages is not defined
+
 - name:     Update Pi boot configuration
   include:  ../../common/tasks/copyOnRemote.yml
             src="{{ temp_path }}/system/config.txt"
@@ -16,10 +20,6 @@
             group="root"
             perms="777"
   sudo:     true
-
-- name: Setting up packages...
-  include: packages.yml
-  when: nopackages is not defined
 
 - name: Setting up timezone...
   include: timezone.yml

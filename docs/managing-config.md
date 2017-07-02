@@ -25,3 +25,25 @@ Navigate to the `deploy` directory in this repository.
 
 
 ## Templating
+You can specify a list of directories, so that build TVs can share files/configuration. This works by specifying
+a list of directories, which are copied over each other from top to bottom.
+
+In a build TV directory, create the file `template` and specify a folder on each line.
+
+An example for `team-foobar`:
+
+````
+organisation
+development
+````
+
+This would copy the following directories on top of each other:
+- `/build-tv-config/environments/organisation`
+- `/build-tv-config/environments/development`
+- `/build-tv-config/environments/team-foobar`
+
+The final directory at the end would be remotely copied to the build TV. This is useful if you have common splash
+screens and dashboard files.
+
+## Deploying
+When you want to deploy your configuration changes, run `deploy/deploy_config.sh`.

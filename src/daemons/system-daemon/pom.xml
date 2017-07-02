@@ -3,14 +3,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <name>Build Indicator - Daemons - System Daemon</name>
+    <name>Build TV - daemons - system daemon</name>
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.limpygnome.buildindicator</groupId>
+        <groupId>com.limpygnome.buildtv</groupId>
         <artifactId>daemons</artifactId>
-        <version>2.1</version>
+        <version>3.0</version>
     </parent>
-    <groupId>com.limpygnome.buildindicator.daemons</groupId>
+    <groupId>com.limpygnome.buildtv.daemons</groupId>
     <artifactId>system-daemon</artifactId>
     <packaging>jar</packaging>
 
@@ -19,7 +19,7 @@
 
         <!-- Local -->
         <dependency>
-            <groupId>com.limpygnome.buildindicator.libs</groupId>
+            <groupId>com.limpygnome.buildtv.libs</groupId>
             <artifactId>daemon-lib</artifactId>
             <version>${project.version}</version>
         </dependency>
