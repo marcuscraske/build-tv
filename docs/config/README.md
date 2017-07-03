@@ -8,8 +8,8 @@ machine, checked into version control, deployed remotely from your machine to bu
 
 ## Configuration Files
 Each config file is optional:
-- [components-enabled.json](config/components-enabled.md) - enable/disable components of your build TV
-- [dashboards.json](config/dashboards.md) - configure web-pages shown on the screen
+- [components-enabled.json](components-enabled.md) - enable/disable components of your build TV
+- [dashboards.json](dashboards.md) - configure web-pages shown on the screen
 - [jenkins.json](jenkins.md) - configure polling Jenkins for build statuses
 - [led-patterns.json](led-patterns.md) - configure notifications, turning off the screen etc
 

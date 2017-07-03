@@ -43,4 +43,4 @@ Or for Linux users, use our quick script:
     - Refer to [manual software setup](manual-software-setup.md) for other platforms, or if the script fails.
 
 ## Configuration
-The next step is [configuration](configuration.md).
+The next step is [configuration](configuration/README.md).
