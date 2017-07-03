@@ -8,6 +8,24 @@
         groups=rpi-group
   sudo: true
 
+- name: Installing X11
+  apt:  name=xserver-xorg
+        state=present
+  when: nopackages is not defined
+  sudo: true
+
+- name: Installing X11 xinit
+  apt:  name=xinit
+        state=present
+  when: nopackages is not defined
+  sudo: true
+
+- name: Installing X11 legacy
+  apt:  name=xserver-xorg-legacy
+        state=present
+  when: nopackages is not defined
+  sudo: true
+
 - name: Installing X11 utils for xset
   apt:  name=x11-xserver-utils
         state=present
