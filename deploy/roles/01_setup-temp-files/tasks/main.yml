@@ -16,9 +16,8 @@
   sudo: true
 
 - name: Copy setup files
-  copy: src="{{ files_base }}/../compile/{{ inventory_hostname }}/"
-        dest="{{ temp_path }}"
-        mode=0775
+  synchronize:  src="{{ files_base }}/../compile/{{ inventory_hostname }}/"
+                dest="{{ temp_path }}"
   sudo: true
 
 - name: Setting permissions on setup files...

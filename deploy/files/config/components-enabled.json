@@ -1,10 +1,9 @@
 {
     "remote-daemon"         : false,
+    "led-daemon"            : false,
 
     "build-tv-daemon"       : true,
     "interval-daemon"       : true,
-    "led-daemon"            : true,
     "system-daemon"         : true,
-    "notifications-client"  : true,
     "launcher-client"       : true
 }

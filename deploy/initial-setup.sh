@@ -11,7 +11,7 @@ DEFAULT_PASS="raspberry"
 # *********************************************************************************
 
 # Check if user needs to build source code
-echo "Have you built the source code? (y to skip)"
+echo "Have you built the source code? (y to skip / press enter to continue)"
 read CONFIRM
 
 if [[ ${CONFIRM} != "y" ]]; then
