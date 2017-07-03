@@ -3,7 +3,7 @@ All configuration files for the build TV live at `/build-tv/config` on the Pi.
 
 You can manually edit your config, which is useful for getting started. However you should use config on your local
 machine, checked into version control, deployed remotely from your machine to build TVs. Refer to
-[managing config](managing-config.md).
+[managing config](../managing-config.md).
 
 
 ## Configuration Files
@@ -16,5 +16,5 @@ Each config file is optional:
 
 ### Experimental
 
-#### Status API
-- [status.json](status.md) - authenticated API for polling status of build TV
+#### Build TV API
+- [build-tv-api.json](build-tv-api.md) - authenticated API for polling status of build TV
