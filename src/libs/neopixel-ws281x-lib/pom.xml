@@ -16,10 +16,10 @@
 
     <build>
         <plugins>
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.1.1</version>
                 <executions>
                     <execution>
                     <id>compile-library</id>
@@ -33,6 +33,7 @@
                     <executable>${project.basedir}/compile.sh</executable>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
 
