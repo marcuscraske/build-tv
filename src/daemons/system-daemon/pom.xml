@@ -17,37 +17,31 @@
 
     <dependencies>
 
-        <!-- Local -->
+        <!-- local -->
         <dependency>
             <groupId>com.limpygnome.buildtv.libs</groupId>
             <artifactId>daemon-lib</artifactId>
             <version>${project.version}</version>
         </dependency>
 
-        <!-- HTTP Client -->
+        <!-- apache -->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
 
-        <!-- JSON Serialization -->
+        <!-- json -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.6.3</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.6.3</version>
-        </dependency>
-
-        <!-- Apache Commons -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.0</version>
         </dependency>
 
     </dependencies>

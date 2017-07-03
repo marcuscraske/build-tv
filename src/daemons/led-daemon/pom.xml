@@ -17,7 +17,7 @@
 
     <dependencies>
 
-        <!-- Local -->
+        <!-- local -->
         <dependency>
             <groupId>com.limpygnome.buildtv.libs</groupId>
             <artifactId>daemon-lib</artifactId>

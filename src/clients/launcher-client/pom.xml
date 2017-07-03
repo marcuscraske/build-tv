@@ -16,35 +16,31 @@
 
     <dependencies>
 
-        <!-- Local -->
+        <!-- local -->
         <dependency>
             <groupId>com.limpygnome.buildtv.libs</groupId>
             <artifactId>daemon-lib</artifactId>
             <version>${project.version}</version>
         </dependency>
 
-        <!-- HTTP Client -->
+        <!-- apache -->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5</version>
         </dependency>
 
-        <!-- Jetty embedded web server -->
+        <!-- jetty -->
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
-            <version>9.3.7.v20160115</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlets</artifactId>
-            <version>9.3.7.v20160115</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlet</artifactId>
-            <version>9.3.7.v20160115</version>
         </dependency>
 
     </dependencies>
