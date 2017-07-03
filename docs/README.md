@@ -1,7 +1,7 @@
 # Docs
 
 - [getting started](getting-started.md)
-- [configuration](configuration/README.md)
+- [configuration](config/README.md)
 - [managing config](managing-config.md) - remotely deploy config to your build TVs
 - [build indicator](build-indicator.md) - setup an LED strip for build status and stand-ups
 - [configure proxy](configure-proxy.md) - configuration for networks behind a proxy
