@@ -15,11 +15,11 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>system-daemon</module>
-        <module>led-daemon</module>
         <module>build-status-daemon</module>
-        <module>interval-daemon</module>
+        <module>led-daemon</module>
+        <module>notification-daemon</module>
         <module>remote-daemon</module>
+        <module>system-daemon</module>
     </modules>
 
     <build>

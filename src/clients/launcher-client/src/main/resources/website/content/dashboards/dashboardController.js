@@ -6,7 +6,7 @@ $(window).ready(function(){
 // Our dashboard controller, for creating and changing the visibility of dashboards (which are iframe elements)
 dashboardController = {
 
-    dashboardServiceUrl: "http://localhost:2800/interval-daemon/dashboards/urls/get",
+    dashboardServiceUrl: "http://localhost:2800/notification-daemon/dashboards/urls/get",
 
     /* The index of the current dashboard being shown. */
     currentIframeIndex: -1,

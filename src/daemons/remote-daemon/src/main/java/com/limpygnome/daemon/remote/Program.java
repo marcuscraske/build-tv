@@ -2,10 +2,7 @@ package com.limpygnome.daemon.remote;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.imp.DefaultController;
-import com.limpygnome.daemon.remote.service.HostInformationService;
-import com.limpygnome.daemon.remote.service.InstanceIdentityService;
 import com.limpygnome.daemon.remote.service.RestProxyService;
-import com.limpygnome.daemon.remote.service.StatsForwarderService;
 import com.limpygnome.daemon.remote.service.VersionService;
 import com.limpygnome.daemon.remote.service.auth.RandomTokenAuthProviderService;
 import com.limpygnome.daemon.remote.service.proxy.ProxyService;
@@ -24,10 +21,7 @@ public class Program
         // Add services
         controller.add(RandomTokenAuthProviderService.SERVICE_NAME, new RandomTokenAuthProviderService());
         controller.add(RestProxyService.SERVICE_NAME, new RestProxyService());
-        controller.add(InstanceIdentityService.SERVICE_NAME, new InstanceIdentityService());
         controller.add(VersionService.SERVICE_NAME, new VersionService());
-        controller.add(HostInformationService.SERVICE_NAME, new HostInformationService());
-        controller.add(StatsForwarderService.SERVICE_NAME, new StatsForwarderService());
         controller.add(ProxyService.SERVICE_NAME, new ProxyService());
 
         // Attach REST handlers

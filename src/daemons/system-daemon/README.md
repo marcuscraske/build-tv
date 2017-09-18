@@ -9,7 +9,8 @@ The system daemon can be used to poll for system metrics, which consist of: mini
 - Temperature
 
 ## Screen
-The physical screen attached to the system can be controlled. At present this only supports the Raspberry Pi 2, using the `tv-service` to control the HDMI port.
+The physical screen attached to the system can be controlled. At present this only supports the Raspberry Pi 3,
+using the `tv-service` to control the HDMI port.
 
 ## Power Management
 The system can be rebooted or halted.

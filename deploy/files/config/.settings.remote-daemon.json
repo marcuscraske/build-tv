@@ -15,7 +15,7 @@
         "led-daemon"            : 2500,
         "system-daemon"         : 2600,
         "build-status-daemon"   : 2700,
-        "interval-daemon"       : 2800,
+        "notification-daemon"   : 2800,
         "launcher-client"       : 2900
     }
 }

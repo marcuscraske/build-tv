@@ -15,7 +15,7 @@ public class Program
 
     public static void main(String[] args)
     {
-        Controller controller = new DefaultController("interval-daemon");
+        Controller controller = new DefaultController("notification-daemon");
 
         // Add services
         controller.add(IntervalService.SERVICE_NAME, new IntervalService());

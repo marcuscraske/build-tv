@@ -32,10 +32,10 @@ public class NotificationClient
         this.restClient = new RestClient(sourceName);
         this.sourceName = sourceName;
 
-        if (controller.isComponentEnabled("interval-daemon"))
+        if (controller.isComponentEnabled("notification-daemon"))
         {
-            this.notificationSetEndpointUrl = controller.getSettings().getString("interval-daemon.notifications.set.url");
-            this.notificationRemoveEndpointUrl = controller.getSettings().getString("interval-daemon.notifications.remove.url");
+            this.notificationSetEndpointUrl = controller.getSettings().getString("notification-daemon.notifications.set.url");
+            this.notificationRemoveEndpointUrl = controller.getSettings().getString("notification-daemon.notifications.remove.url");
         }
         else
         {

@@ -4,8 +4,8 @@
 # Daemon configuration
 # **********************************************************************************************************************
 
-DAEMON_NAME="interval-daemon"
-DAEMON_JAR="/build-tv/interval-daemon.jar"
+DAEMON_NAME="notification-daemon"
+DAEMON_JAR="/build-tv/notification-daemon.jar"
 DAEMON_WORKING_DIR="/build-tv"
 DAEMON_USER="rpi-daemon"
 

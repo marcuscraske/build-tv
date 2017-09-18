@@ -9,6 +9,6 @@ In most cases you will never want to touch this, unless you have an LED strip.
 | remote-daemon         | Opens up build TV API (experimental). |
 | led-daemon            | Runs daemon for operating LED strip. See [build indicator](../build-indicator.md). |
 | build-status-daemon   | Polls instance(s) of Jenkins for build statuses. |
-| interval-daemon       | Looks at led-patterns to show screen notifications and turn on/off screen. |
+| notification-daemon   | Looks at led-patterns to show screen notifications and turn on/off screen. |
 | system-daemon         | Provides system metrics, power management and screen APIs.
 | launcher-client       | Desktop client to control browser (Chrome) to render dashboards. |

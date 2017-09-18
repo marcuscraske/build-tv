@@ -27,8 +27,8 @@ PATH_FILES_OVERRIDE="${PATH_CURR}/../../build-tv-config/environments"
 
 PATH_NEOPIXEL_WS281X_LIB="${PATH_BASE}/src/libs/neopixel-ws281x-lib"
 PATH_LED_DAEMON="${PATH_BASE}/src/daemons/led-daemon"
-PATH_BUILDTV_DAEMON="${PATH_BASE}/src/daemons/build-status-daemon"
-PATH_INTERVAL_DAEMON="${PATH_BASE}/src/daemons/interval-daemon"
+PATH_BUILD_STATUS_DAEMON="${PATH_BASE}/src/daemons/build-status-daemon"
+PATH_INTERVAL_DAEMON="${PATH_BASE}/src/daemons/notification-daemon"
 PATH_SYSTEM_DAEMON="${PATH_BASE}/src/daemons/system-daemon"
 PATH_REMOTE_DAEMON="${PATH_BASE}/src/daemons/remote-daemon"
 PATH_LAUNCHER_CLIENT="${PATH_BASE}/src/clients/launcher-client"
@@ -53,8 +53,8 @@ echo "Path - base:                  ${PATH_BASE}"
 
 echo "Path - ws281x library:        ${PATH_NEOPIXEL_WS281X_LIB}"
 echo "Path - led daemon:            ${PATH_LED_DAEMON}"
-echo "Path - build status daemon:   ${PATH_BUILDTV_DAEMON}"
-echo "Path - interval daemon:       ${PATH_INTERVAL_DAEMON}"
+echo "Path - build status daemon:   ${PATH_BUILD_STATUS_DAEMON}"
+echo "Path - notification daemon:   ${PATH_NOTIFICATION_DAEMON}"
 echo "Path - system daemon:         ${PATH_SYSTEM_DAEMON}"
 echo "Path - remote daemon:         ${PATH_REMOTE_DAEMON}"
 echo "Path - launcher client:       ${PATH_LAUNCHER_CLIENT}"
@@ -72,8 +72,8 @@ fi
 # -- Paths to daemons/apps etc
 EXTRA_VARS+="ws281x_lib=\"${PATH_NEOPIXEL_WS281X_LIB}\" "
 EXTRA_VARS+="led_daemon=\"${PATH_LED_DAEMON}\" "
-EXTRA_VARS+="build_tv_daemon=\"${PATH_BUILDTV_DAEMON}\" "
-EXTRA_VARS+="interval_daemon=\"${PATH_INTERVAL_DAEMON}\" "
+EXTRA_VARS+="build_tv_daemon=\"${PATH_BUILD_STATUS_DAEMON}\" "
+EXTRA_VARS+="interval_daemon=\"${PATH_NOTIFICATION_DAEMON}\" "
 EXTRA_VARS+="system_daemon=\"${PATH_SYSTEM_DAEMON}\" "
 EXTRA_VARS+="remote_daemon=\"${PATH_REMOTE_DAEMON}\" "
 EXTRA_VARS+="launcher_client=\"${PATH_LAUNCHER_CLIENT}\" "
@@ -112,7 +112,7 @@ fi
 
 # Definitions of available tags by alias/category
 TAGS_LIBS="neopixel-lib"
-TAGS_APPS="led-daemon,build-status-daemon,interval-daemon,system-daemon,remote-daemon,launcher-client"
+TAGS_APPS="led-daemon,build-status-daemon,notification-daemon,system-daemon,remote-daemon,launcher-client"
 TAGS_SETUP="backup,remove,setup-pi,wallboard,config"
 TAGS_ALL="${TAGS_SETUP},${TAGS_LIBS},${TAGS_APPS},reboot"
 

@@ -4,7 +4,7 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{YYYY-MM-dd HH:mm:ss} : %-24thread : %-5level : %-65c : %msg%n" />
         </Console>
-        <RollingFile name="LocalFile" fileName="logs/interval-daemon.log" filePattern="" append="false">
+        <RollingFile name="LocalFile" fileName="logs/notification-daemon.log" filePattern="" append="false">
             <PatternLayout pattern="%d{YYYY-MM-dd HH:mm:ss} : %-24thread : %-5level : %-65c : %msg%n" />
             <Policies>
                 <SizeBasedTriggeringPolicy size="1 MB" />

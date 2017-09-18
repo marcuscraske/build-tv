@@ -3,7 +3,7 @@
   become: true
 
 - name: Restarting interval daemon...
-  shell: service interval-daemon restart
+  shell: service notification-daemon restart
   become: true
 
 - name: Restarting system daemon...

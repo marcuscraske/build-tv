@@ -9,7 +9,7 @@ notificationController = {
     /* The rate at which to poll for dashboard changes in milliseconds. */
     notificationPollingInterval: 1000,
 
-    notificationsServiceUrl: "http://localhost:2800/interval-daemon/notifications/get",
+    notificationsServiceUrl: "http://localhost:2800/notification-daemon/notifications/get",
 
     /* The current notification; set to null once expired. */
     currentNotification: null,

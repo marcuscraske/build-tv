@@ -17,7 +17,7 @@
     - { role: 08_neopixel-ws281x-lib, tags: ["neopixel-lib"] }
     - { role: 09_led-daemon, tags: ["led-daemon"] }
     - { role: 10_build-status-daemon, tags: ["build-status-daemon"] }
-    - { role: 11_interval-daemon,   tags: ["interval-daemon"] }
+    - { role: 11_notification-daemon, tags: ["notification-daemon"] }
     - { role: 12_system-daemon, tags: ["system-daemon"] }
     - { role: 13_remote-daemon, tags: ["remote-daemon"] }
     - { role: 14_launcher-client, tags: ["launcher-client"] }
