@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <name>Build TV - Daemons - Build TV Daemon</name>
+    <name>Build TV - Daemons - Build Status Daemon</name>
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.limpygnome.buildtv</groupId>
@@ -11,9 +11,8 @@
         <version>3.0</version>
     </parent>
     <groupId>com.limpygnome.buildtv.daemons</groupId>
-    <artifactId>build-tv-daemon</artifactId>
+    <artifactId>build-status-daemon</artifactId>
     <packaging>jar</packaging>
-
 
     <dependencies>
 
@@ -55,14 +54,14 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.limpygnome.daemon.buildtv.Program</mainClass>
+                            <mainClass>com.limpygnome.daemon.buildstatus.Program</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
                     <appendAssemblyId>false</appendAssemblyId>
-                    <finalName>build-tv-daemon</finalName>
+                    <finalName>build-status-daemon</finalName>
                 </configuration>
             </plugin>
             

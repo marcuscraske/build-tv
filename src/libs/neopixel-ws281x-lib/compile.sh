@@ -51,7 +51,7 @@ function programInstalled
     ERROR="${3}"
     SUCCESS="${4}"
 
-    OUTPUT=$(eval ${CMD})
+    OUTPUT=$(eval ${CMD} || echo "fail")
     if [[ "${OUTPUT}" != *"${EXPECTED}"* ]]; then
         echo "${ERROR}"
         exit 1

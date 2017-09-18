@@ -18,9 +18,9 @@ public enum ComponentType
     SYSTEM_DAEMON("system-daemon", "local-ports/system-daemon"),
 
     /**
-     * The build TV daemon - Jenkins etc.
+     * The build status daemon - Jenkins etc.
      */
-    BUILD_TV_DAEMON("build-tv-daemon", "local-ports/build-tv-daemon"),
+    BUILD_STATUS_DAEMON("build-status-daemon", "local-ports/build-status-daemon"),
 
     /**
      * The interval daemon - timed patterns/notifications etc.

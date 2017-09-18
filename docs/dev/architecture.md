@@ -6,7 +6,7 @@ Local daemons can communicate between each other, with all communication using a
 JSON.
 
 The notification client is intended to be executed within a windowed/UI/non-headless environment, which communicates
-with the build-tv-daemon for notifications to be displayed on the physical screen connected to the box.
+with the build-status-daemon for notifications to be displayed on the physical screen connected to the box.
 
 Systems other than the Raspberry Pi 2 can be supported, refer to each daemon individually for any notes regarding
 compatibility. If not stated, it should be assumed cross-platform support is available for that specific application

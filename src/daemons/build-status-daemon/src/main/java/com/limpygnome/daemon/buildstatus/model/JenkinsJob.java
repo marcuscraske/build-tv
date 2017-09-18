@@ -1,4 +1,4 @@
-package com.limpygnome.daemon.buildtv.model;
+package com.limpygnome.daemon.buildstatus.model;
 
 import com.limpygnome.daemon.api.LedPattern;
 

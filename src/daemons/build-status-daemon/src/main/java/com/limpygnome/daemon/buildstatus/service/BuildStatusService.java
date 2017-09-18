@@ -1,21 +1,16 @@
-package com.limpygnome.daemon.buildtv.service;
+package com.limpygnome.daemon.buildstatus.service;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Service;
-import com.limpygnome.daemon.buildtv.model.JenkinsHostUpdateResult;
-import com.limpygnome.daemon.buildtv.model.JenkinsJob;
+import com.limpygnome.daemon.buildstatus.model.JenkinsHostUpdateResult;
+import com.limpygnome.daemon.buildstatus.model.JenkinsJob;
 import com.limpygnome.daemon.common.rest.RestRequest;
 import com.limpygnome.daemon.common.rest.RestResponse;
 import com.limpygnome.daemon.api.RestServiceHandler;
-import com.limpygnome.daemon.util.EnvironmentUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.Properties;
 
 /**
  * A service for retrieving the build status of Jenkins projects (as a whole).
@@ -44,7 +39,7 @@ public class BuildStatusService implements Service, RestServiceHandler
     @Override
     public boolean handleRequestInChain(RestRequest restRequest, RestResponse restResponse)
     {
-        if (restRequest.isPathMatch(new String[]{ "build-tv-daemon", "status", "get" }))
+        if (restRequest.isPathMatch(new String[]{ "build-status-daemon", "status", "get" }))
         {
             return handleRequest_statusGet(restRequest, restResponse);
         }

@@ -23,10 +23,10 @@
   }
 
 - {
-    name:         Removing build-tv-daemon service...,
+    name:         Removing build-status-daemon service...,
     include:      ../../common/tasks/removeService.yml,
-    service_name: "build-tv-daemon",
-    daemon_name:  "build-tv-daemon"
+    service_name: "build-status-daemon",
+    daemon_name:  "build-status-daemon"
   }
 
 - {

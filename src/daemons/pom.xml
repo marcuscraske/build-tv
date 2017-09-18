@@ -17,7 +17,7 @@
     <modules>
         <module>system-daemon</module>
         <module>led-daemon</module>
-        <module>build-tv-daemon</module>
+        <module>build-status-daemon</module>
         <module>interval-daemon</module>
         <module>remote-daemon</module>
     </modules>

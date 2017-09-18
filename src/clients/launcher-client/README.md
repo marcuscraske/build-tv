@@ -1,5 +1,8 @@
 # launcher-client
-The launcher client is used to control the dashboard, which runs within a non-headless windowed environment. It also provides a public URL of the dashboard currently displayed.
+Responsible for launching the dashboard within a supported browser (currently Chromium), with process recovery.
+
+This will run an instance of a web server (Jetty) on `localhost`, which will host any web files, required to get around
+browser security policies.
 
 ## Configuration
 

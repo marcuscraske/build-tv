@@ -16,7 +16,7 @@
     - { role: 07_wallboard, tags: ["wallboard"] }
     - { role: 08_neopixel-ws281x-lib, tags: ["neopixel-lib"] }
     - { role: 09_led-daemon, tags: ["led-daemon"] }
-    - { role: 10_build-tv-daemon, tags: ["build-tv-daemon"] }
+    - { role: 10_build-status-daemon, tags: ["build-status-daemon"] }
     - { role: 11_interval-daemon,   tags: ["interval-daemon"] }
     - { role: 12_system-daemon, tags: ["system-daemon"] }
     - { role: 13_remote-daemon, tags: ["remote-daemon"] }

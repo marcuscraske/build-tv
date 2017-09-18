@@ -2,7 +2,7 @@
     "remote-daemon"         : false,
     "led-daemon"            : false,
 
-    "build-tv-daemon"       : true,
+    "build-status-daemon"   : true,
     "interval-daemon"       : true,
     "system-daemon"         : true,
     "launcher-client"       : true

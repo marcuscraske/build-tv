@@ -27,7 +27,7 @@ PATH_FILES_OVERRIDE="${PATH_CURR}/../../build-tv-config/environments"
 
 PATH_NEOPIXEL_WS281X_LIB="${PATH_BASE}/src/libs/neopixel-ws281x-lib"
 PATH_LED_DAEMON="${PATH_BASE}/src/daemons/led-daemon"
-PATH_BUILDTV_DAEMON="${PATH_BASE}/src/daemons/build-tv-daemon"
+PATH_BUILDTV_DAEMON="${PATH_BASE}/src/daemons/build-status-daemon"
 PATH_INTERVAL_DAEMON="${PATH_BASE}/src/daemons/interval-daemon"
 PATH_SYSTEM_DAEMON="${PATH_BASE}/src/daemons/system-daemon"
 PATH_REMOTE_DAEMON="${PATH_BASE}/src/daemons/remote-daemon"
@@ -53,7 +53,7 @@ echo "Path - base:                  ${PATH_BASE}"
 
 echo "Path - ws281x library:        ${PATH_NEOPIXEL_WS281X_LIB}"
 echo "Path - led daemon:            ${PATH_LED_DAEMON}"
-echo "Path - build TV daemon:       ${PATH_BUILDTV_DAEMON}"
+echo "Path - build status daemon:   ${PATH_BUILDTV_DAEMON}"
 echo "Path - interval daemon:       ${PATH_INTERVAL_DAEMON}"
 echo "Path - system daemon:         ${PATH_SYSTEM_DAEMON}"
 echo "Path - remote daemon:         ${PATH_REMOTE_DAEMON}"
@@ -112,7 +112,7 @@ fi
 
 # Definitions of available tags by alias/category
 TAGS_LIBS="neopixel-lib"
-TAGS_APPS="led-daemon,build-tv-daemon,interval-daemon,system-daemon,remote-daemon,launcher-client"
+TAGS_APPS="led-daemon,build-status-daemon,interval-daemon,system-daemon,remote-daemon,launcher-client"
 TAGS_SETUP="backup,remove,setup-pi,wallboard,config"
 TAGS_ALL="${TAGS_SETUP},${TAGS_LIBS},${TAGS_APPS},reboot"
 

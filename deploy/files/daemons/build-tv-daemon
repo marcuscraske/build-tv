@@ -4,8 +4,8 @@
 # Daemon configuration
 # **********************************************************************************************************************
 
-DAEMON_NAME="build-tv-daemon"
-DAEMON_JAR="/build-tv/build-tv-daemon.jar"
+DAEMON_NAME="build-status-daemon"
+DAEMON_JAR="/build-tv/build-status-daemon.jar"
 DAEMON_WORKING_DIR="/build-tv"
 DAEMON_USER="rpi-daemon"
 

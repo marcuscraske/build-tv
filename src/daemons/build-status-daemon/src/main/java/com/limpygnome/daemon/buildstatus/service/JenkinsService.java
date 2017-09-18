@@ -1,9 +1,9 @@
-package com.limpygnome.daemon.buildtv.service;
+package com.limpygnome.daemon.buildstatus.service;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Service;
-import com.limpygnome.daemon.buildtv.jenkins.JenkinsStatusThread;
-import com.limpygnome.daemon.buildtv.model.JenkinsHostUpdateResult;
+import com.limpygnome.daemon.buildstatus.jenkins.JenkinsStatusThread;
+import com.limpygnome.daemon.buildstatus.model.JenkinsHostUpdateResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

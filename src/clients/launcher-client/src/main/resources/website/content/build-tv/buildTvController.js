@@ -13,7 +13,7 @@ $(window).ready(function(){
 buildTvController = {
 
     /* The URL of the REST service for retrieving the build statuses of jobs. */
-    buildTvServiceUrl: "http://localhost:2700/build-tv-daemon/status/get",
+    buildTvServiceUrl: "http://localhost:2700/build-status-daemon/status/get",
 
     /* The rate at which to poll for changes. */
     pollDelay: 1000,

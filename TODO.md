@@ -1,5 +1,7 @@
 # TODO
 
+- rename rpi-daemon to buildtv-daemon
+
 - Binaries should be pre-compiled and installed as Debian packages.
     - Ansible deploy dir could still be used, but no need for user to build project.
 

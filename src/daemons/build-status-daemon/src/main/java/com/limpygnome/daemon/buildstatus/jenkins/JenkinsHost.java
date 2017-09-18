@@ -1,8 +1,8 @@
-package com.limpygnome.daemon.buildtv.jenkins;
+package com.limpygnome.daemon.buildstatus.jenkins;
 
 import com.limpygnome.daemon.api.LedPattern;
-import com.limpygnome.daemon.buildtv.model.JenkinsHostUpdateResult;
-import com.limpygnome.daemon.buildtv.model.JenkinsJob;
+import com.limpygnome.daemon.buildstatus.model.JenkinsHostUpdateResult;
+import com.limpygnome.daemon.buildstatus.model.JenkinsJob;
 import com.limpygnome.daemon.util.RestClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

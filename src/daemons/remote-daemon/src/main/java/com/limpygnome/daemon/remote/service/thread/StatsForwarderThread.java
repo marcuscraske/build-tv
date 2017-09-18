@@ -53,7 +53,7 @@ public class StatsForwarderThread extends ExtendedThread
         this.hostInformationService = (HostInformationService) controller.getServiceByName(HostInformationService.SERVICE_NAME);
 
         // Build endpoint URLs for available daemons
-        // -- build-tv-daemon
+        // -- build-status-daemon
         if (controller.isComponentEnabled(ComponentType.INTERVAL_DAEMON.COMPONENT_NAME))
         {
             long launcherClientPort = controller.getSettings().getLong(ComponentType.INTERVAL_DAEMON.SETTING_KEY_PORT);

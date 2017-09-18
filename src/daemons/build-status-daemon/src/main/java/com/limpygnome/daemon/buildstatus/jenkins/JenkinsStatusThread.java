@@ -1,9 +1,9 @@
-package com.limpygnome.daemon.buildtv.jenkins;
+package com.limpygnome.daemon.buildstatus.jenkins;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.ControllerState;
 import com.limpygnome.daemon.api.LedPattern;
-import com.limpygnome.daemon.buildtv.model.JenkinsHostUpdateResult;
+import com.limpygnome.daemon.buildstatus.model.JenkinsHostUpdateResult;
 import com.limpygnome.daemon.api.Notification;
 import com.limpygnome.daemon.common.ExtendedThread;
 import com.limpygnome.daemon.common.rest.client.LedClient;
@@ -15,7 +15,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import java.awt.Color;
 import java.io.File;
 import java.io.FileReader;
 import java.util.LinkedList;
