@@ -1,4 +1,4 @@
 - name: Rebooting Pi
   shell: reboot
   ignore_errors: true
-  sudo: true
+  become: true

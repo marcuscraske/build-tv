@@ -6,43 +6,43 @@
         createhome=yes
         append=no
         groups=rpi-group
-  sudo: true
+  become: true
 
 - name: Installing X11
   apt:  name=xserver-xorg
         state=present
   when: nopackages is not defined
-  sudo: true
+  become: true
 
 - name: Installing X11 xinit
   apt:  name=xinit
         state=present
   when: nopackages is not defined
-  sudo: true
+  become: true
 
 - name: Installing X11 legacy
   apt:  name=xserver-xorg-legacy
         state=present
   when: nopackages is not defined
-  sudo: true
+  become: true
 
 - name: Installing X11 utils for xset
   apt:  name=x11-xserver-utils
         state=present
   when: nopackages is not defined
-  sudo: true
+  become: true
 
 - name: Installing Matchbox window manager
   apt:  name=matchbox-desktop
         state=present
   when: nopackages is not defined
-  sudo: true
+  become: true
 
 - name: Installing Chromium browser
   apt:  name=chromium-browser
         state=present
   when: nopackages is not defined
-  sudo: true
+  become: true
 
 - name:     Setting up .xinitrc for wallboard user
   include:  ../../common/tasks/copyOnRemote.yml
@@ -51,16 +51,16 @@
             owner="wallboard"
             group="wallboard"
             perms="755"
-  sudo:     true
+  become:   true
 
 - name: Setting up automatic login of wallboard user
   shell: "{{ temp_path }}/setup-scripts/automatic-login.sh wallboard"
-  sudo: true
+  become: true
 
 - name: Disabling blanking of monitor
   shell: "{{ temp_path }}/setup-scripts/disable-blanking.sh"
-  sudo: true
+  become: true
 
 - name: Setting up bashrc to run x11
   shell: "{{ temp_path }}/setup-scripts/setup-bashrc-x11.sh"
-  sudo: true
+  become: true

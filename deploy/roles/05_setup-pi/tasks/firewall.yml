@@ -1,26 +1,26 @@
 - name: Updating apt-get cache
   apt:  update_cache=yes
-  sudo: true
+  become: true
 
 - name: Make sure ufw installed
   apt:  name=ufw
         state=present
-  sudo: true
+  become: true
 
 - name: Allow SSH traffic
   ufw:  proto=tcp
         port=22
         rule=allow
-  sudo: true
+  become: true
 
 - name: Allow remote daemon traffic
   ufw:  proto=tcp
         port=2000
         rule=allow
-  sudo: true
+  become: true
 
 - name: Deny all other traffic
   ufw:  state=enabled
         direction=incoming
         policy=deny
-  sudo: true
+  become: true

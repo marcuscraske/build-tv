@@ -5,8 +5,8 @@
             owner="root"
             group="root"
             perms="755"
-  sudo:     true
+  become:   true
 
 - name: Setup motd script
   shell: "{{ temp_path }}/setup-scripts/setup-motd.sh"
-  sudo: true
+  become: true

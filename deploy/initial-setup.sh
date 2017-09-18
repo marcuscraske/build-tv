@@ -50,7 +50,7 @@ if [[ ! -d "${DIR}/ansible" ]]; then
     sudo easy_install pip
 
     ## Fetch Ansible
-    git clone git://github.com/ansible/ansible.git --recursive
+    git clone https://github.com/ansible/ansible.git --recursive
 
     ## Checkout stable 2.3
     (cd ansible && git checkout stable-2.3 && git submodule update --init --recursive)

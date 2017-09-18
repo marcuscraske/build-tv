@@ -1,6 +1,7 @@
 - hosts: all
   gather_facts: no
   vars:
+    ansible_user: "monitor"
     deploy_path:  "/build-tv"
     backup_path:  "/build-tv-backups"
     temp_path:    "/build-tv-setup-files"

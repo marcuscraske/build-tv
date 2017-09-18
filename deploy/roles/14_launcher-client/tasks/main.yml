@@ -4,4 +4,4 @@
         mode=0770
         owner=wallboard
         group=wallboard
-  sudo: true
+  become: true

@@ -3,7 +3,7 @@
         state=directory
         owner=monitor
         group=rpi-group
-  sudo: true
+  become: true
 
 - name: Creating logs directory
   file: path={{ deploy_path }}/logs
@@ -11,7 +11,7 @@
         owner=monitor
         group=rpi-group
         mode=775
-  sudo: true
+  become: true
 
 - name:     Copying shared configuration,
   include:  ../../common/tasks/copyOnRemote.yml
@@ -20,7 +20,7 @@
             owner="monitor"
             group="rpi-group"
             perms="775"
-  sudo:     true
+  become:   true
 
 - name:     Copying website override files,
   include:  ../../common/tasks/copyOnRemote.yml
@@ -29,4 +29,4 @@
             owner="monitor"
             group="rpi-group"
             perms="775"
-  sudo:     true
+  become:   true

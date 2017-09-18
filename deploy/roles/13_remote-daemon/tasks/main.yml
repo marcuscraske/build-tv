@@ -4,7 +4,7 @@
         mode=0770
         owner=rpi-daemon
         group=rpi-group
-  sudo: true
+  become: true
 
 - {
     name:         Setting Up Remote Daemon,

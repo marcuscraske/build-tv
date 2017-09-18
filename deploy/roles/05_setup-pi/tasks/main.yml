@@ -1,11 +1,11 @@
 - name: Copying global proxy setting
   command: cp "{{ temp_path }}/system/environment" "/etc/environment"
-  sudo: true
+  become: true
   when: noproxy is not defined
 
 - name: Copying apt-get proxy setting
   command: cp "{{ temp_path }}/system/apt-get-proxy-settings" "/etc/apt/apt.conf.d/10proxy"
-  sudo: true
+  become: true
   when: noproxy is not defined
 
 - name: Setting up packages...
@@ -19,7 +19,7 @@
             owner="root"
             group="root"
             perms="777"
-  sudo:     true
+  become:     true
 
 - name: Setting up timezone...
   include: timezone.yml

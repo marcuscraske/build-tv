@@ -1,24 +1,24 @@
 - name: Install SWIG
   apt:  name=swig
         state=present
-  sudo: true
+  become: true
   when: nopackages is not defined
 
 - name: Install GCC
   apt:  name=gcc
         state=present
-  sudo: true
+  become: true
   when: nopackages is not defined
 
 - name: Check Library Files Exist
   stat: path={{ deploy_path }}/neopixel-ws281x-lib
   register: library_files_exist
-  sudo: true
+  become: true
 
 - name: Delete Existing Library Files
   shell: rm -R {{ deploy_path }}/neopixel-ws281x-lib
   when: library_files_exist.stat.exists == true
-  sudo: true
+  become: true
 
 - name: Copying New Library Files
   copy: src={{ ws281x_lib }}
@@ -26,24 +26,24 @@
         mode=0775
         owner=wallboard
         group=wallboard
-  sudo: true
+  become: true
 
 - name: Compiling Library Files
   shell: "{{ deploy_path }}/neopixel-ws281x-lib/compile.sh"
   args:
     chdir: "{{ deploy_path }}/neopixel-ws281x-lib"
-  sudo: true
+  become: true
 
 - name: Copying Compiled ws281x Shared Library
   shell: >
     cp "{{ deploy_path }}/neopixel-ws281x-lib/output/ws2811.so" "{{ deploy_path }}/ws2811.so"
-  sudo: true
+  become: true
 
 - name: Copying Compiled JNI Shared Library
   shell: >
     cp "{{ deploy_path }}/neopixel-ws281x-lib/output/libws281x.so" "{{ deploy_path }}/libws281x.so"
-  sudo: true
+  become: true
 
 - name: Cleanup Library Files
   shell: rm -R {{ deploy_path }}/neopixel-ws281x-lib
-  sudo: true
+  become: true

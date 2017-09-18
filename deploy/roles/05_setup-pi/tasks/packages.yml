@@ -1,48 +1,48 @@
 - name: Updating apt-get cache
   apt:  update_cache=yes
-  sudo: true
+  become: true
 
 - name: Upgrading entire OS
   apt:  upgrade=full
-  sudo: true
+  become: true
 
 - name: Installing rsync
   apt:  name=rsync
         state=present
-  sudo: true
+  become: true
 
 - name: Installing sudo
   apt:  name=sudo
         state=present
-  sudo: true
+  become: true
 
 - name: Installing mDNS for hostname resolution
   apt:  name=avahi-daemon
         state=present
-  sudo: true
+  become: true
 
 - name: Installing Oracle JDK 8
   apt:  name=oracle-java8-jdk
         state=present
-  sudo: true
+  become: true
 
 - name: Installing htop
   apt:  name=htop
         state=present
-  sudo: true
+  become: true
 
 - name: Installing dnsutils
   apt:  name=dnsutils
         state=present
-  sudo: true
+  become: true
 
 - name: Installing ntp
   apt:  name=ntp
         state=present
-  sudo: true
+  become: true
 
 - name: Installing ntupdate
   apt:  name=ntpdate
         state=present
-  sudo: true
+  become: true
 
