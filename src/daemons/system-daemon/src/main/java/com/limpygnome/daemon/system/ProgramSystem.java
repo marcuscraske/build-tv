@@ -11,7 +11,7 @@ import com.limpygnome.daemon.system.service.stat.TemperatureStatService;
 /**
  * Entry point into the system daemon.
  */
-public class Program
+public class ProgramSystem
 {
 
     public static void main(String[] args)

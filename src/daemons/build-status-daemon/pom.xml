@@ -54,7 +54,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.limpygnome.daemon.buildstatus.Program</mainClass>
+                            <mainClass>com.limpygnome.daemon.buildstatus.ProgramBuildStatus</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

@@ -55,7 +55,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.limpygnome.buildtv.daemon.dashboard.Program</mainClass>
+                            <mainClass>com.limpygnome.buildtv.daemon.dashboard.ProgramDashboard</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

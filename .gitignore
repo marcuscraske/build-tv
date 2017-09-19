@@ -4,3 +4,6 @@ target/
 logs/
 
 ansible/
+
+
+auth-token.txt

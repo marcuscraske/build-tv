@@ -62,7 +62,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.limpygnome.client.launcher.Program</mainClass>
+                            <mainClass>com.limpygnome.client.launcher.ProgramLauncherClient</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

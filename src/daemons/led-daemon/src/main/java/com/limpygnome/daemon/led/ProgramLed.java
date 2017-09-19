@@ -14,9 +14,9 @@ import org.json.simple.JSONObject;
 /**
  * The entry point into the LED daemon.
  */
-public class Program
+public class ProgramLed
 {
-    private static final Logger LOG = LogManager.getLogger(Program.class);
+    private static final Logger LOG = LogManager.getLogger(ProgramLed.class);
 
     private static final String CONTROLLER_NAME = "led-daemon";
 

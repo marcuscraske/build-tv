@@ -9,7 +9,7 @@ import com.limpygnome.daemon.service.RestService;
 /**
  * Entry point into the notification daemon.
  */
-public class Program
+public class ProgramNotification
 {
 
     public static void main(String[] args)

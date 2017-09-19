@@ -1,21 +1,23 @@
-package com.limpygnome.buildtv.daemon.dashboard;
+package com.limpygnome.daemon.buildstatus;
 
-import com.limpygnome.buildtv.daemon.dashboard.service.DashboardService;
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.imp.DefaultController;
+import com.limpygnome.daemon.buildstatus.service.*;
 import com.limpygnome.daemon.service.RestService;
 
 /**
- * Entry point for dashboard daemon.
+ * Entry point into the build status daemon.
  */
-public class Program
+public class ProgramBuildStatus
 {
+
     public static void main(String[] args)
     {
-        Controller controller = new DefaultController("dashboard-daemon");
+        Controller controller = new DefaultController("build-status-daemon");
 
         // Add services
-        controller.add(DashboardService.SERVICE_NAME, new DashboardService());
+        controller.add(JenkinsService.SERVICE_NAME, new JenkinsService());
+        controller.add(BuildStatusService.SERVICE_NAME, new BuildStatusService());
 
         // Attach REST handlers
         RestService.attachControllerRestHandlerServices(controller);
@@ -23,4 +25,5 @@ public class Program
         // Start forever...
         controller.hookAndStartAndWaitForExit();
     }
+
 }

@@ -49,7 +49,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.limpygnome.daemon.remote.Program</mainClass>
+                            <mainClass>com.limpygnome.daemon.remote.ProgramRemote</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

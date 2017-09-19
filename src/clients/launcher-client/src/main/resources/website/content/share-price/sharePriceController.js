@@ -20,9 +20,6 @@ sharePriceController = {
     /* The old data; we avoid changes when new data is the same. */
     pollOldData: null,
 
-    /* Used to indicate if currently raining money. */
-    rainingMoney: false,
-
     setup: function()
     {
         // Fetch symbol from URL params
@@ -46,6 +43,9 @@ sharePriceController = {
 
         // Setup polling
         this.setupPoll();
+
+        // Start raining money
+        this.rainMoney();
     },
 
     setupPoll: function()
@@ -110,21 +110,6 @@ sharePriceController = {
 
         // Rain money if open share value is positive
         var currentValue = stockData["LastTradePriceOnly"];
-        var shouldRain = currentValue > 0;
-
-        if (shouldRain != this.rainingMoney)
-        {
-            if (shouldRain)
-            {
-                this.rainMoney();
-            }
-            else
-            {
-                this.clearMoneyRain();
-            }
-
-            this.rainingMoney = shouldRain;
-        }
     },
 
     updateField: function(stockData, item, target, preSymbol, postSymbol)

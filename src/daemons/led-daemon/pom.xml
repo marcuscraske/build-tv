@@ -48,7 +48,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.limpygnome.daemon.led.Program</mainClass>
+                            <mainClass>com.limpygnome.daemon.led.ProgramLed</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

@@ -63,7 +63,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.limpygnome.daemon.system.Program</mainClass>
+                            <mainClass>com.limpygnome.daemon.system.ProgramSystem</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

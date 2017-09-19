@@ -55,7 +55,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.limpygnome.daemon.interval.Program</mainClass>
+                            <mainClass>com.limpygnome.daemon.interval.ProgramNotification</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
