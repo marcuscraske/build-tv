@@ -1,4 +1,4 @@
-package com.limpygnome.daemon.interval.dashboard;
+package com.limpygnome.buildtv.daemon.dashboard.dashboard;
 
 import org.apache.commons.lang3.text.StrSubstitutor;
 import org.json.simple.JSONObject;

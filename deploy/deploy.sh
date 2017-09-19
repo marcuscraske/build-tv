@@ -30,6 +30,7 @@ PATH_LED_DAEMON="${PATH_BASE}/src/daemons/led-daemon"
 PATH_BUILD_STATUS_DAEMON="${PATH_BASE}/src/daemons/build-status-daemon"
 PATH_NOTIFICATION_DAEMON="${PATH_BASE}/src/daemons/notification-daemon"
 PATH_SYSTEM_DAEMON="${PATH_BASE}/src/daemons/system-daemon"
+PATH_DASHBOARD_DAEMON="${PATH_BASE}/src/daemons/dashboard-daemon"
 PATH_REMOTE_DAEMON="${PATH_BASE}/src/daemons/remote-daemon"
 PATH_LAUNCHER_CLIENT="${PATH_BASE}/src/clients/launcher-client"
 
@@ -56,6 +57,7 @@ echo "Path - led daemon:            ${PATH_LED_DAEMON}"
 echo "Path - build status daemon:   ${PATH_BUILD_STATUS_DAEMON}"
 echo "Path - notification daemon:   ${PATH_NOTIFICATION_DAEMON}"
 echo "Path - system daemon:         ${PATH_SYSTEM_DAEMON}"
+echo "Path - dashboard daemon:      ${PATH_DASHBOARD_DAEMON}"
 echo "Path - remote daemon:         ${PATH_REMOTE_DAEMON}"
 echo "Path - launcher client:       ${PATH_LAUNCHER_CLIENT}"
 
@@ -75,6 +77,7 @@ EXTRA_VARS+="led_daemon=\"${PATH_LED_DAEMON}\" "
 EXTRA_VARS+="build_status_daemon=\"${PATH_BUILD_STATUS_DAEMON}\" "
 EXTRA_VARS+="notification_daemon=\"${PATH_NOTIFICATION_DAEMON}\" "
 EXTRA_VARS+="system_daemon=\"${PATH_SYSTEM_DAEMON}\" "
+EXTRA_VARS+="dashboard_daemon=\"${PATH_DASHBOARD_DAEMON}\" "
 EXTRA_VARS+="remote_daemon=\"${PATH_REMOTE_DAEMON}\" "
 EXTRA_VARS+="launcher_client=\"${PATH_LAUNCHER_CLIENT}\" "
 
@@ -112,7 +115,7 @@ fi
 
 # Definitions of available tags by alias/category
 TAGS_LIBS="neopixel-lib"
-TAGS_APPS="led-daemon,build-status-daemon,notification-daemon,system-daemon,remote-daemon,launcher-client"
+TAGS_APPS="led-daemon,build-status-daemon,notification-daemon,system-daemon,remote-daemon,dashboard-daemon,launcher-client"
 TAGS_SETUP="backup,remove,setup-pi,wallboard,config"
 TAGS_ALL="${TAGS_SETUP},${TAGS_LIBS},${TAGS_APPS},reboot"
 

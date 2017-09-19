@@ -1,4 +1,4 @@
-package com.limpygnome.daemon.interval.dashboard;
+package com.limpygnome.buildtv.daemon.dashboard.dashboard;
 
 import org.json.simple.JSONObject;
 

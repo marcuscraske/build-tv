@@ -22,7 +22,7 @@ public class EnvironmentUtil
     static
     {
         // Determine if this is a dev environment -> set flag if so...
-        DEV_ENVIRONMENT = new File("pom.xml").exists();
+        DEV_ENVIRONMENT = new File("README.md").exists();
 
         if (DEV_ENVIRONMENT)
         {

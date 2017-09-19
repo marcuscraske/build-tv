@@ -1,7 +1,7 @@
-package com.limpygnome.daemon.interval.service;
+package com.limpygnome.buildtv.daemon.dashboard.service;
 
-import com.limpygnome.daemon.interval.dashboard.DashboardProvider;
-import com.limpygnome.daemon.interval.dashboard.DefaultDashbordProvider;
+import com.limpygnome.buildtv.daemon.dashboard.dashboard.DashboardProvider;
+import com.limpygnome.buildtv.daemon.dashboard.dashboard.DefaultDashbordProvider;
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.RestServiceHandler;
 import com.limpygnome.daemon.api.Service;
@@ -94,15 +94,15 @@ public class DashboardService implements Service, RestServiceHandler
     @Override
     public synchronized boolean handleRequestInChain(RestRequest restRequest, RestResponse restResponse)
     {
-        if (restRequest.isPathMatch(new String[]{ "notification-daemon", "dashboards", "urls", "get" }))
+        if (restRequest.isPathMatch(new String[]{ "dashboard-daemon", "dashboards", "urls", "get" }))
         {
             return handleRequestGetUrls(restRequest, restResponse);
         }
-        else if (restRequest.isPathMatch(new String[]{ "notification-daemon", "dashboards", "urls", "set" }))
+        else if (restRequest.isPathMatch(new String[]{ "dashboard-daemon", "dashboards", "urls", "set" }))
         {
             return handleRequestOpenUrls(restRequest, restResponse);
         }
-        else if (restRequest.isPathMatch(new String[]{ "notification-daemon", "dashboards", "urls", "reset" }))
+        else if (restRequest.isPathMatch(new String[]{ "dashboard-daemon", "dashboards", "urls", "reset" }))
         {
             return handleRequestResetUrls(restRequest, restResponse);
         }

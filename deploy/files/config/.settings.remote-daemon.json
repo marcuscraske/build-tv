@@ -12,6 +12,7 @@
 
     "local-ports" :
     {
+        "dashboard-daemon"      : 2400,
         "led-daemon"            : 2500,
         "system-daemon"         : 2600,
         "build-status-daemon"   : 2700,

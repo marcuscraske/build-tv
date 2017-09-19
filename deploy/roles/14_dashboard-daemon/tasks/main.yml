@@ -1,0 +1,13 @@
+- name: Copying dashboard daemon JAR
+  copy: src={{ dashboard_daemon }}/target/dashboard-daemon.jar
+        dest={{ deploy_path }}
+        mode=0770
+        owner=rpi-daemon
+        group=rpi-group
+  become: true
+
+- {
+    name:         Setting Up Dashboard Daemon,
+    include:      ../../common/tasks/setupService.yml,
+    service_name: "dashboard-daemon"
+  }

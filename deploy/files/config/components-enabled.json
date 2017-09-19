@@ -1,8 +1,9 @@
 {
-    "remote-daemon"         : true,
-    "led-daemon"            : false,
     "build-status-daemon"   : true,
+    "dashboard-daemon"      : true,
+    "led-daemon"            : false,
     "notification-daemon"   : true,
+    "remote-daemon"         : true,
     "system-daemon"         : true,
 
     "launcher-client"       : true

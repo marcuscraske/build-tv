@@ -20,7 +20,8 @@
     - { role: 11_notification-daemon, tags: ["notification-daemon"] }
     - { role: 12_system-daemon, tags: ["system-daemon"] }
     - { role: 13_remote-daemon, tags: ["remote-daemon"] }
-    - { role: 14_launcher-client, tags: ["launcher-client"] }
-    - { role: 15_remove-temp-files, tags: ["always"] }
-    - { role: 16_setup-restart, tags: ["restart"] }
-    - { role: 17_setup-reboot, tags: ["reboot"] }
+    - { role: 14_dashboard-daemon, tags: ["dashboard-daemon"] }
+    - { role: 15_launcher-client, tags: ["launcher-client"] }
+    - { role: 16_remove-temp-files, tags: ["always"] }
+    - { role: 17_setup-restart-services, tags: ["restart"] }
+    - { role: 18_setup-reboot, tags: ["reboot"] }

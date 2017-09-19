@@ -16,6 +16,7 @@
 
     <modules>
         <module>build-status-daemon</module>
+        <module>dashboard-daemon</module>
         <module>led-daemon</module>
         <module>notification-daemon</module>
         <module>remote-daemon</module>
