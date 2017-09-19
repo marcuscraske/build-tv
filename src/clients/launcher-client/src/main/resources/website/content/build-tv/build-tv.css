@@ -10,7 +10,7 @@
 {
     display: inline-block;
     background: #333;
-    font-size: 2.75em;
+    font-size: 2.4em;
     padding: 0.2em 0.4em;
     margin: 0.2em;
     box-sizing: border-box;
@@ -41,6 +41,12 @@
     animation-iteration-count: infinite;
 }
 
+#jobs li.BUILD_UNSTABLE,
+#jobs li.BUILD_FAILURE
+{
+    font-size: 3.5em;
+}
+
 #jobs li.BUILD_UNSTABLE
 {
     background: #fc0;
@@ -50,6 +56,7 @@
 #jobs li.BUILD_FAILURE
 {
     background: #C00;
+    font-size: 3.5em;
 }
 
 #jobs li.BUILD_PROGRESS

@@ -1,15 +1,13 @@
 package com.limpygnome.client.launcher.service;
 
+import java.io.File;
+
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.Service;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.ContextHandler;
-
-import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.util.resource.Resource;
-
-import java.io.File;
 
 /**
  * Used to provide a web server for dashboards content.
@@ -57,22 +55,23 @@ public class WebServerService implements Service
             server.addConnector(connector);
 
             // -- Setup handler to serve assets from class-path
-            WebServerHandler webServerHandler = new WebServerHandler();
-            webServerHandler.setBaseResource(Resource.newClassPathResource(RESOURCE_PATH));
-            webServerHandler.setDirectoriesListed(false);
-            webServerHandler.setWelcomeFiles(WELCOME_FILES);
+            WebServerHandler classPathHandler = new WebServerHandler();
+            classPathHandler.setBaseResource(Resource.newClassPathResource(RESOURCE_PATH));
+            classPathHandler.setDirectoriesListed(false);
+            classPathHandler.setWelcomeFiles(WELCOME_FILES);
 
             // -- Setup handler to serve assets from file system
             File pathWebsite = controller.getFile(LOCAL_PATH);
 
-            ResourceHandler resourceHandler = new ResourceHandler();
-            resourceHandler.setBaseResource(Resource.newResource(pathWebsite));
-            resourceHandler.setDirectoriesListed(false);
-            resourceHandler.setHandler(webServerHandler);
+            WebServerHandler fileSystemHandler = new WebServerHandler();
+            fileSystemHandler.setBaseResource(Resource.newResource(pathWebsite));
+            fileSystemHandler.setDirectoriesListed(false);
+            fileSystemHandler.setHandler(classPathHandler);
+            fileSystemHandler.setWelcomeFiles(WELCOME_FILES);
 
             // -- Setup context path for serving assets
             ContextHandler contextHandler = new ContextHandler(CONTEXT_PATH);
-            contextHandler.setHandler(resourceHandler);
+            contextHandler.setHandler(fileSystemHandler);
 
             server.setHandler(contextHandler);
 

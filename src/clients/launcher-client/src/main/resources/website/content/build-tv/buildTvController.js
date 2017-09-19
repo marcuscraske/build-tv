@@ -43,7 +43,7 @@ buildTvController = {
                     buildTvController.pollHandle(data);
 
                 }).fail(function(){
-                    console.error("buildTvController - failed to retrieve dashboards from REST service");
+                    console.error("buildTvController - failed to retrieve build status from REST service");
                 });
             }
             catch (e)
@@ -55,17 +55,17 @@ buildTvController = {
 
     pollHandle: function(data)
     {
-        // Check if data has even changed
+        // check if data has even changed
         if (this.pollOldData != null && JSON.stringify(data) == JSON.stringify(this.pollOldData))
         {
             console.debug("buildTvController - polled data unchanged");
             return;
         }
 
-        // Update poll timestamp
+        // update poll timestamp
         this.pollTimestamp = dashboardUtils.currentTime();
 
-        // Update all the items
+        // update all the items
         var jobs = data.jobs;
         var job;
 
@@ -75,8 +75,47 @@ buildTvController = {
             this.jobUpdate(job.name, job.status);
         }
 
-        // Remove items not updated
+        // remove items not updated
         this.jobRemoveNonUpdated();
+
+        // sort jobs by status
+        var self = this;
+        var jobs = $("#jobs").children().sort(function(a, b){
+            var statusA = $(a).attr("status");
+            var statusB = $(b).attr("status");
+
+            // assign priority
+            var priorityA = self.getPriority(statusA);
+            var priorityB = self.getPriority(statusB);
+
+            var result = priorityB - priorityA;
+
+            if (result == 0) {
+                // sort by name
+                result = $(a).text() > $(b).text() ? 1 : -1;
+            }
+
+            return result;
+        });
+
+        //$("#jobs").detach().appendTo(jobs);
+        $("#jobs").children().detach();
+        $("#jobs").append(jobs);
+    },
+
+    getPriority: function(status)
+    {
+        switch (status)
+        {
+            case "BUILD_PROGRESS":
+                return 3;
+            case "BUILD_FAILURE":
+                return 2;
+            case "BUILD_UNSTABLE":
+                return 1;
+            default:
+                return 0;
+        }
     },
 
     jobNameEscape: function(name)
