@@ -10,7 +10,7 @@ import org.json.simple.JSONObject;
 import java.net.ConnectException;
 
 /**
- * REST client used to communicate with interval daemon for notifications.
+ * REST client used to communicate with notification daemon for notifications.
  */
 public class NotificationClient
 {
@@ -51,10 +51,10 @@ public class NotificationClient
      */
     public void updateNotification(Notification notification)
     {
-        // Check interval daemon is available
+        // Check notification daemon is available
         if (notificationSetEndpointUrl == null)
         {
-            LOG.debug("Ignored request to change notification, interval daemon unavailable - notification: {}", notification);
+            LOG.debug("Ignored request to change notification, notification daemon unavailable - notification: {}", notification);
             return;
         }
 
@@ -78,13 +78,13 @@ public class NotificationClient
         }
         catch (ConnectException e)
         {
-            LOG.error("Failed to connect to interval daemon - url: {}, notification: {}",
+            LOG.error("Failed to connect to notification daemon - url: {}, notification: {}",
                     notificationSetEndpointUrl, notification
             );
         }
         catch (Exception e)
         {
-            LOG.error("Failed to connect to interval daemon - url: {}, notification: {}",
+            LOG.error("Failed to connect to notification daemon - url: {}, notification: {}",
                     notificationSetEndpointUrl, notification, e
             );
         }
@@ -92,10 +92,10 @@ public class NotificationClient
 
     public void removeNotification()
     {
-        // Check interval daemon is available
+        // Check notification daemon is available
         if (notificationSetEndpointUrl == null)
         {
-            LOG.debug("Ignored request to remove notification for current source, interval daemon unavailable - source name: {}", sourceName);
+            LOG.debug("Ignored request to remove notification for current source, notification daemon unavailable - source name: {}", sourceName);
             return;
         }
 
@@ -113,13 +113,13 @@ public class NotificationClient
         }
         catch (ConnectException e)
         {
-            LOG.error("Failed to connect to interval daemon - url: {}",
+            LOG.error("Failed to connect to notification daemon - url: {}",
                     notificationSetEndpointUrl
             );
         }
         catch (Exception e)
         {
-            LOG.error("Failed to connect to interval daemon - url: {}",
+            LOG.error("Failed to connect to notification daemon - url: {}",
                     notificationSetEndpointUrl, e
             );
         }

@@ -20,7 +20,7 @@ public class IntervalThread extends ExtendedThread
 {
     private static final Logger LOG = LogManager.getLogger(IntervalThread.class);
 
-    private static final String SOURCE_NAME = "interval-daemon";
+    private static final String SOURCE_NAME = "notification-daemon";
 
     private Controller controller;
     private ClientAggregate clientAggregate;

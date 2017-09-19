@@ -23,9 +23,9 @@ public enum ComponentType
     BUILD_STATUS_DAEMON("build-status-daemon", "local-ports/build-status-daemon"),
 
     /**
-     * The interval daemon - timed patterns/notifications etc.
+     * The notification daemon - timed patterns/notifications etc.
      */
-    INTERVAL_DAEMON("notification-daemon", "local-ports/notification-daemon")
+    NOTIFICATION_DAEMON("notification-daemon", "local-ports/notification-daemon")
     ;
 
     public final String COMPONENT_NAME;

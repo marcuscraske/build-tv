@@ -2,7 +2,7 @@
   shell: service build-status-daemon restart
   become: true
 
-- name: Restarting interval daemon...
+- name: Restarting notification daemon...
   shell: service notification-daemon restart
   become: true
 

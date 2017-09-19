@@ -8,7 +8,7 @@ import com.limpygnome.daemon.interval.service.NotificationService;
 import com.limpygnome.daemon.service.RestService;
 
 /**
- * Entry point into the interval daemon.
+ * Entry point into the notification daemon.
  */
 public class Program
 {

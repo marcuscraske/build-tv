@@ -1,5 +1,5 @@
 # LED Patterns
-This configuration is used by the interval daemon to show notifications and turn the screen on/off.
+This configuration is used by the notification daemon to show notifications and turn the screen on/off.
 
 Each piece of configuration should be defined as a JSON object inside the following:
 

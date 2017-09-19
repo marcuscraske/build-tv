@@ -129,15 +129,15 @@ public class NotificationService implements Service, RestServiceHandler
     public boolean handleRequestInChain(RestRequest restRequest, RestResponse restResponse)
     {
         // Check request destined for us
-        if (restRequest.isPathMatch(new String[]{ "interval-daemon", "notifications", "get" }))
+        if (restRequest.isPathMatch(new String[]{ "notification-daemon", "notifications", "get" }))
         {
             return handleNotificationGet(restRequest, restResponse);
         }
-        else if (restRequest.isJsonRequest() && restRequest.isPathMatch(new String[] { "interval-daemon", "notifications", "set" }))
+        else if (restRequest.isJsonRequest() && restRequest.isPathMatch(new String[] { "notification-daemon", "notifications", "set" }))
         {
             return handleNotificationSet(restRequest, restResponse);
         }
-        else if (restRequest.isJsonRequest() && restRequest.isPathMatch(new String[]{ "interval-daemon", "notifications", "remove" }))
+        else if (restRequest.isJsonRequest() && restRequest.isPathMatch(new String[]{ "notification-daemon", "notifications", "remove" }))
         {
             return handleNotificationRemove(restRequest, restResponse);
         }
