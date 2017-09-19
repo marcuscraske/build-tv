@@ -1,3 +1,0 @@
-{
-    "version" : "v${project.version}:j${java.version}"
-}

@@ -1,10 +1,11 @@
 {
-    "build-status-daemon"   : true,
     "dashboard-daemon"      : true,
-    "led-daemon"            : false,
-    "notification-daemon"   : true,
     "remote-daemon"         : true,
     "system-daemon"         : true,
+
+    "led-daemon"            : false,
+    "build-status-daemon"   : false,
+    "notification-daemon"   : false,
 
     "launcher-client"       : true
 }
