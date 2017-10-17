@@ -113,19 +113,8 @@ if [[ -z "${1}" ]]; then
     exit 1
 fi
 
-# Definitions of available tags by alias/category
-TAGS_LIBS="neopixel-lib"
-TAGS_APPS="led-daemon,build-status-daemon,notification-daemon,system-daemon,remote-daemon,dashboard-daemon,launcher-client"
-TAGS_SETUP="backup,remove,setup-pi,wallboard,config"
-TAGS_ALL="${TAGS_SETUP},${TAGS_LIBS},${TAGS_APPS},reboot"
-
 # Replace alias tags
 DEPLOY_TAGS="${1}"
-DEPLOY_TAGS="${DEPLOY_TAGS/setup/$TAGS_SETUP}"
-DEPLOY_TAGS="${DEPLOY_TAGS/libs/$TAGS_LIBS}"
-DEPLOY_TAGS="${DEPLOY_TAGS/apps/$TAGS_APPS}"
-DEPLOY_TAGS="${DEPLOY_TAGS/all/$TAGS_ALL}"
-
 
 # Reset terminal colour
 echo -e "\033[0m"
