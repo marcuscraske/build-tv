@@ -11,3 +11,13 @@
     include:      ../../common/tasks/setupService.yml,
     service_name: "system-daemon"
   }
+
+- name: Installing cec library (screen on/off)
+  apt:  name=libcec3
+        state=present
+  become: true
+
+- name: Installing cec utils (screen on/off)
+  apt:  name=cec-utils
+        state=present
+  become: true

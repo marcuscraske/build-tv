@@ -7,31 +7,3 @@
   command: rm -r "{{ deploy_path }}"
   become: true
   when: deploy_exists.stat.exists
-
-- {
-    name:         Removing remote-daemon service...,
-    include:      ../../common/tasks/removeService.yml,
-    service_name: "remote-daemon",
-    daemon_name:  "remote-daemon"
-  }
-
-- {
-    name:         Removing system-daemon service...,
-    include:      ../../common/tasks/removeService.yml,
-    service_name: "system-daemon",
-    daemon_name:  "system-daemon"
-  }
-
-- {
-    name:         Removing build-status-daemon service...,
-    include:      ../../common/tasks/removeService.yml,
-    service_name: "build-status-daemon",
-    daemon_name:  "build-status-daemon"
-  }
-
-- {
-    name:         Removing led-daemon service...,
-    include:      ../../common/tasks/removeService.yml,
-    service_name: "led-daemon",
-    daemon_name:  "led-daemon"
-  }

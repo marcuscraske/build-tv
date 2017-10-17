@@ -1,11 +1,11 @@
 package com.limpygnome.client.launcher.browser;
 
+import java.awt.Dimension;
+
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.util.EnvironmentUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.awt.*;
 
 /**
  * Chromium implementation of a browser.
@@ -60,7 +60,7 @@ public class ChromiumBrowser implements Browser
                             "--window-position=0,0",
                             "--window-size=" + dimensionWidth + "," + dimensionHeight,
 
-                            // Disable security and the bubble (with test-type); allows embedding webpages in iframe
+                            // Disable security and the bubble (with test-type)
                             //"--disable-web-security",
                             //"--test-type",
 

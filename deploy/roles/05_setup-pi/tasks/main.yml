@@ -36,3 +36,7 @@
 
 - name: Setting up firewall...
   include: firewall.yml
+
+- name: Disabling audio...
+  include: disable-audio.yml
+  when: audio is not defined

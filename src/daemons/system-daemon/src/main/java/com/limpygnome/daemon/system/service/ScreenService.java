@@ -70,13 +70,15 @@ public class ScreenService implements Service, RestServiceHandler
     {
         if (force || (!isTooSoon() && isScreenExpectedState(false)))
         {
-            LOG.info("Executing commands for screen on...");
+            LOG.info("Executing command(s) for screen on...");
 
-            exec(new String[]{"/opt/vc/bin/tvservice", "-p"});
-            exec(new String[]{ "fbset", "-depth", "16" });
-            exec(new String[]{ "fbset", "-depth", "0" });
-            exec(new String[]{ "fbset", "-depth", "16" });
-            exec(new String[]{ "fbset", "-accel", "true" });
+            // Causes framebuffer corruption in latest Pi's when using fbset sometimes, tvservice also has blank screen
+            // when turning back on. Disabled for now, left as future alternative...
+//            exec(new String[]{ "/opt/vc/bin/tvservice", "-p" });
+//            exec(new String[]{ "fbset", "-depth", "8" });
+//            exec(new String[]{ "fbset", "-depth", "16" });
+
+            exec(new String[]{ "/bin/sh", "-c", "echo \"on 0\" | cec-client -s -d 1" });
 
             this.screenOn = true;
         }
@@ -86,9 +88,12 @@ public class ScreenService implements Service, RestServiceHandler
     {
         if (force || (!isTooSoon() && isScreenExpectedState(true)))
         {
-            LOG.info("Executing commands for screen off...");
+            LOG.info("Executing command(s) for screen off...");
 
-            exec(new String[]{ "/opt/vc/bin/tvservice", "-o" });
+            // See comments above for screenOn; using cec-client as alternative
+//            exec(new String[]{ "/opt/vc/bin/tvservice", "-o" });
+
+            exec(new String[]{ "/bin/sh", "-c", "echo \"standby 0\" | cec-client -s -d 1" });
 
             this.screenOn = false;
         }

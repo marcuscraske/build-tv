@@ -3,7 +3,8 @@ By the end of this guide, you should have a working build TV.
 
 
 ## Prerequisites
-- Raspberry Pi 2+
+- Raspberry Pi 3
+    - Should be backwards compatible with Raspberry Pi 2, although no longer officially supported.
 - MicroSD with Raspbian
     - You will need a MicroSD or SD card slot (with MicroSD converter) on your machine
     - See next section for installation

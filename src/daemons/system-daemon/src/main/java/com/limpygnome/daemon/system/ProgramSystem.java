@@ -2,8 +2,10 @@ package com.limpygnome.daemon.system;
 
 import com.limpygnome.daemon.api.Controller;
 import com.limpygnome.daemon.api.imp.DefaultController;
-import com.limpygnome.daemon.system.service.*;
 import com.limpygnome.daemon.service.RestService;
+import com.limpygnome.daemon.system.service.PowerManagementService;
+import com.limpygnome.daemon.system.service.ScreenService;
+import com.limpygnome.daemon.system.service.StatsService;
 import com.limpygnome.daemon.system.service.stat.CpuStatService;
 import com.limpygnome.daemon.system.service.stat.RamStatService;
 import com.limpygnome.daemon.system.service.stat.TemperatureStatService;
