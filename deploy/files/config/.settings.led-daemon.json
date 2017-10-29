@@ -10,7 +10,7 @@
         "leds"          : 60,
         "pin"           : 18,
         "freq"          : 800000,
-        "dma"           : 5,
+        "dma"           : 10,
         "brightness"    : 255,
         "pwm_channel"   : 0,
         "invert"        : false

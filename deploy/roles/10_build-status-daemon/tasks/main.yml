@@ -1,0 +1,13 @@
+- name: Copying build status daemon JAR
+  copy: src={{ build_status_daemon }}/target/build-status-daemon.jar
+        dest={{ deploy_path }}
+        mode=0770
+        owner=rpi-daemon
+        group=rpi-group
+  become: true
+
+- {
+    name:         Setting Up Build Status Daemon,
+    include:      ../../common/tasks/setupService.yml,
+    service_name: "build-status-daemon"
+  }

@@ -1,0 +1,4 @@
+- name: Rebooting Pi
+  shell: reboot -f
+  ignore_errors: true
+  become: true

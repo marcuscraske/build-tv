@@ -1,21 +1,27 @@
 - hosts: all
   gather_facts: no
+  vars:
+    ansible_user: "monitor"
+    deploy_path:  "/build-tv"
+    backup_path:  "/build-tv-backups"
+    temp_path:    "/build-tv-setup-files"
 
   roles:
-    - { role: 01_setup-temp-files, tags: ["always"] }
-    - { role: 02_setup-users, tags: ["setup-pi"] }
-    - { role: 03_backup-previous-deploy, tags: ["backup"] }
-    - { role: 04_remove-previous-deploy, tags: ["remove"] }
-    - { role: 05_setup-pi, tags: ["setup-pi"] }
-    - { role: 06_shared-config, tags: ["config"] }
-    - { role: 07_wallboard, tags: ["wallboard"] }
-    - { role: 08_neopixel-ws281x-lib, tags: ["neopixel-lib"] }
-    - { role: 09_led-daemon, tags: ["led-daemon"] }
-    - { role: 10_build-tv-daemon, tags: ["build-tv-daemon"] }
-    - { role: 11_interval-daemon,   tags: ["interval-daemon"] }
-    - { role: 12_system-daemon, tags: ["system-daemon"] }
-    - { role: 13_remote-daemon, tags: ["remote-daemon"] }
-    - { role: 14_launcher-client, tags: ["launcher-client"] }
-    - { role: 15_remove-temp-files, tags: ["always"] }
-    - { role: 16_setup-restart, tags: ["restart"] }
-    - { role: 17_setup-reboot, tags: ["reboot"] }
+    - { role: 01_setup-temp-files,        tags: ["all", "always"] }
+    - { role: 02_setup-users,             tags: ["all", "setup-pi"] }
+    - { role: 03_backup-previous-deploy,  tags: ["all", "backup"] }
+    - { role: 04_remove-previous-deploy,  tags: ["all", "remove"] }
+    - { role: 05_setup-pi,                tags: ["all", "setup-pi"] }
+    - { role: 06_shared-config,           tags: ["all", "config"] }
+    - { role: 07_wallboard,               tags: ["all", "wallboard"] }
+    - { role: 08_neopixel-ws281x-lib,     tags: ["all", "neopixel-lib"] }
+    - { role: 09_led-daemon,              tags: ["all", "apps", "led-daemon"] }
+    - { role: 10_build-status-daemon,     tags: ["all", "apps", "build-status-daemon"] }
+    - { role: 11_notification-daemon,     tags: ["all", "apps", "notification-daemon"] }
+    - { role: 12_system-daemon,           tags: ["all", "apps", "system-daemon"] }
+    - { role: 13_remote-daemon,           tags: ["all", "apps", "remote-daemon"] }
+    - { role: 14_dashboard-daemon,        tags: ["all", "apps", "dashboard-daemon"] }
+    - { role: 15_launcher-client,         tags: ["all", "apps", "launcher-client"] }
+    - { role: 16_remove-temp-files,       tags: ["all", "always"] }
+    - { role: 17_setup-restart-services,  tags: ["all", "restart"] }
+    - { role: 18_setup-reboot,            tags: ["all", "reboot"] }

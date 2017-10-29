@@ -1,0 +1,13 @@
+{
+    "rest" :
+    {
+        "local-only" : true,
+        "port" : 2700
+    },
+
+
+    "led-daemon.rest.url"                           : "http://localhost:2500/led-daemon/leds/set",
+    "system-daemon.screen.rest.url"                 : "http://localhost:2600/system-daemon/screen/set",
+    "notification-daemon.notifications.set.url"     : "http://localhost:2800/notification-daemon/notifications/set",
+    "notification-daemon.notifications.remove.url"  : "http://localhost:2800/notification-daemon/notifications/set"
+}

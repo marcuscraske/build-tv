@@ -1,11 +1,11 @@
 - name: Optimizing SSH daemon by disabling reverse DNS
   shell: "{{ temp_path }}/setup-scripts/ssh-speedup.sh"
-  sudo: true
+  become: true
 
 - name: Creating shared group for users
   group:  name=rpi-group
           state=present
-  sudo: true
+  become: true
 
 - name: Creating managed user for SSH (with password specified)
   user: name=monitor
@@ -16,7 +16,7 @@
         createhome=yes
         append=no
         groups=rpi-group
-  sudo: true
+  become: true
   when: monitor_password is defined
 
 - name: Creating managed user for SSH (when no password)
@@ -27,7 +27,7 @@
         createhome=yes
         append=no
         groups=rpi-group
-  sudo: true
+  become: true
   when: monitor_password is not defined
 
 - name: Creating managed user for non-root daemons
@@ -38,7 +38,7 @@
         createhome=no
         append=no
         groups=rpi-group
-  sudo: true
+  become: true
 
 - name: Configuring managed user for nopasswd sudo access
   lineinfile: dest=/etc/sudoers.d/monitor
@@ -48,7 +48,7 @@
               line="monitor ALL=(ALL) NOPASSWD:ALL"
               state=present
               create=yes
-  sudo: true
+  become: true
 
 - name: Reading SSH keys
   shell: cat "{{ temp_path }}/system/ssh_keys"
@@ -61,11 +61,11 @@
   authorized_key: exclusive=yes
                   key="{{ ssh_keys.stdout }}"
                   user=monitor
-  sudo: true
+  become: true
 
 - name: Removing default Pi user
   user: name=pi
         state=absent
         remove=yes
-  sudo: true
+  become: true
   ignore_errors: true

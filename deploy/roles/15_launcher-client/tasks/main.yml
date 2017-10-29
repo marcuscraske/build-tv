@@ -1,0 +1,7 @@
+- name: Copying launcher client JAR
+  copy: src={{ launcher_client }}/target/launcher-client.jar
+        dest={{ deploy_path }}
+        mode=0770
+        owner=wallboard
+        group=wallboard
+  become: true

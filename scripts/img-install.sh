@@ -1,16 +1,20 @@
 #!/bin/bash
+
 # *********************************************************************************
 # Installs an image onto a disk i.e. the Pi's memory card
-#
-# Author(s):    limpygnome
-# Version:      1.0
 # *********************************************************************************
 
 # Output available images
 IMAGES=$(ls ./images)
 
+# Check we're sudo
+if [[ "$EUID" != 0 ]]; then
+    echo "This script must be ran with sudo"
+    exit 1
+fi
+
 # Ask for image to use
-echo "Select image to install:"
+echo "Typ number of image to install:"
 select IMAGE in $IMAGES;
 do
     if [[ $IMAGE ]]; then

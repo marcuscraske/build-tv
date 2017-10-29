@@ -6,15 +6,16 @@
   service: name={{service_name}} state=stopped
   when: service_status.stat.exists
   register: service_stopped
+  become: true
 
 - name: Copying service file to init.d
   command: cp "{{ temp_path }}/daemons/{{ service_name }}" "/etc/init.d/{{service_name}}"
-  sudo: true
+  become: true
 
 - name: Registering Service
   shell: "update-rc.d {{service_name}} defaults"
-  sudo: true
+  become: true
 
 - name: Starting Service
   shell: "service {{service_name}} start"
-  sudo: true
+  become: true

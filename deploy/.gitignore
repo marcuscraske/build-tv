@@ -4,3 +4,5 @@ build/
 
 deploy.retry
 
+# Ignore local install of Ansible
+ansible/

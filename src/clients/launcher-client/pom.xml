@@ -1,0 +1,79 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <name>Build TV - Clients - Launcher Client</name>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.limpygnome.buildtv</groupId>
+        <artifactId>clients</artifactId>
+        <version>3.0</version>
+    </parent>
+    <groupId>com.limpygnome.buildtv.clients</groupId>
+    <artifactId>launcher-client</artifactId>
+    <packaging>jar</packaging>
+
+    <dependencies>
+
+        <!-- local -->
+        <dependency>
+            <groupId>com.limpygnome.buildtv.libs</groupId>
+            <artifactId>daemon-lib</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- apache -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+
+        <!-- jetty -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlets</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+        
+            <!-- Builds executable JAR with dependencies included -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                    <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.limpygnome.client.launcher.ProgramLauncherClient</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <finalName>launcher-client</finalName>
+                </configuration>
+            </plugin>
+            
+        </plugins>
+    </build>
+    
+</project>

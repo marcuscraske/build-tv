@@ -4,17 +4,17 @@
         owner=monitor
         group=rpi-group
         mode=775
-  sudo: true
+  become: true
 
 - name: Checking deploy directory exists
   stat: path={{ deploy_path }}
   register: deploy_exists
-  sudo: true
+  become: true
 
 - name: Checking logs directory exists
   stat: path={{ deploy_path }}/logs
   register: logs_exist
-  sudo: true
+  become: true
 
 - name: Fetching date time string
   shell: date "+%Y-%m-%d_%H-%M-%S"
@@ -22,7 +22,7 @@
 
 - name: Removing logs directory
   command: rm -r "{{ deploy_path }}/logs"
-  sudo: true
+  become: true
   when: logs_exist.stat.exists
 
 - name:     Creating backup of previous deployment
@@ -32,5 +32,5 @@
             owner="monitor"
             group="rpi-group"
             perms="775"
-  sudo:     true
+  become:   true
   when:     deploy_exists.stat.exists

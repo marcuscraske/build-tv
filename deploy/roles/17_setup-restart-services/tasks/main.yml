@@ -1,0 +1,15 @@
+- name: Restarting build statuss daemon...
+  shell: service build-status-daemon restart
+  become: true
+
+- name: Restarting notification daemon...
+  shell: service notification-daemon restart
+  become: true
+
+- name: Restarting system daemon...
+  shell: service system-daemon restart
+  become: true
+
+- name: Restarting remote daemon...
+  shell: service remote-daemon restart
+  become: true

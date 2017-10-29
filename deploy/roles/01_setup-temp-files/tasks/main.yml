@@ -1,29 +1,31 @@
 - name: Compiling setup files for host
   local_action: script compile-files.sh "{{ inventory_hostname }}" "{{ files_base }}" "{{ files_override }}"
 
+- name: Checking sudo access
+  command: whoami
+  become: true
+
 - name: Removing previous setup files (in case of failure last run)
   command: rm -R {{ temp_path }}
   ignore_errors: true
-  sudo: true
+  become: true
 
 - name: Creating setup files directory
   file: path="{{ temp_path }}"
         state=directory
-        owner="{{ ansible_ssh_user }}"
-        group="{{ ansible_ssh_user }}"
+        owner="{{ ansible_user }}"
+        group="{{ ansible_user }}"
         mode=0777
         recurse=yes
-  sudo: true
+  become: true
 
 - name: Copy setup files
   copy: src="{{ files_base }}/../compile/{{ inventory_hostname }}/"
         dest="{{ temp_path }}"
         mode=0775
-  sudo: true
 
 - name: Setting permissions on setup files...
   shell: chmod -R 775 "{{ temp_path }}"
-  sudo: true
 
 - name: Removing local setup files
   local_action: script cleanup-files.sh "{{ inventory_hostname }}" "{{ files_base }}"

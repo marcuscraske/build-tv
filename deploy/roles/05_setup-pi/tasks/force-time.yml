@@ -1,17 +1,17 @@
 - name: Stopping ntp service
   service:  name=ntp
             state=stopped
-  sudo: true
+  become: true
 
 - name: Forcing ntpupdate...
   shell:  ntpdate pool.ntp.org
   ignore_errors: true
-  sudo: true
+  become: true
 
 - name: Starting ntp service
   service:  name=ntp
             state=stopped
-  sudo: true
+  become: true
 
 # Disabled since this may not work behind a corporate network, and thus just slow down the Pi
 #- {

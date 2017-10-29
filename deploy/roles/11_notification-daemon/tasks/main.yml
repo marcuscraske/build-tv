@@ -1,0 +1,13 @@
+- name: Copying notification daemon JAR
+  copy: src={{ notification_daemon }}/target/notification-daemon.jar
+        dest={{ deploy_path }}
+        mode=0770
+        owner=rpi-daemon
+        group=rpi-group
+  become: true
+
+- {
+    name:         Setting up notification daemon service,
+    include:      ../../common/tasks/setupService.yml,
+    service_name: "notification-daemon"
+  }

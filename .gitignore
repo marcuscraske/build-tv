@@ -3,3 +3,7 @@ target/
 .idea/
 logs/
 
+ansible/
+
+
+auth-token.txt

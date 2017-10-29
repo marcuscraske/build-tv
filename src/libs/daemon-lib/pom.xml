@@ -1,0 +1,43 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <name>Build TV - libs - daemon shared library</name>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.limpygnome.buildtv</groupId>
+        <artifactId>libs</artifactId>
+        <version>3.0</version>
+    </parent>
+    <groupId>com.limpygnome.buildtv.libs</groupId>
+    <artifactId>daemon-lib</artifactId>
+    <packaging>jar</packaging>
+
+    <dependencies>
+
+        <!-- apache -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <!-- json -->
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+        </dependency>
+    
+        <!-- joda -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+
+    </dependencies>
+
+</project>

@@ -2,12 +2,12 @@
 
 # Fancy script title
 IFS='' read -r -d '' SCRIPT_HEADER <<'EOF'
- █████╗ ██╗   ██╗████████╗ ██████╗ ███╗   ███╗ █████╗ ████████╗███████╗██████╗     ██████╗ ██╗    ██████╗ ███████╗██████╗ ██╗      ██████╗ ██╗   ██╗███╗   ███╗███████╗███╗   ██╗████████╗
-██╔══██╗██║   ██║╚══██╔══╝██╔═══██╗████╗ ████║██╔══██╗╚══██╔══╝██╔════╝██╔══██╗    ██╔══██╗██║    ██╔══██╗██╔════╝██╔══██╗██║     ██╔═══██╗╚██╗ ██╔╝████╗ ████║██╔════╝████╗  ██║╚══██╔══╝
-███████║██║   ██║   ██║   ██║   ██║██╔████╔██║███████║   ██║   █████╗  ██║  ██║    ██████╔╝██║    ██║  ██║█████╗  ██████╔╝██║     ██║   ██║ ╚████╔╝ ██╔████╔██║█████╗  ██╔██╗ ██║   ██║
-██╔══██║██║   ██║   ██║   ██║   ██║██║╚██╔╝██║██╔══██║   ██║   ██╔══╝  ██║  ██║    ██╔═══╝ ██║    ██║  ██║██╔══╝  ██╔═══╝ ██║     ██║   ██║  ╚██╔╝  ██║╚██╔╝██║██╔══╝  ██║╚██╗██║   ██║
-██║  ██║╚██████╔╝   ██║   ╚██████╔╝██║ ╚═╝ ██║██║  ██║   ██║   ███████╗██████╔╝    ██║     ██║    ██████╔╝███████╗██║     ███████╗╚██████╔╝   ██║   ██║ ╚═╝ ██║███████╗██║ ╚████║   ██║
-╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═════╝     ╚═╝     ╚═╝    ╚═════╝ ╚══════╝╚═╝     ╚══════╝ ╚═════╝    ╚═╝   ╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝   ╚═╝
+ _           _ _     _   _                    _
+| |__  _   _(_) | __| | | |___   __  ___  ___| |_ _   _ _ __
+| '_ \| | | | | |/ _` | | __\ \ / / / __|/ _ \ __| | | | '_ \
+| |_) | |_| | | | (_| | | |_ \ V /  \__ \  __/ |_| |_| | |_) |
+|_.__/ \__,_|_|_|\__,_|  \__| \_/   |___/\___|\__|\__,_| .__/
+                                                       |_|
 EOF
 
 echo -e "\033[1;31m
@@ -16,23 +16,23 @@ ${SCRIPT_HEADER}
 "
 
 # Target hosts group
-TARGET_HOSTS="pi2"
+TARGET_HOSTS="build-tv"
 
 # Build dynamic paths
-PATH_CURR=$(pwd)
+PATH_CURR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PATH_BASE=$(dirname "${PATH_CURR}")
 
 PATH_FILES_BASE="${PATH_CURR}/files"
 PATH_FILES_OVERRIDE="${PATH_CURR}/../../build-tv-config/environments"
 
-PATH_NEOPIXEL_WS281X_LIB="${PATH_BASE}/libs/neopixel-ws281x-lib"
-PATH_LED_DAEMON="${PATH_BASE}/daemons/led-daemon"
-PATH_BUILDTV_DAEMON="${PATH_BASE}/daemons/build-tv-daemon"
-PATH_INTERVAL_DAEMON="${PATH_BASE}/daemons/interval-daemon"
-PATH_SYSTEM_DAEMON="${PATH_BASE}/daemons/system-daemon"
-PATH_REMOTE_DAEMON="${PATH_BASE}/daemons/remote-daemon"
-PATH_LAUNCHER_CLIENT="${PATH_BASE}/clients/launcher-client"
-
+PATH_NEOPIXEL_WS281X_LIB="${PATH_BASE}/src/libs/neopixel-ws281x-lib"
+PATH_LED_DAEMON="${PATH_BASE}/src/daemons/led-daemon"
+PATH_BUILD_STATUS_DAEMON="${PATH_BASE}/src/daemons/build-status-daemon"
+PATH_NOTIFICATION_DAEMON="${PATH_BASE}/src/daemons/notification-daemon"
+PATH_SYSTEM_DAEMON="${PATH_BASE}/src/daemons/system-daemon"
+PATH_DASHBOARD_DAEMON="${PATH_BASE}/src/daemons/dashboard-daemon"
+PATH_REMOTE_DAEMON="${PATH_BASE}/src/daemons/remote-daemon"
+PATH_LAUNCHER_CLIENT="${PATH_BASE}/src/clients/launcher-client"
 
 # Determine inventory file to use
 INVENTORY="${PATH_FILES_OVERRIDE}/hosts_inventory"
@@ -54,9 +54,10 @@ echo "Path - base:                  ${PATH_BASE}"
 
 echo "Path - ws281x library:        ${PATH_NEOPIXEL_WS281X_LIB}"
 echo "Path - led daemon:            ${PATH_LED_DAEMON}"
-echo "Path - build TV daemon:       ${PATH_BUILDTV_DAEMON}"
-echo "Path - interval daemon:       ${PATH_INTERVAL_DAEMON}"
+echo "Path - build status daemon:   ${PATH_BUILD_STATUS_DAEMON}"
+echo "Path - notification daemon:   ${PATH_NOTIFICATION_DAEMON}"
 echo "Path - system daemon:         ${PATH_SYSTEM_DAEMON}"
+echo "Path - dashboard daemon:      ${PATH_DASHBOARD_DAEMON}"
 echo "Path - remote daemon:         ${PATH_REMOTE_DAEMON}"
 echo "Path - launcher client:       ${PATH_LAUNCHER_CLIENT}"
 
@@ -73,9 +74,10 @@ fi
 # -- Paths to daemons/apps etc
 EXTRA_VARS+="ws281x_lib=\"${PATH_NEOPIXEL_WS281X_LIB}\" "
 EXTRA_VARS+="led_daemon=\"${PATH_LED_DAEMON}\" "
-EXTRA_VARS+="build_tv_daemon=\"${PATH_BUILDTV_DAEMON}\" "
-EXTRA_VARS+="interval_daemon=\"${PATH_INTERVAL_DAEMON}\" "
+EXTRA_VARS+="build_status_daemon=\"${PATH_BUILD_STATUS_DAEMON}\" "
+EXTRA_VARS+="notification_daemon=\"${PATH_NOTIFICATION_DAEMON}\" "
 EXTRA_VARS+="system_daemon=\"${PATH_SYSTEM_DAEMON}\" "
+EXTRA_VARS+="dashboard_daemon=\"${PATH_DASHBOARD_DAEMON}\" "
 EXTRA_VARS+="remote_daemon=\"${PATH_REMOTE_DAEMON}\" "
 EXTRA_VARS+="launcher_client=\"${PATH_LAUNCHER_CLIENT}\" "
 
@@ -111,19 +113,8 @@ if [[ -z "${1}" ]]; then
     exit 1
 fi
 
-# Definitions of available tags by alias/category
-TAGS_LIBS="neopixel-lib"
-TAGS_APPS="led-daemon,build-tv-daemon,interval-daemon,system-daemon,remote-daemon,launcher-client"
-TAGS_SETUP="backup,remove,setup-pi,wallboard,config"
-TAGS_ALL="${TAGS_SETUP},${TAGS_LIBS},${TAGS_APPS},reboot"
-
 # Replace alias tags
 DEPLOY_TAGS="${1}"
-DEPLOY_TAGS="${DEPLOY_TAGS/setup/$TAGS_SETUP}"
-DEPLOY_TAGS="${DEPLOY_TAGS/libs/$TAGS_LIBS}"
-DEPLOY_TAGS="${DEPLOY_TAGS/apps/$TAGS_APPS}"
-DEPLOY_TAGS="${DEPLOY_TAGS/all/$TAGS_ALL}"
-
 
 # Reset terminal colour
 echo -e "\033[0m"
@@ -139,6 +130,8 @@ echo "${EXTRA_VARS}"
 echo ""
 echo "Running deployment..."
 
+# Include Ansible on path
+source ${PATH_CURR}/ansible/hacking/env-setup -q
 
 # Run deployment"
-ansible-playbook deploy.yml -v -i "${INVENTORY}" -l "${TARGET_HOSTS}" --extra-vars "${EXTRA_VARS}" --tags "${DEPLOY_TAGS}"
+ansible-playbook ${PATH_CURR}/deploy.yml -v -i "${INVENTORY}" -l "${TARGET_HOSTS}" --extra-vars "${EXTRA_VARS}" --tags "${DEPLOY_TAGS}"

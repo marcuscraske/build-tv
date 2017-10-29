@@ -1,9 +1,11 @@
 {
-    "build-tv-daemon"       : true,
-    "interval-daemon"       : true,
-    "led-daemon"            : true,
-    "remote-daemon"         : true,
-    "system-daemon"         : true,
-    "notifications-client"  : true,
+    "dashboard-daemon"      : true,
+
+    "remote-daemon"         : false,
+    "system-daemon"         : false,
+    "led-daemon"            : false,
+    "build-status-daemon"   : false,
+    "notification-daemon"   : false,
+
     "launcher-client"       : true
 }

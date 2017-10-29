@@ -1,0 +1,3 @@
+- name: Removing temp files
+  command: rm -R {{ temp_path }}
+  become: true

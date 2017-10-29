@@ -11,5 +11,7 @@ arm_freq=800
 # Allocate more memory to GPU since we're using a monitor/TV
 gpu_mem=256
 
-# Force usage of HDMI audio
-hdmi_drive=2
+# Disable audio for ws281x LED strip (PWM conflicts - causes kernel panic)
+#dtparam=audio=on
+hdmi_force_hotplug=1
+hdmi_force_edid_audio=1
