@@ -15,7 +15,7 @@ By the end of this guide, you should have a working build TV.
 - Network connection
 - Spare keyboard for installation process.
 
-If you want a build indicator LED strip, refer to [build indicator](build-indicator.md), this can be added later.
+If you want a build indicator LED strip, refer to [led indicator](led-indicator.md), this can be added later.
 
 You will need to clone this project to your machine:
 

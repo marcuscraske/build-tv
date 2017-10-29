@@ -6,6 +6,7 @@
 - [led indicator](led-indicator.md) - setup an LED strip for build status and stand-ups
 - [configure proxy](configure-proxy.md) - configuration for networks behind a proxy
 - [manual software setup](manual-software-setup.md) - manual setup of a build TV (not needed in most cases)
+- [security](security.md)
 
 Refer to sub-section for further development:
 - [devs](dev/README.md) - development
