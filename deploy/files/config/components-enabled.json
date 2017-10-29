@@ -1,7 +1,7 @@
 {
     "dashboard-daemon"      : true,
-    "remote-daemon"         : true,
 
+    "remote-daemon"         : false,
     "system-daemon"         : false,
     "led-daemon"            : false,
     "build-status-daemon"   : false,

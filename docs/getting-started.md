@@ -8,7 +8,7 @@ By the end of this guide, you should have a working build TV.
 - MicroSD with Raspbian
     - You will need a MicroSD or SD card slot (with MicroSD converter) on your machine
     - See next section for installation
-- TV / monitor with HDMI port and cable to connect Raspberry Pi
+- TV / monitor with HDMI port and HDMI cable to connect Raspberry Pi
 - Power supply (USB 5v / 2 amps)
     - Optional if you're able to power the Raspberry Pi off the TV
     - When the Pi does not have enough power, you will observe a coloured wheel on the screen
@@ -17,6 +17,19 @@ By the end of this guide, you should have a working build TV.
 
 If you want a build indicator LED strip, refer to [build indicator](build-indicator.md), this can be added later.
 
+You will need to clone this project to your machine:
+
+````
+git clone git@github.com:limpygnome/build-tv.git
+````
+
+Or download the zip:
+<https://github.com/limpygnome/build-tv/archive/master.zip>
+
+You will need the following dependencies installed, locally, to build the project:
+- JDK 1.7+ and Maven (3+)
+- swig
+- gcc
 
 ## Installing Raspbian
 Grab Raspbian:
