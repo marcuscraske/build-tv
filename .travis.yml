@@ -8,3 +8,5 @@ addons:
   apt_packages:
     - swig
     - gcc
+install:
+  mvn clean package
