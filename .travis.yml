@@ -9,4 +9,4 @@ addons:
     - swig
     - gcc
 install:
-  mvn clean package
+  cd src && mvn clean package
